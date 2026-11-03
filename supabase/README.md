@@ -43,7 +43,8 @@ All database tables, constraints, functions, and seed data are maintained under 
 To run a migration:
 1. Go to your Supabase Project Dashboard → **SQL Editor** (left sidebar).
 2. Click **New Query**.
-3. Copy the contents of the target migration file (e.g. `supabase/migrations/01_base_tables.sql`).
+3. Copy the contents of the target migration file:
+   - `supabase/migrations/01_base_tables.sql` — Base tables (customers, products, departments, jobs, employees) and seed data.
 4. Click **Run** (or `Ctrl + Enter`).
 5. Verify created tables in the **Table Editor**.
 
