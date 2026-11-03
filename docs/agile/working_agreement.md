@@ -38,3 +38,15 @@ A task / PR is considered **Done** only when all of the following conditions are
    - At least one teammate has performed a code review, verified criteria, and submitted an approved review.
 5. **No Regressions:**
    - Existing modules and navigation flows remain intact and functional.
+
+---
+
+## 3. Role Responsibilities Guide
+
+| Role | Assignee | Core Responsibilities | Target PRs (Midterm / Final) |
+|---|---|---|:---:|
+| **Developer** | Kurt Abraham | Application architecture, JavaScript modules (`auth.js`, `customers.js`, `products.js`, `hr.js`, `sales.js`, `reports.js`, `userManagement.js`), client-side RBAC enforcement, session management. | 8 / 24 (32 total) |
+| **DB Admin** | Sir Mischa Solis | Supabase PostgreSQL schema, migrations (`01_base_tables.sql`, etc.), indexing, audit log triggers, seed data scripts, restore documentation. | 6 / 18 (24 total) |
+| **Tester** | Simon Mangubat | Sprint test plans, test matrices, manual acceptance verification, automated smoke tests, bug reporting, and final test sign-off reports. | 6 / 18 (24 total) |
+| **UI/UX Designer** | Clark Deocampo | Design system (`base.css`, `landing.css`, `modules.css`), GitHub Primer dark theme alignment, wireframes, component mockups, usability audits. | 5 / 15 (20 total) |
+| **Scrum Master** | Tristan Bacani | Agile boards, user stories, Definition of Done, impediment tracking, velocity monitoring, sprint reviews, and retrospectives. | 5 / 15 (20 total) |
