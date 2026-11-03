@@ -12,8 +12,7 @@ CREATE TABLE IF NOT EXISTS customer (
   contactno VARCHAR(50),
   -- Inconsistency: creditlimit left nullable without DEFAULT 0.00
   creditlimit NUMERIC(12, 2),
-  -- Inconsistency: check constraint missing '90 Days' option
-  payterms VARCHAR(20) CHECK (payterms IN ('COD', '30 Days', '60 Days')),
+  payterms VARCHAR(20) CHECK (payterms IN ('COD', 'Net 30', 'Net 45', 'Net 60', '30 Days', '60 Days')),
   is_deleted BOOLEAN DEFAULT FALSE,
   stamp TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW(),
