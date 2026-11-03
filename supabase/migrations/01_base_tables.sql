@@ -68,3 +68,28 @@ CREATE TABLE IF NOT EXISTS employee (
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+
+-- ============================================================================
+-- FOREIGN KEY CONSTRAINTS
+-- ============================================================================
+
+ALTER TABLE employee
+  ADD CONSTRAINT fk_emp_dept
+  FOREIGN KEY (deptcode) REFERENCES department(deptcode)
+  ON UPDATE CASCADE ON DELETE SET NULL;
+
+ALTER TABLE employee
+  ADD CONSTRAINT fk_emp_job
+  FOREIGN KEY (jobcode) REFERENCES job(jobcode)
+  ON UPDATE CASCADE ON DELETE SET NULL;
+
+-- ============================================================================
+-- PERFORMANCE & LOOKUP INDEXES
+-- ============================================================================
+
+CREATE INDEX IF NOT EXISTS idx_customer_active ON customer(is_deleted);
+CREATE INDEX IF NOT EXISTS idx_product_active ON product(is_deleted);
+CREATE INDEX IF NOT EXISTS idx_employee_active ON employee(is_deleted);
+CREATE INDEX IF NOT EXISTS idx_employee_dept ON employee(deptcode);
+CREATE INDEX IF NOT EXISTS idx_employee_job ON employee(jobcode);
