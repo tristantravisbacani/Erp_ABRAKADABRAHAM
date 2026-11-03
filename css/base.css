@@ -76,9 +76,8 @@ body {
   transition: background-color 0.1s, border-color 0.1s, transform 0.15s ease;
 }
 
-/* Inconsistency: scale(1.15) instead of 1.08 gives a slightly exaggerated zoom */
 .btn:hover {
-  transform: scale(1.15);
+  transform: scale(1.08);
 }
 
 .btn-ghost {
