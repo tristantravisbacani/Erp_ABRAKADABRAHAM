@@ -10,8 +10,7 @@ CREATE TABLE IF NOT EXISTS customer (
   custname VARCHAR(100) NOT NULL,
   address TEXT,
   contactno VARCHAR(50),
-  -- Inconsistency: creditlimit left nullable without DEFAULT 0.00
-  creditlimit NUMERIC(12, 2),
+  creditlimit NUMERIC(12, 2) DEFAULT 0.00,
   payterms VARCHAR(20) CHECK (payterms IN ('COD', 'Net 30', 'Net 45', 'Net 60', '30 Days', '60 Days')),
   is_deleted BOOLEAN DEFAULT FALSE,
   stamp TEXT,
@@ -144,11 +143,11 @@ ON CONFLICT (empno) DO NOTHING;
 INSERT INTO customer (customerno, custname, address, contactno, creditlimit, payterms, is_deleted, stamp) VALUES
   ('C0001', 'Globus Medical, Inc', '2560 Gen Armistead Ave Audubon CA 94031', '555-0101', 50000.00, '30 Days', FALSE, 'CREATED system 2026-11-01 9:00 AM'),
   ('C0002', 'RF Industries, Inc', '7610 Miramar Rd San Diego, CA 92602', '555-0102', 35000.00, '60 Days', FALSE, 'CREATED system 2026-11-01 9:00 AM'),
-  ('C0003', 'Trisha Macdowell', '7642 Clairemont Mesa Blvd San Diego CA 90321', '555-0103', NULL, 'COD', FALSE, 'CREATED system 2026-11-01 9:00 AM'),
+  ('C0003', 'Trisha Macdowell', '7642 Clairemont Mesa Blvd San Diego CA 90321', '555-0103', 0.00, 'COD', FALSE, 'CREATED system 2026-11-01 9:00 AM'),
   ('C0004', 'HMS Holdings, Inc', '1000 So Fremont Ave, Suite 225 Alhambara CA 91303', '555-0104', 75000.00, '60 Days', FALSE, 'CREATED system 2026-11-01 9:00 AM'),
-  ('C0005', 'Christian Andersen', '1120 Lincoln St Suite 809 Sacramento CA 95815', '555-0105', NULL, 'COD', FALSE, 'CREATED system 2026-11-01 9:00 AM'),
+  ('C0005', 'Christian Andersen', '1120 Lincoln St Suite 809 Sacramento CA 95815', '555-0105', 0.00, 'COD', FALSE, 'CREATED system 2026-11-01 9:00 AM'),
   ('C0006', 'Astronics, Inc', '2 Orion Aliso Viejo, CA 92656', '555-0106', 40000.00, '30 Days', FALSE, 'CREATED system 2026-11-01 9:00 AM'),
-  ('C0007', 'Morgan Alegore', '2 Goodyear Irvine, CA 92618', '555-0107', NULL, 'COD', FALSE, 'CREATED system 2026-11-01 9:00 AM'),
+  ('C0007', 'Morgan Alegore', '2 Goodyear Irvine, CA 92618', '555-0107', 0.00, 'COD', FALSE, 'CREATED system 2026-11-01 9:00 AM'),
   ('C0008', 'Abaxis, Inc', '3240 Whipple Rd, Union City, CA 94587', '555-0108', 60000.00, '30 Days', FALSE, 'CREATED system 2026-11-01 9:00 AM')
 ON CONFLICT (customerno) DO NOTHING;
 
