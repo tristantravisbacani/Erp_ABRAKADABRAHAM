@@ -1,0 +1,26 @@
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor directories
+.vscode/
+.idea/
+*.suo
+*.user
+
+# Node (if ever used for tooling)
+node_modules/
+npm-debug.log*
+
+# Environment / secrets — never commit these
+.env
+.env.local
+.env.*.local
+
+# Supabase local dev (if you ever use supabase CLI)
+.supabase/
+
+# Build output
+dist/
+build/
