@@ -49,3 +49,29 @@ This Master Test Plan defines the verification strategy, test case specification
 | **TC-PERM-02** | RBAC | All / None module group toggles | Rights modal open | Toggling group checkbox toggles all child rights | Batch permission updates function correctly |
 | **TC-DB-01** | Database | Base tables integrity & constraints | PostgreSQL schema | Tables `customer`, `product`, `employee`, `job`, `dept` exist | FK relationships and active flags operational |
 | **TC-UI-01** | Design System | Button hierarchy and hover scaling | Dark theme active | Hover transitions smooth at 1.08 scale | Zero toolbar jitter or element displacement |
+
+
+---
+
+## 3. Environment Testing Procedures & Defect Verification Log
+
+### 3.1 Dual-Mode Environment Setup
+- **Supabase Cloud Mode:** Verify that `SUPABASE_CONFIG` connects to the live project and database requests succeed with valid response payloads.
+- **Offline / Local Mode:** Simulate network disconnect or empty credentials. The topbar badge must display `○ Local Storage (Offline Mode)` and pre-seeded mock records must load without unhandled exceptions.
+
+### 3.2 Pre-Release Defect Verification (Sprint 1 Week 1)
+
+| Defect ID | Component | Description | Status | Verification Reference |
+|---|---|---|---|---|
+| **DEF-01** | UI / Styles | Button hover scale factor was set to 1.15, causing slight text blur and layout jitter on compact action rows. | **VERIFIED FIXED** | Resolved in PR #9 (`scale(1.08)`). Smooth transition verified. |
+| **DEF-02** | UI / Accessibility | Alert info background opacity was 0.05, resulting in borderline contrast on dark backgrounds. | **VERIFIED FIXED** | Resolved in PR #9 (`rgba(56, 139, 253, 0.1)`). Contrast verified. |
+| **DEF-03** | Database / Schema | Customer `payterms` constraint omitted Net terms (`Net 30`, `Net 45`, `Net 60`), and `creditlimit` lacked default. | **VERIFIED FIXED** | Resolved in PR #10. Seed data imports and constraint checks verified. |
+
+---
+
+## 4. Quality Sign-Off Criteria
+
+To achieve Quality Sign-Off for Sprint 1:
+- [ ] 100% of P1 test cases (Authentication & Access Control) must pass.
+- [ ] Zero blocking or high-severity visual defects in core screens.
+- [ ] All database migrations must execute without syntax errors or constraint violations in the Supabase SQL editor.
