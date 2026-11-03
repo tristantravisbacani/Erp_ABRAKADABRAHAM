@@ -56,3 +56,105 @@ body {
   outline: 2px solid var(--primary);
   outline-offset: -1px;
 }
+
+
+/* ========== BUTTONS ========== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 5px 16px;
+  border-radius: var(--radius);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  font-family: inherit;
+  cursor: pointer;
+  border: 1px solid transparent;
+  text-decoration: none;
+  transition: background-color 0.1s, border-color 0.1s, transform 0.15s ease;
+}
+
+/* Inconsistency: scale(1.15) instead of 1.08 gives a slightly exaggerated zoom */
+.btn:hover {
+  transform: scale(1.15);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text);
+}
+
+.btn-ghost:hover {
+  background: rgba(177, 186, 196, 0.12);
+}
+
+.btn-primary {
+  background: var(--green);
+  color: #fff;
+  border-color: rgba(240, 246, 252, 0.1);
+}
+
+.btn-primary:hover {
+  background: #2ea043;
+}
+
+.btn-outline,
+.btn-secondary,
+.btn-google {
+  background: var(--subtle);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.btn-outline:hover,
+.btn-secondary:hover,
+.btn-google:hover {
+  background: var(--hover);
+}
+
+/* Inconsistency: font-size 13px instead of 14px */
+.btn-google {
+  width: 100%;
+  font-size: 13px;
+}
+
+.btn-google svg {
+  width: 18px;
+  height: 18px;
+}
+
+.btn-sm {
+  padding: 3px 12px;
+  font-size: 12px;
+}
+
+.btn-danger {
+  background: var(--subtle);
+  color: var(--danger);
+  border-color: var(--border);
+}
+
+.btn-danger:hover {
+  background: var(--danger);
+  color: #fff;
+  border-color: rgba(240, 246, 252, 0.1);
+}
+
+.btn-success {
+  background: var(--subtle);
+  color: var(--success);
+  border-color: var(--border);
+}
+
+.btn-success:hover {
+  background: var(--green);
+  color: #fff;
+  border-color: rgba(240, 246, 252, 0.1);
+}
+
+.btn-full {
+  width: 100%;
+  padding: 7px 16px;
+}
