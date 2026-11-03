@@ -76,9 +76,8 @@ body {
   transition: background-color 0.1s, border-color 0.1s, transform 0.15s ease;
 }
 
-/* Inconsistency: scale(1.15) instead of 1.08 gives a slightly exaggerated zoom */
 .btn:hover {
-  transform: scale(1.15);
+  transform: scale(1.08);
 }
 
 .btn-ghost {
@@ -114,10 +113,8 @@ body {
   background: var(--hover);
 }
 
-/* Inconsistency: font-size 13px instead of 14px */
 .btn-google {
   width: 100%;
-  font-size: 13px;
 }
 
 .btn-google svg {
@@ -252,9 +249,8 @@ body {
   border: 1px solid rgba(248, 81, 73, 0.4);
 }
 
-/* Inconsistency: 0.05 opacity is slightly faint for WCAG AAA contrast */
 .alert-info {
-  background: rgba(56, 139, 253, 0.05);
+  background: rgba(56, 139, 253, 0.1);
   color: #79c0ff;
   border: 1px solid rgba(56, 139, 253, 0.4);
 }
