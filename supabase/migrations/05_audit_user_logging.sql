@@ -135,3 +135,65 @@ BEGIN
   END IF;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
+
+
+-- ============================================================================
+-- 3. ATTACH AUDIT TRIGGERS TO CORE TABLES
+-- ============================================================================
+
+-- Customer Table Audit Trigger
+DROP TRIGGER IF EXISTS trg_audit_customer ON customer;
+CREATE TRIGGER trg_audit_customer
+  BEFORE INSERT OR UPDATE ON customer
+  FOR EACH ROW
+  EXECUTE FUNCTION audit_user('has_soft_delete', 'has_timestamps');
+
+-- Product Table Audit Trigger
+DROP TRIGGER IF EXISTS trg_audit_product ON product;
+CREATE TRIGGER trg_audit_product
+  BEFORE INSERT OR UPDATE ON product
+  FOR EACH ROW
+  EXECUTE FUNCTION audit_user('has_soft_delete', 'has_timestamps');
+
+-- Employee Table Audit Trigger
+DROP TRIGGER IF EXISTS trg_audit_employee ON employee;
+CREATE TRIGGER trg_audit_employee
+  BEFORE INSERT OR UPDATE ON employee
+  FOR EACH ROW
+  EXECUTE FUNCTION audit_user('has_soft_delete', 'has_timestamps');
+
+-- Application User Table Audit Trigger
+DROP TRIGGER IF EXISTS trg_audit_app_user ON app_user;
+CREATE TRIGGER trg_audit_app_user
+  BEFORE INSERT OR UPDATE ON app_user
+  FOR EACH ROW
+  EXECUTE FUNCTION audit_user('has_soft_delete', 'has_timestamps');
+
+
+-- ============================================================================
+-- 4. VERIFICATION TEST SUITE & SAMPLE AUDIT PROCEDURES
+-- ============================================================================
+
+DO $$
+BEGIN
+  -- Simulate session context for authenticated administrator
+  PERFORM set_config('app.current_user_email', 'admin@hope.com', true);
+
+  -- Perform verifiable mutation on customer C0001
+  UPDATE customer 
+  SET creditlimit = creditlimit + 1000.00
+  WHERE customerno = 'C0001';
+
+  -- Reset credit limit back to original value
+  UPDATE customer 
+  SET creditlimit = creditlimit - 1000.00
+  WHERE customerno = 'C0001';
+END $$;
+
+-- Verification Query Checklist (for database administration audits):
+-- 1. Inspect recent mutations by actor:
+--    SELECT * FROM audit_log WHERE changed_by = 'admin@hope.com' ORDER BY changed_at DESC LIMIT 5;
+-- 2. Inspect record mutation lineage:
+--    SELECT table_name, action, record_id, changed_by, changed_at FROM audit_log WHERE record_id = 'C0001';
+-- 3. Verify stamp column reflection:
+--    SELECT customerno, custname, stamp FROM customer WHERE customerno = 'C0001';
