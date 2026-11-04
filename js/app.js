@@ -690,9 +690,9 @@
         html +=
           '<div class="nav-item' +
           isActive +
-          '" onclick="alert(\'' +
+          '" onclick="window.navigateTo(\'' + item.id + '\')" data-id="' + item.id + '">' + /*
           item.label +
-          ' module arriving in assigned Sprint PR\')">' +
+          */
           '<span class="icon">' +
           item.icon +
           '</span> ' +
