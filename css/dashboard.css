@@ -702,3 +702,84 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ==========================================================================
+   Quick Actions & Launch Tiles
+   ========================================================================== */
+.quick-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.quick-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 16px;
+  background: var(--subtle);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+  text-align: left;
+  transition: transform 0.15s ease, background-color 0.1s;
+}
+
+.quick-btn:hover {
+  background: var(--hover);
+  transform: scale(1.03);
+}
+
+.qa-icon {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  transition: color 0.1s ease;
+}
+
+.quick-btn:hover .qa-icon {
+  color: var(--primary);
+}
+
+/* ==========================================================================
+   Access Denied Guardrail State
+   ========================================================================== */
+.access-denied-wrap {
+  text-align: center;
+  padding: 56px 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  max-width: 540px;
+  margin: 40px auto;
+}
+
+.access-denied-icon {
+  font-size: 44px;
+  margin-bottom: 14px;
+  opacity: 0.9;
+}
+
+.access-denied-wrap h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--danger);
+}
+
+.access-denied-wrap p {
+  color: var(--text);
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.access-denied-hint {
+  color: var(--text-muted) !important;
+  font-size: 13px !important;
+  margin-bottom: 20px !important;
+}
