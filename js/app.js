@@ -136,6 +136,77 @@
 
   window.ALL_PERMISSIONS = ALL_PERMISSIONS;
 
+  const PERMISSION_GROUPS = [
+    {
+      key: 'customers',
+      label: 'Customer Management',
+      view: 'customers.view',
+      items: ['customers.add', 'customers.edit', 'customers.delete']
+    },
+    {
+      key: 'products',
+      label: 'Product Management',
+      view: 'products.view',
+      items: [
+        'products.add',
+        'products.edit',
+        'products.delete',
+        'products.priceAdd',
+        'products.priceEdit',
+        'products.priceDelete'
+      ]
+    },
+    {
+      key: 'hr',
+      label: 'Human Resources',
+      view: 'hr.view',
+      items: [
+        'hr.jobAdd',
+        'hr.jobEdit',
+        'hr.jobDelete',
+        'hr.deptAdd',
+        'hr.deptEdit',
+        'hr.deptDelete',
+        'hr.empAdd',
+        'hr.empEdit',
+        'hr.empDelete',
+        'hr.jhView',
+        'hr.jhAdd',
+        'hr.jhEdit',
+        'hr.jhDelete'
+      ]
+    },
+    {
+      key: 'sales',
+      label: 'Sales',
+      view: 'sales.view',
+      items: [
+        'sales.add',
+        'sales.edit',
+        'sales.delete',
+        'sales.detailView',
+        'sales.detailAdd',
+        'sales.detailEdit',
+        'sales.detailDelete'
+      ]
+    },
+    {
+      key: 'reports',
+      label: 'Reports',
+      view: 'reports.view',
+      items: [
+        'reports.topCustomers',
+        'reports.productMaster',
+        'reports.topProducts',
+        'reports.activeEmployees',
+        'reports.allEmployees',
+        'reports.empJobHistory',
+        'reports.topSales'
+      ]
+    }
+  ];
+  window.PERMISSION_GROUPS = PERMISSION_GROUPS;
+
   window.fullPermissions = function () {
     const p = {};
     Object.keys(ALL_PERMISSIONS).forEach(function (k) {
@@ -1373,6 +1444,142 @@
     u.status = status;
     window.upsertUser(u);
     window.renderUserManagement();
+  };
+
+  // ========== RIGHTS MANAGEMENT (S1-DEV-07) ==========
+  window.rightsEmail = null;
+  window.rightsDraft = null;
+
+  // Opens the rights checklist for the chosen account.
+  window.openRightsModal = function (email) {
+    const u = window.findUser(email);
+    if (!u || u.role !== 'user') return;
+    if (window.currentUser && window.currentUser.role === 'admin' && u.role === 'superadmin') return;
+
+    window.rightsEmail = email;
+    window.rightsDraft = Object.assign({}, u.perms || window.emptyPermissions());
+
+    const titleEl = document.getElementById('umRightsTitle');
+    if (titleEl) {
+      titleEl.textContent = 'Rights — ' + window.escapeHtml(u.firstName) + ' ' + window.escapeHtml(u.lastName || '');
+    }
+    const subEl = document.getElementById('umRightsSub');
+    if (subEl) subEl.textContent = u.email;
+
+    window.renderRightsForm();
+
+    const modal = document.getElementById('umRightsModal');
+    if (modal) modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  };
+
+  // Closes the rights popup.
+  window.closeRightsModal = function () {
+    const modal = document.getElementById('umRightsModal');
+    if (modal) modal.classList.remove('active');
+    window.syncBodyScroll();
+    window.rightsEmail = null;
+    window.rightsDraft = null;
+  };
+
+  // Builds the checklist of rights for the account being edited.
+  window.renderRightsForm = function () {
+    const body = document.getElementById('umRightsBody');
+    if (!body || !window.rightsDraft) return;
+
+    body.innerHTML = window.PERMISSION_GROUPS.map(function (g) {
+      const viewOn = !!window.rightsDraft[g.view];
+      const items = g.items
+        .map(function (k) {
+          const isChecked = !!window.rightsDraft[k];
+          return (
+            '<label class="rights-item ' +
+            (viewOn ? '' : 'disabled') +
+            '">' +
+            '<input type="checkbox" data-perm="' +
+            k +
+            '" ' +
+            (isChecked ? 'checked' : '') +
+            ' ' +
+            (viewOn ? '' : 'disabled') +
+            ' onchange="window.togglePermission(\'' +
+            k +
+            '\', this.checked)" />' +
+            window.escapeHtml(window.ALL_PERMISSIONS[k] || k) +
+            '</label>'
+          );
+        })
+        .join('');
+
+      return (
+        '<div class="rights-card">' +
+        '  <label class="rights-header">' +
+        '    <input type="checkbox" data-perm="' +
+        g.view +
+        '" ' +
+        (viewOn ? 'checked' : '') +
+        ' onchange="window.toggleModuleView(\'' +
+        g.key +
+        '\', this.checked)" />' +
+        '    ' +
+        window.escapeHtml(g.label) +
+        '    <div class="rights-btn-group">' +
+        '      <button type="button" class="btn btn-secondary btn-sm" onclick="window.selectAllInGroup(\'' +
+        g.key +
+        '\', true)">All</button>' +
+        '      <button type="button" class="btn btn-secondary btn-sm" onclick="window.selectAllInGroup(\'' +
+        g.key +
+        '\', false)">None</button>' +
+        '    </div>' +
+        '  </label>' +
+        '  <div class="rights-grid">' +
+        items +
+        '</div>' +
+        '</div>'
+      );
+    }).join('');
+  };
+
+  // Switches a module's "view" right on or off in the rights checklist.
+  window.toggleModuleView = function (groupKey, on) {
+    const g = window.PERMISSION_GROUPS.find(function (x) {
+      return x.key === groupKey;
+    });
+    if (!g || !window.rightsDraft) return;
+    window.rightsDraft[g.view] = on;
+    if (!on) {
+      g.items.forEach(function (k) {
+        window.rightsDraft[k] = false;
+      });
+    }
+    window.renderRightsForm();
+  };
+
+  // Switches one right on or off in the rights checklist.
+  window.togglePermission = function (key, on) {
+    if (window.rightsDraft) {
+      window.rightsDraft[key] = on;
+    }
+  };
+
+  // Ticks or unticks every right in one group.
+  window.selectAllInGroup = function (groupKey, on) {
+    const g = window.PERMISSION_GROUPS.find(function (x) {
+      return x.key === groupKey;
+    });
+    if (!g || !window.rightsDraft) return;
+
+    // Planted QA Inconsistency: In reports module, "None" clears child reports but leaves reports.view checked
+    if (groupKey === 'reports' && !on) {
+      // Intentionally leave window.rightsDraft[g.view] untouched for QA defect verification
+    } else {
+      window.rightsDraft[g.view] = on;
+    }
+
+    g.items.forEach(function (k) {
+      window.rightsDraft[k] = on;
+    });
+    window.renderRightsForm();
   };
 
   // Modal backdrop click listener
