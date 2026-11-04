@@ -1,0 +1,351 @@
+/* ==========================================================================
+   Hope, Inc. ERP — Landing & Authentication Layout Styles
+   Role: UI/UX Designer (Clark Jarred Deocampo)
+   Task: S1-UIX-02 (Wireframes: login, register, set/reset password)
+   ========================================================================== */
+
+#landing {
+  min-height: 100vh;
+}
+
+/* Split-screen login layout */
+.auth-page {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(380px, 1fr);
+  min-height: 100vh;
+}
+
+/* Left Hero & Visual Panel */
+.auth-left {
+  position: relative;
+  padding: 32px 48px 56px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 24px;
+  overflow: hidden;
+  border-right: 1px solid var(--border);
+  background: radial-gradient(60% 45% at 72% 30%, rgba(68, 147, 248, 0.12), transparent 70%), var(--bg);
+}
+
+.auth-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.auth-brand .logo-icon {
+  width: 44px;
+  height: 44px;
+  font-size: 1.25rem;
+  background: #fff;
+  color: var(--header);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+/* Visual Dashboard Preview inside Left Panel */
+.auth-visual {
+  position: relative;
+  width: min(460px, 100%);
+  margin: 24px 28px 24px auto;
+}
+
+.auth-visual .dashboard-preview {
+  box-shadow: 0 16px 40px rgba(1, 4, 9, 0.6);
+  background: var(--bg);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.preview-header {
+  background: var(--subtle);
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.preview-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.preview-dots span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--border);
+}
+
+.preview-body {
+  padding: 16px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.module-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.module-card h4 {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.module-card p {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.module-icon {
+  width: 32px;
+  height: 32px;
+  font-size: 1rem;
+  background: var(--subtle);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Floating Badges & Accents */
+.float-chip {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 2em;
+  background: var(--btn);
+  border: 1px solid var(--border);
+  font-size: 12px;
+  font-weight: 600;
+  box-shadow: 0 8px 24px rgba(1, 4, 9, 0.6);
+  white-space: nowrap;
+}
+
+.float-chip svg {
+  color: var(--primary);
+}
+
+.chip-a {
+  top: -18px;
+  right: -22px;
+}
+
+.chip-b {
+  bottom: -18px;
+  left: -26px;
+}
+
+.float-dot {
+  position: absolute;
+  right: -20px;
+  bottom: 64px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(1, 4, 9, 0.6);
+}
+
+/* Headline with Gradient Text */
+.auth-headline {
+  font-size: clamp(2.4rem, 4.2vw, 3.6rem);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+}
+
+.auth-headline span {
+  background: linear-gradient(90deg, var(--accent), var(--primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+
+/* ==========================================================================
+   Right Panel — Auth Form Card & Inputs
+   ========================================================================== */
+
+.auth-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 440px;
+}
+
+.auth-card h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+
+.auth-card .field {
+  margin-bottom: 14px;
+}
+
+.auth-card input[type="email"],
+.auth-card input[type="password"],
+.auth-card input[type="text"] {
+  width: 100%;
+  height: 52px;
+  padding: 0 20px;
+  font-size: 15px;
+  font-family: inherit;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+
+.auth-card input::placeholder {
+  color: var(--text-muted);
+}
+
+.auth-card input[type="email"]:focus,
+.auth-card input[type="password"]:focus,
+.auth-card input[type="text"]:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: inset 0 0 0 1px var(--primary);
+}
+
+.auth-card .password-wrapper {
+  position: relative;
+}
+
+.auth-card .password-wrapper input {
+  padding-right: 52px;
+}
+
+.auth-card .toggle-password {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  padding: 4px;
+  filter: grayscale(1);
+}
+
+.auth-submit,
+.auth-card .btn-google,
+.auth-create {
+  width: 100%;
+  height: 52px;
+  border-radius: 26px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.auth-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 18px;
+  font-size: 13px;
+}
+
+.auth-card .divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.auth-card .divider::before,
+.auth-card .divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.auth-create {
+  margin-top: 28px;
+  background: transparent;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+}
+
+.auth-create:hover {
+  background: rgba(56, 139, 253, 0.1);
+}
+
+.auth-card .demo-hint {
+  margin: 28px 0 0;
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   Responsive Breakpoints
+   ========================================================================== */
+
+@media (max-width: 960px) {
+  .auth-page {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+
+  .auth-left {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    padding: 24px;
+    gap: 16px;
+  }
+
+  .auth-visual {
+    display: none;
+  }
+
+  .auth-headline {
+    font-size: 2rem;
+  }
+
+  .auth-right {
+    padding: 32px 20px 48px;
+  }
+}
