@@ -702,3 +702,46 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ==========================================================================
+   Quick Actions & Launch Tiles
+   ========================================================================== */
+.quick-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.quick-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 16px;
+  background: var(--subtle);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+  text-align: left;
+  transition: transform 0.15s ease, background-color 0.1s;
+}
+
+.quick-btn:hover {
+  background: var(--hover);
+  transform: scale(1.03);
+}
+
+.qa-icon {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  transition: color 0.1s ease;
+}
+
+.quick-btn:hover .qa-icon {
+  color: var(--primary);
+}
