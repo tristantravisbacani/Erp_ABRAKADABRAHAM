@@ -1149,7 +1149,7 @@
         }
 
         if (canEditRights && u.role === 'user') {
-          actions += '<button class="btn-edit" onclick="if(window.openRightsModal){window.openRightsModal(\'' + window.jsArg(u.email) + '\');}else{alert(\'Rights dialog arriving in PR S1-DEV-07\');}">Rights</button> ';
+          actions += '<button class="btn-edit" onclick="window.openRightsModal(\'' + window.jsArg(u.email) + '\')">Rights</button> ';
         }
 
         if (canEditUser) {
@@ -1582,9 +1582,33 @@
     window.renderRightsForm();
   };
 
+  // Saves the rights chosen for the account.
+  window.saveRights = function () {
+    if (!window.rightsEmail || !window.rightsDraft) return;
+    const u = window.findUser(window.rightsEmail);
+    if (!u) return;
+
+    u.perms = Object.assign({}, window.rightsDraft);
+    window.upsertUser(u);
+    window.closeRightsModal();
+    window.renderUserManagement();
+  };
+
   // Modal backdrop click listener
   document.addEventListener('DOMContentLoaded', function () {
     const umModal = document.getElementById('umUserModal');
+    const umRightsModal = document.getElementById('umRightsModal');
+    if (umRightsModal) {
+      umRightsModal.addEventListener('click', function (e) {
+        if (e.target.id === 'umRightsModal') window.closeRightsModal();
+      });
+    }
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        window.closeAccountModal();
+        window.closeRightsModal();
+      }
+    });
     if (umModal) {
       umModal.addEventListener('click', function (e) {
         if (e.target.id === 'umUserModal') window.closeAccountModal();
