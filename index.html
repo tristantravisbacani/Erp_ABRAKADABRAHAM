@@ -31,12 +31,51 @@
               Hope, Inc. ERP Dashboard
             </div>
             <div class="preview-body">
-              <div class="module-card"><div class="module-icon">👥</div><h4>Customers</h4><p>Manage contacts &amp; accounts</p></div>
-              <div class="module-card"><div class="module-icon">📦</div><h4>Products</h4><p>Catalog &amp; inventory</p></div>
-              <div class="module-card"><div class="module-icon">🧑‍💼</div><h4>Human Resources</h4><p>Employees &amp; payroll</p></div>
-              <div class="module-card"><div class="module-icon">📈</div><h4>Sales</h4><p>Orders &amp; revenue</p></div>
+              <div class="module-card">
+                <div class="module-icon">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                  </svg>
+                </div>
+                <h4>Customers</h4>
+                <p>Manage contacts &amp; accounts</p>
+              </div>
+
+              <div class="module-card">
+                <div class="module-icon">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                    <path d="M3.27 6.96 12 12.01l8.73-5.05"/><path d="M12 22.08V12"/>
+                  </svg>
+                </div>
+                <h4>Products</h4>
+                <p>Catalog &amp; inventory</p>
+              </div>
+
+              <div class="module-card">
+                <div class="module-icon">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                  </svg>
+                </div>
+                <h4>Human Resources</h4>
+                <p>Employees &amp; payroll</p>
+              </div>
+
+              <div class="module-card">
+                <div class="module-icon">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                    <polyline points="17 6 23 6 23 12"/>
+                  </svg>
+                </div>
+                <h4>Sales</h4>
+                <p>Orders &amp; revenue</p>
+              </div>
             </div>
           </div>
+
           <div class="float-chip chip-a">
             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Role-based access
           </div>
@@ -58,7 +97,7 @@
 
           <form id="loginForm" onsubmit="handleLogin(event)">
             <div class="field">
-              <input type="email" id="loginEmail" placeholder="Email address" aria-label="Email address" autocomplete="username" required />
+              <input type="email" id="loginEmail" placeholder="Email address" aria-label="Email address" autocomplete="username" required pattern="[^\s'&quot;&lt;&gt;&amp;\\]+@[^\s'&quot;&lt;&gt;&amp;\\]+" title="Email can't contain spaces, quotes or the symbols &lt; &gt; &amp;" />
             </div>
             <div class="field password-wrapper">
               <input type="password" id="loginPassword" placeholder="Password" aria-label="Password" required />
@@ -89,7 +128,7 @@
             <strong>Demo accounts (any password works):</strong>
             superadmin@hope.com / ceo@hope.com → Superadmin<br>
             admin@hope.com / manager@hope.com → Admin<br>
-            Or register a new account (starts as User)
+            New accounts must be approved by an admin before they can sign in
           </div>
 
           <div class="auth-footer">© 2026 Hope, Inc. ERP System · All rights reserved</div>
