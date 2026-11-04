@@ -6,6 +6,7 @@
   <title>Hope, Inc. ERP – Enterprise Resource Planning</title>
   <link rel="stylesheet" href="css/base.css" />
   <link rel="stylesheet" href="css/landing.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
   <link rel="stylesheet" href="css/modules.css" />
 </head>
 <body>
@@ -134,6 +135,39 @@
           <div class="auth-footer">© 2026 Hope, Inc. ERP System · All rights reserved</div>
         </div>
       </section>
+    </div>
+  </div>
+
+  <!-- ==================== DASHBOARD ==================== -->
+  <div id="dashboard">
+    <header class="gh-header">
+      <div class="gh-top">
+        <div class="gh-brand"><div class="logo-icon">H</div><span>Hope, Inc. ERP</span></div>
+        <div class="user-menu">
+          <div class="user-info" tabindex="0" aria-haspopup="true">
+            <div class="user-avatar" id="userAvatar">U</div>
+            <div class="user-details">
+              <div class="name" id="userName">User</div>
+              <div class="role" id="userRoleLabel">User</div>
+            </div>
+          </div>
+          <div class="user-dropdown">
+            <div class="user-dropdown-panel">
+              <div id="userMenuItems"><!-- User Management (admins only), filled by JS --></div>
+              <div class="menu-item" onclick="handleLogout()"><span class="icon">🚪</span> Logout</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Populated by JS based on role -->
+      <nav class="sidebar-nav" id="sidebarNav"></nav>
+    </header>
+    <div class="page-wrap">
+      <div class="page-head">
+        <div class="topbar-title" id="pageTitle">Dashboard</div>
+        <span class="role-badge" id="roleBadge">User</span>
+      </div>
+      <div class="content-area" id="contentArea"><!-- Dynamic content --></div>
     </div>
   </div>
 
