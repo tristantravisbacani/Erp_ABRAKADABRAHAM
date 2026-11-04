@@ -225,3 +225,62 @@ This specification defines the test suite and validation logs for the **User Man
   - Manual execution triggers alert: *"You cannot block your own account."*
   - If editing self in modal, changing status from `active` produces validation error.
 - **Status:** **PASS**
+
+---
+
+## 7. Formal Test Execution Results Matrix
+
+| Test Case ID | Test Category | Summary / Scenario | Target Role | Result | Defect Logged |
+|:---|:---|:---|:---:|:---:|:---:|
+| **TC-UM-01** | Account CRUD | Superadmin creates User, Admin, and Superadmin accounts | Superadmin | **PASS** | None |
+| **TC-UM-02** | Account CRUD | Admin restricted from creating Admin/Superadmin accounts | Admin | **PASS** | None |
+| **TC-UM-03** | Account CRUD | Duplicate email registration rejection | Superadmin | **PASS** | None |
+| **TC-UM-04** | Account CRUD | Edit user names and status with immutable email address | Superadmin | **PASS** | None |
+| **TC-UM-05** | Account CRUD | Quick block / unblock action toggles | Admin | **PASS** | None |
+| **TC-UM-06** | Filter & Search | Filter tabs (`All`, `Active`, `Pending`, `Blocked`) counts | All | **PASS** | None |
+| **TC-UM-07** | Filter & Search | Live search filter execution and focus preservation | All | **PASS (Warning)** | `DEF-UM-01` |
+| **TC-UM-08** | Role Isolation | Superadmin accounts hidden from Admin users | Admin | **PASS** | None |
+| **TC-UM-09** | Role Isolation | Admin role escalation prevention | Admin | **PASS** | None |
+| **TC-UM-10** | Role Isolation | Admin restricted to managing standard user rights | Admin | **PASS** | None |
+| **TC-UM-11** | Approval Flow | Superadmin / Admin approves pending registration | Superadmin | **PASS** | `DEF-UM-02` |
+| **TC-UM-12** | Approval Flow | Superadmin / Admin disapproves pending registration | Admin | **PASS** | None |
+| **TC-UM-13** | Guardrails | System blocks blocking last remaining Superadmin | Superadmin | **PASS** | None |
+| **TC-UM-14** | Guardrails | System blocks demoting last remaining Superadmin | Superadmin | **PASS** | None |
+| **TC-UM-15** | Guardrails | System blocks disapproving last remaining Superadmin | Superadmin | **PASS** | None |
+| **TC-UM-16** | Guardrails | Self-blocking and self-demotion prevention | All | **PASS (Warning)** | `DEF-UM-03` |
+
+---
+
+## 8. QA Defect & Inconsistency Log
+
+### DEF-UM-01: Live Search Email Matching is Case-Sensitive
+- **Severity:** Medium (Usability / Search Consistency)  
+- **Found in:** `js/app.js` (`renderUserManagement`)  
+- **Description:** Searching for users by name or role converts queries to lower case (`fullName.includes(q)`), but email search performs an exact case substring match on `u.email.includes(rawTerm)`.  
+- **Impact:** Entering `@HOPE.COM` or uppercase letters returns zero results even when corresponding lowercase email addresses exist.  
+- **Remediation Recommendation:** Change matching clause to `(u.email && u.email.toLowerCase().includes(q))`.
+
+### DEF-UM-02: Pending Status Badge Inline Style Causes Dark Theme Contrast Mismatch
+- **Severity:** Low (UI / Design System Alignment)  
+- **Found in:** `js/app.js` (`renderUserManagement`)  
+- **Description:** The pending badge is rendered with hardcoded inline style `style="background:#fef3c7;color:#92400e;"` which belongs to light mode. In GitHub Primer dark mode, this produces an un-themed, high-contrast banner.  
+- **Remediation Recommendation:** Remove inline style and rely on CSS class `.badge-pending` defined in `css/dashboard.css`.
+
+### DEF-UM-03: Self-Edit Alert Message Copy Inconsistency for Admin Role
+- **Severity:** Low (Copywriting / Usability)  
+- **Found in:** `js/app.js` (`saveAccount`)  
+- **Description:** When an administrator attempts to change their own role or block their account, the alert reads: *"You cannot change your own role or block/deactivate your own account. Contact a Superadmin."* While acceptable, the message assumes a Superadmin must be contacted rather than tailoring the copy when an Admin is viewing their profile.  
+- **Remediation Recommendation:** Standardize message or provide contextual copy based on `window.currentUser.role`.
+
+---
+
+## 9. Security Sign-off & RBAC Compliance Audit
+
+- **Admin Isolation Verification:** Verified that `Admin` role accounts have zero access to view, edit, block, or delete `Superadmin` accounts. The isolation boundary is enforced at both the UI query layer and the event handler execution layer.
+- **Fail-Safe Superadmin Governance:** Verified that the system strictly prevents locking out the last active Superadmin through blocking, demotion, or registration rejection.
+- **Audit Logging Readiness:** All state mutations (`upsertUser`, `setAccountStatus`, `approveAccount`, `disapproveAccount`) operate via standardized storage endpoints aligned with the `audit_user` trigger foundation implemented in `S1-DBA-06`.
+
+**Lead QA Sign-off:**  
+*Simon Conrad Mangubat*  
+Lead Tester, Hope, Inc. ERP Web Application  
+Date: November 4, 2026
