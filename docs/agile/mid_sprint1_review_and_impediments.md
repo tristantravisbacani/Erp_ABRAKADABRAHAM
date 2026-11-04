@@ -37,3 +37,35 @@ Sprint 1 Roadmap Progress (17 of 30 PRs Merged):
 | `S1-DEV-02` | Registration modal dialog & pending status flow | Developer | PR #15 | Merged |
 | `S1-UIX-03` | Dashboard header, navigation tabs & layout specs | UI/UX Designer | PR #16 | Merged |
 | `S1-DBA-04/05` | Password reset token schema & team user seeds | DB Admin | PR #17 | Merged |
+
+
+---
+
+## 2. Team Velocity & Role Contribution Audit
+
+To ensure equitable grading across the 5 project members in accordance with the grading rubric targets (DEV 32, DBA 24, TST 24, UIX 20, SM 20 across the semester), Sprint 1 task distribution is actively balanced:
+
+```
+Role Contribution Breakdown (Merged PRs):
+DB Admin (Mischa)       : [██████████████] 5 PRs
+UI/UX Designer (Clark)  : [██████████] 4 PRs
+Scrum Master (Tristan)  : [██████████] 4 PRs
+Developer (Kurt)        : [████████] 3 PRs
+Tester (Simon)          : [███] 1 PR (+ upcoming QA defect audit PRs)
+```
+
+### 2.1 Velocity & Burndown Tracking
+
+- **Sprint 1 Committed Story Points:** 50 SP  
+- **Completed Points at Midpoint:** 26 SP  
+- **Remaining Points for Week 2:** 24 SP  
+- **Current Team Velocity:** 5.2 SP / working day  
+
+| Sprint Day | Ideal Burndown (SP) | Actual Remaining (SP) | Notes |
+|:---:|:---:|:---:|---|
+| Day 1 | 50 | 50 | Repository kickoff & initial backlog |
+| Day 2 | 44 | 42 | Base tables & scaffolding ahead of schedule |
+| Day 3 | 38 | 36 | Design system & Sprint 1 test plan delivered |
+| Day 4 | 32 | 30 | Master blueprint vector alignment complete |
+| Day 5 | 26 | 24 | Auth & RBAC schema migrations merged |
+| Day 6 (Today) | 20 | 24 | Combined token schema & seed data completed |
