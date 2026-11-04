@@ -216,6 +216,57 @@
     </div>
   </div>
 
+  <!-- ==================== RESET PASSWORD MODAL ==================== -->
+  <div class="modal-overlay" id="resetModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <h2>Reset password</h2>
+          <p id="resetModalSubtitle">We'll send you a secure link to reset it</p>
+        </div>
+        <button class="modal-close" onclick="closeModal('reset')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-error" id="resetError"></div>
+        <div class="alert alert-success" id="resetSuccess"></div>
+
+        <!-- Step 1: Request Reset Link / Token -->
+        <form id="resetForm" onsubmit="handleReset(event)">
+          <div class="form-group">
+            <label for="resetEmail">Email address</label>
+            <input type="email" id="resetEmail" placeholder="you@company.com" required pattern="[^\s'&quot;&lt;&gt;&amp;\\]+@[^\s'&quot;&lt;&gt;&amp;\\]+" title="Email can't contain spaces, quotes or the symbols &lt; &gt; &amp;" />
+          </div>
+          <button type="submit" class="btn btn-primary btn-full">Send Reset Link</button>
+        </form>
+
+        <!-- Step 2: Set New Password via Token (Simulation) -->
+        <div id="resetTokenSection" style="display: none; margin-top: 16px; border-top: 1px solid var(--border); padding-top: 16px;">
+          <form id="setNewPasswordForm" onsubmit="handleSetNewPassword(event)">
+            <div class="form-group">
+              <label for="resetToken">Reset Token</label>
+              <input type="text" id="resetToken" placeholder="Paste 64-char token or test token" required />
+            </div>
+            <div class="form-group password-wrapper">
+              <label for="newPassword">New Password</label>
+              <input type="password" id="newPassword" placeholder="Minimum 6 characters" required />
+              <button type="button" class="toggle-password" onclick="togglePassword('newPassword', this)" aria-label="Show or hide password">👁</button>
+            </div>
+            <div class="form-group password-wrapper" style="margin-top: 12px;">
+              <label for="confirmNewPassword">Confirm Password</label>
+              <input type="password" id="confirmNewPassword" placeholder="Re-type new password" required />
+              <button type="button" class="toggle-password" onclick="togglePassword('confirmNewPassword', this)" aria-label="Show or hide password">👁</button>
+            </div>
+            <button type="submit" class="btn btn-primary btn-full" style="margin-top: 16px;">Update Password</button>
+          </form>
+        </div>
+
+        <div class="form-footer">
+          Remember your password? <a class="link" onclick="switchModal('reset','login')">Back to Sign In</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Supabase CDN Client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <!-- Environment Config -->
