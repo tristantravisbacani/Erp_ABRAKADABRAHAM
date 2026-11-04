@@ -49,3 +49,29 @@ INSERT INTO module (module_code, module_name, sort_order) VALUES
   ('sales', 'Sales & Invoicing', 4),
   ('reports', 'Reports & Analytics', 5)
 ON CONFLICT (module_code) DO NOTHING;
+
+
+-- ============================================================================
+-- 3. APPLICATION USER TABLE
+-- Handles authentication, role binding, registration states, and soft deletion
+-- ============================================================================
+
+CREATE TABLE IF NOT EXISTS app_user (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  email VARCHAR(255) NOT NULL UNIQUE,
+  password_hash TEXT,
+  first_name VARCHAR(100) NOT NULL,
+  last_name VARCHAR(100) NOT NULL,
+  role VARCHAR(20) NOT NULL DEFAULT 'user' REFERENCES role(role_code) ON UPDATE CASCADE,
+  status VARCHAR(20) NOT NULL DEFAULT 'pending' CHECK (status IN ('active', 'pending', 'rejected', 'suspended')),
+  is_deleted BOOLEAN DEFAULT FALSE,
+  deleted_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Optimization indexes for user lookups and authentication queries
+CREATE INDEX IF NOT EXISTS idx_app_user_email ON app_user(LOWER(email));
+CREATE INDEX IF NOT EXISTS idx_app_user_status ON app_user(status);
+CREATE INDEX IF NOT EXISTS idx_app_user_role ON app_user(role);
+CREATE INDEX IF NOT EXISTS idx_app_user_active ON app_user(is_deleted);
