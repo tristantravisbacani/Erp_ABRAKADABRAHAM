@@ -188,7 +188,6 @@
   background-clip: text;
 }
 
-
 /* ==========================================================================
    Right Panel — Auth Form Card & Inputs
    ========================================================================== */
@@ -299,7 +298,7 @@
 }
 
 .auth-create {
-  margin-top: 28px;
+  margin-top: 20px;
   background: transparent;
   color: var(--primary);
   border: 1px solid var(--primary);
@@ -310,7 +309,8 @@
 }
 
 .auth-card .demo-hint {
-  margin: 28px 0 0;
+  margin-top: 20px;
+  font-size: 13px;
 }
 
 .auth-footer {
