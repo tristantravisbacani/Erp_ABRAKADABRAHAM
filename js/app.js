@@ -466,6 +466,242 @@
     return '';
   };
 
+  // ========== Permissions Checking ==========
+  window.can = function (perm) {
+    if (!window.currentUser) return false;
+    if (window.currentUser.role === 'superadmin' || window.currentUser.role === 'admin') return true;
+    const u = window.findUser(window.currentUser.email);
+    if (!u || !u.perms) return false;
+    return !!u.perms[perm];
+  };
+
+  window.canModule = function (mod) {
+    return window.can(mod + '.view');
+  };
+
+  // ========== Session Persistence Helpers ==========
+  window.saveSession = function (user) {
+    try {
+      localStorage.setItem('hope_erp_session_v4', JSON.stringify(user));
+    } catch (e) {}
+  };
+
+  window.getSession = function () {
+    try {
+      const s = localStorage.getItem('hope_erp_session_v4');
+      return s ? JSON.parse(s) : null;
+    } catch (e) {
+      return null;
+    }
+  };
+
+  window.clearSession = function () {
+    try {
+      localStorage.removeItem('hope_erp_session_v4');
+    } catch (e) {}
+  };
+
+  window.restoreRememberedEmail = function () {
+    try {
+      const saved = localStorage.getItem('hope_erp_remember_email');
+      const emailInput = document.getElementById('loginEmail');
+      const rememberCheckbox = document.getElementById('rememberMe');
+      if (saved && emailInput) {
+        emailInput.value = saved;
+        if (rememberCheckbox) rememberCheckbox.checked = true;
+      }
+    } catch (e) {}
+  };
+
+  // ========== View Transitions & Dashboard Rendering ==========
+  window.showDashboard = function () {
+    ['login', 'register', 'reset'].forEach(function (name) {
+      const el = document.getElementById(name + 'Modal');
+      if (el) el.classList.remove('active');
+    });
+    window.syncBodyScroll();
+
+    const landing = document.getElementById('landing');
+    const dashboard = document.getElementById('dashboard');
+    if (landing) landing.style.display = 'none';
+    if (dashboard) dashboard.style.display = 'block';
+
+    const pageTitle = document.getElementById('pageTitle');
+    if (pageTitle) pageTitle.textContent = 'Dashboard';
+
+    window.renderSidebar();
+    window.renderDashboardHome();
+    window.updateUserInfo();
+  };
+
+  window.handleLogout = function () {
+    window.clearSession();
+    window.currentUser = null;
+
+    document.querySelectorAll('.modal-overlay.active').forEach(function (m) {
+      m.classList.remove('active');
+    });
+    window.syncBodyScroll();
+
+    const lf = document.getElementById('loginForm');
+    if (lf) lf.reset();
+    const lp = document.getElementById('loginPassword');
+    if (lp) lp.type = 'password';
+    const le = document.getElementById('loginError');
+    if (le) {
+      le.classList.remove('show');
+      le.textContent = '';
+    }
+
+    window.restoreRememberedEmail();
+
+    const landing = document.getElementById('landing');
+    const dashboard = document.getElementById('dashboard');
+    if (dashboard) dashboard.style.display = 'none';
+    if (landing) landing.style.display = 'block';
+  };
+
+  window.logout = window.handleLogout;
+
+  window.updateUserInfo = function () {
+    if (!window.currentUser) return;
+    const nameEl = document.getElementById('userName');
+    const roleEl = document.getElementById('userRoleLabel');
+    const avatarEl = document.getElementById('userAvatar');
+    const badgeEl = document.getElementById('roleBadge');
+
+    if (nameEl) nameEl.textContent = window.currentUser.name || 'User';
+    if (roleEl) roleEl.textContent = window.currentUser.role || 'user';
+    if (avatarEl) {
+      const firstInitial = (window.currentUser.firstName || 'U')[0] || 'U';
+      avatarEl.textContent = firstInitial.toUpperCase();
+    }
+    if (badgeEl) {
+      badgeEl.textContent = window.currentUser.role || 'user';
+      badgeEl.className = 'role-badge ' + (window.currentUser.role || 'user');
+    }
+  };
+
+  window.renderSidebar = function () {
+    const nav = document.getElementById('sidebarNav');
+    if (!nav || !window.currentUser) return;
+    const role = window.currentUser.role;
+
+    const items = [
+      { id: 'dashboard', icon: '📊', label: 'Dashboard', roles: ['superadmin', 'admin', 'user'] },
+      { id: 'customers', icon: '👥', label: 'Customers', roles: ['superadmin', 'admin', 'user'] },
+      { id: 'products', icon: '📦', label: 'Products', roles: ['superadmin', 'admin', 'user'] },
+      { id: 'hr', icon: '🏢', label: 'Human Resources', roles: ['superadmin', 'admin', 'user'] },
+      { id: 'sales', icon: '💼', label: 'Sales', roles: ['superadmin', 'admin', 'user'] },
+      { id: 'reports', icon: '📑', label: 'Reports', roles: ['superadmin', 'admin', 'user'] },
+      { id: 'users', icon: '⚙️', label: 'User Management', roles: ['superadmin', 'admin'] }
+    ];
+
+    let html = '';
+    let menuHtml = '';
+
+    items.forEach(function (item) {
+      if (!item.roles.includes(role)) return;
+      if (role === 'user' && ['customers', 'products', 'hr', 'sales', 'reports'].includes(item.id)) {
+        if (!window.canModule(item.id)) return;
+      }
+
+      if (item.id === 'users') {
+        menuHtml +=
+          '<div class="menu-item" onclick="alert(\'User Management Console arriving in PR S1-DEV-05\')">' +
+          '<span class="icon">' +
+          item.icon +
+          '</span> ' +
+          item.label +
+          '</div>';
+      } else {
+        const isActive = item.id === 'dashboard' ? ' active' : '';
+        html +=
+          '<div class="nav-item' +
+          isActive +
+          '" onclick="alert(\'' +
+          item.label +
+          ' module arriving in assigned Sprint PR\')">' +
+          '<span class="icon">' +
+          item.icon +
+          '</span> ' +
+          item.label +
+          '</div>';
+      }
+    });
+
+    nav.innerHTML = html;
+    const userMenuItems = document.getElementById('userMenuItems');
+    if (userMenuItems) userMenuItems.innerHTML = menuHtml;
+  };
+
+  window.renderDashboardHome = function () {
+    const area = document.getElementById('contentArea');
+    if (!area || !window.currentUser) return;
+    const role = window.currentUser.role;
+
+    const roleMessages = {
+      superadmin: 'You have full system access. You can manage all modules, approve users, and assign rights.',
+      admin: 'You can manage core modules and standard user rights (except Superadmin accounts).',
+      user: 'You have operational access to modules assigned to your profile by an administrator.'
+    };
+
+    area.innerHTML =
+      '<div class="dash-grid">' +
+      '  <div class="dash-main">' +
+      '    <div class="welcome-msg">' +
+      '      <h2>Welcome back, ' +
+      window.escapeHtml(window.currentUser.firstName || 'User') +
+      '!</h2>' +
+      '      <p>' +
+      (roleMessages[role] || 'Welcome to Hope, Inc. ERP system.') +
+      '</p>' +
+      '    </div>' +
+      '    <div class="stats-grid">' +
+      '      <div class="stat-card">' +
+      '        <div class="label">System Modules</div>' +
+      '        <div class="value">5</div>' +
+      '        <div class="change">Customers, Products, HR, Sales, Reports</div>' +
+      '      </div>' +
+      '      <div class="stat-card">' +
+      '        <div class="label">Rights Catalog</div>' +
+      '        <div class="value">41</div>' +
+      '        <div class="change">Granular access rights</div>' +
+      '      </div>' +
+      '      <div class="stat-card">' +
+      '        <div class="label">Your Role</div>' +
+      '        <div class="value" style="font-size: 18px; text-transform: capitalize;">' +
+      window.escapeHtml(role) +
+      '</div>' +
+      '        <div class="change">Session Active</div>' +
+      '      </div>' +
+      '      <div class="stat-card">' +
+      '        <div class="label">Platform Status</div>' +
+      '        <div class="value" style="font-size: 18px; color: var(--success);">Operational</div>' +
+      '        <div class="change">Zero server errors</div>' +
+      '      </div>' +
+      '    </div>' +
+      '  </div>' +
+      '  <div class="dash-side">' +
+      '    <h3>Quick Actions</h3>' +
+      '    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">' +
+      '      Navigate modules using the top underline navigation bar.' +
+      '    </p>' +
+      '    <button class="btn btn-primary btn-full" onclick="window.handleLogout()" style="margin-top: auto;">Sign out</button>' +
+      '  </div>' +
+      '</div>';
+  };
+
+  // Restore session or remembered email on startup
+  document.addEventListener('DOMContentLoaded', function () {
+    window.restoreRememberedEmail();
+    const session = window.getSession();
+    if (session && session.email) {
+      window.currentUser = session;
+      window.showDashboard();
+    }
+  });
+
   window.handleGoogleSignIn = function () {
     console.log('[Auth] Google OAuth handler placeholder');
     alert('Google OAuth integration configured. Set OAuth credentials in Supabase to enable.');
