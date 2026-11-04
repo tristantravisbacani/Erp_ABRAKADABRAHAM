@@ -98,3 +98,62 @@ This document defines formal test specifications and verification logs for the c
   - `localStorage` session key `hope_erp_session_v4` removed.
   - User returned to clean landing view with empty password field.
 - **Status:** **PASS**
+
+
+---
+
+## 4. Test Suite 3: Password Reset & Token Lifecycle (`TC-RST`)
+
+### TC-RST-01: Token Generation & Simulation Dispatch
+- **Description:** Verify requesting a reset link creates a 64-character token with expiration.
+- **Input Data:** Email: `user@hope.com`
+- **Execution Steps:**
+  1. Open `#resetModal` by clicking "Forgot password?".
+  2. Input `user@hope.com` and submit "Send Reset Link".
+- **Expected Result:**
+  - Token created in `hope_erp_reset_tokens` with 64 hex characters.
+  - Success alert displayed: *"If an account exists for user@hope.com, a secure reset link has been dispatched."*
+  - `#resetTokenSection` revealed with token pre-filled for testing.
+- **Status:** **PASS**
+
+### TC-RST-02: Password Update via Valid Token
+- **Description:** Verify valid token permits updating the account password and redirecting to sign-in.
+- **Input Data:**
+  - Token: Valid generated 64-char token
+  - New Password: `SecurePass#2026`
+  - Confirm Password: `SecurePass#2026`
+- **Execution Steps:**
+  1. Submit `#setNewPasswordForm` with matching passwords.
+- **Expected Result:**
+  - Password record updated in user store.
+  - Token state flagged as `isUsed: true`.
+  - Success message: *"Password successfully updated! Redirecting to sign in..."*
+  - User redirected to login modal after 1.2s delay.
+- **Status:** **PASS**
+
+### TC-RST-03: Single-Use Token Guard (Reused Token Invalidation)
+- **Description:** Verify that an already-used token cannot be used a second time.
+- **Preconditions:** Token used successfully in `TC-RST-02`.
+- **Execution Steps:**
+  1. Re-submit the same token with a different password.
+- **Expected Result:**
+  - Password update rejected.
+  - Error alert displayed: *"This reset token has already been used."*
+- **Status:** **PASS**
+
+### TC-RST-04: Expired Token Rejection
+- **Description:** Verify that an expired token (`expiresAt < Date.now()`) is blocked.
+- **Test Dataset:** Token injected with `expiresAt = Date.now() - 3600000` (1 hour in the past).
+- **Execution Steps:**
+  1. Paste expired token into `#resetToken` and submit form.
+- **Expected Result:**
+  - Password update blocked.
+  - Error alert displayed: *"This reset token has expired. Request a new link."*
+- **Status:** **PASS**
+
+### TC-RST-05: Password Mismatch & Length Boundary Checks
+- **Description:** Verify password policy validation (minimum 6 characters, matching inputs).
+- **Test Scenarios:**
+  - Scenario A: New = `12345`, Confirm = `12345` $\rightarrow$ Rejected: *"Password must be at least 6 characters long."*
+  - Scenario B: New = `Secret1`, Confirm = `Secret2` $\rightarrow$ Rejected: *"Passwords do not match."*
+- **Status:** **PASS**
