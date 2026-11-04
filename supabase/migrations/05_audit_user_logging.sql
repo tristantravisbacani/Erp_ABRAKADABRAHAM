@@ -24,3 +24,114 @@ CREATE TABLE IF NOT EXISTS audit_log (
 CREATE INDEX IF NOT EXISTS idx_audit_log_table_record ON audit_log(table_name, record_id);
 CREATE INDEX IF NOT EXISTS idx_audit_log_changed_by ON audit_log(changed_by);
 CREATE INDEX IF NOT EXISTS idx_audit_log_changed_at ON audit_log(changed_at DESC);
+
+
+-- ============================================================================
+-- 2. AUDIT USER TRIGGER FUNCTION
+-- Resolves the current session user and records mutation attribution
+-- ============================================================================
+
+CREATE OR REPLACE FUNCTION audit_user()
+RETURNS TRIGGER AS $$
+DECLARE
+  v_user VARCHAR(255);
+  v_record_id TEXT;
+  v_action VARCHAR(10);
+  v_old_json JSONB := NULL;
+  v_new_json JSONB := NULL;
+  v_stamp TEXT;
+BEGIN
+  -- Resolve active session user from app context, Supabase JWT, or DB current_user
+  v_user := COALESCE(
+    NULLIF(current_setting('app.current_user_email', true), ''),
+    NULLIF(current_setting('request.jwt.claims', true)::json->>'email', ''),
+    NULLIF(current_setting('request.jwt.claim.email', true), ''),
+    current_user,
+    'system'
+  );
+
+  v_action := TG_OP;
+  v_stamp := (
+    CASE TG_OP
+      WHEN 'INSERT' THEN 'CREATED '
+      WHEN 'UPDATE' THEN (
+        -- Differentiate soft-delete / restore actions if table supports is_deleted
+        CASE 
+          WHEN TG_ARGV[0] = 'has_soft_delete' AND (OLD.is_deleted = FALSE AND NEW.is_deleted = TRUE) THEN 'DELETED '
+          WHEN TG_ARGV[0] = 'has_soft_delete' AND (OLD.is_deleted = TRUE AND NEW.is_deleted = FALSE) THEN 'RESTORED '
+          ELSE 'UPDATED '
+        END
+      )
+      WHEN 'DELETE' THEN 'DELETED '
+      ELSE 'MUTATED '
+    END
+  ) || v_user || ' ' || to_char(NOW(), 'YYYY-MM-DD HH12:MI AM');
+
+  IF TG_OP = 'INSERT' THEN
+    v_new_json := to_jsonb(NEW);
+    v_record_id := COALESCE(
+      NEW.customerno::TEXT, 
+      NEW.prodno::TEXT, 
+      NEW.empno::TEXT, 
+      NEW.id::TEXT, 
+      'UNKNOWN'
+    );
+    -- Update stamp on new row if column exists
+    NEW.stamp := v_stamp;
+    IF TG_ARGV[1] = 'has_timestamps' THEN
+      NEW.updated_at := NOW();
+    END IF;
+
+  ELSIF TG_OP = 'UPDATE' THEN
+    v_old_json := to_jsonb(OLD);
+    v_new_json := to_jsonb(NEW);
+    v_record_id := COALESCE(
+      NEW.customerno::TEXT, 
+      NEW.prodno::TEXT, 
+      NEW.empno::TEXT, 
+      NEW.id::TEXT, 
+      'UNKNOWN'
+    );
+    -- Update stamp and updated_at
+    NEW.stamp := v_stamp;
+    IF TG_ARGV[1] = 'has_timestamps' THEN
+      NEW.updated_at := NOW();
+    END IF;
+
+  ELSIF TG_OP = 'DELETE' THEN
+    v_old_json := to_jsonb(OLD);
+    v_record_id := COALESCE(
+      OLD.customerno::TEXT, 
+      OLD.prodno::TEXT, 
+      OLD.empno::TEXT, 
+      OLD.id::TEXT, 
+      'UNKNOWN'
+    );
+  END IF;
+
+  -- Insert audit trail row
+  INSERT INTO audit_log (
+    table_name,
+    action,
+    record_id,
+    old_data,
+    new_data,
+    changed_by,
+    changed_at
+  ) VALUES (
+    TG_TABLE_NAME::VARCHAR,
+    v_action,
+    v_record_id,
+    v_old_json,
+    v_new_json,
+    v_user,
+    NOW()
+  );
+
+  IF TG_OP = 'DELETE' THEN
+    RETURN OLD;
+  ELSE
+    RETURN NEW;
+  END IF;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
