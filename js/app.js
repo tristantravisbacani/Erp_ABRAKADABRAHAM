@@ -1,6 +1,6 @@
 /**
  * Hope, Inc. ERP — Core Application Bootstrap
- * Task: Alignment with Final Prototype
+ * Task: S1-DEV-02 (User Registration Modal Form & Handlers)
  * Role: Developer (Kurt Abraham)
  */
 
@@ -36,7 +36,6 @@
   };
 
   // Makes a value safe inside an inline handler such as onclick="fn('${jsArg(x)}')".
-  // Escaped for the JS string first, then for the HTML attribute.
   window.jsArg = function (value) {
     return window.escapeHtml(
       String(value == null ? '' : value)
@@ -63,12 +62,10 @@
   };
 
   // ========== DOM & Focus Helpers ==========
-  // Locks page scrolling only while at least one modal overlay is open.
   window.syncBodyScroll = function () {
     document.body.style.overflow = document.querySelector('.modal-overlay.active') ? 'hidden' : '';
   };
 
-  // Re-draws a screen from a search box's oninput handler without losing the cursor.
   window.rerenderKeepFocus = function (renderFn) {
     const a = document.activeElement;
     const key = a && a.getAttribute ? a.getAttribute('data-focus-key') : null;
@@ -90,6 +87,174 @@
         } catch (err) {}
       }
     }
+  };
+
+  // ========== Permissions Catalogue & Generators ==========
+  const ALL_PERMISSIONS = {
+    'customers.view': 'View Customers',
+    'customers.add': 'Add Customer',
+    'customers.edit': 'Edit Customer',
+    'customers.delete': 'Delete Customer',
+    'products.view': 'View Products',
+    'products.add': 'Add Product',
+    'products.edit': 'Edit Product',
+    'products.delete': 'Delete Product',
+    'products.priceAdd': 'Add Price',
+    'products.priceEdit': 'Edit Price',
+    'products.priceDelete': 'Delete Price',
+    'hr.view': 'View Human Resources',
+    'hr.jobAdd': 'Add Job',
+    'hr.jobEdit': 'Edit Job',
+    'hr.jobDelete': 'Delete Job',
+    'hr.deptAdd': 'Add Department',
+    'hr.deptEdit': 'Edit Department',
+    'hr.deptDelete': 'Delete Department',
+    'hr.empAdd': 'Add Employee',
+    'hr.empEdit': 'Edit Employee',
+    'hr.empDelete': 'Delete Employee',
+    'hr.jhView': 'View Job History',
+    'hr.jhAdd': 'Add Job History',
+    'hr.jhEdit': 'Edit Job History',
+    'hr.jhDelete': 'Delete Job History',
+    'sales.view': 'View Sales',
+    'sales.add': 'Add Sale',
+    'sales.edit': 'Edit Sale',
+    'sales.delete': 'Delete Sale',
+    'sales.detailView': 'View Sale Details',
+    'sales.detailAdd': 'Add Sale Detail',
+    'sales.detailEdit': 'Edit Sale Detail',
+    'sales.detailDelete': 'Delete Sale Detail',
+    'reports.view': 'View Reports',
+    'reports.topCustomers': 'Top Customers',
+    'reports.productMaster': 'Product Master List',
+    'reports.topProducts': 'Top Products',
+    'reports.activeEmployees': 'Active Employees',
+    'reports.allEmployees': 'All Employees',
+    'reports.empJobHistory': 'Employee Job History',
+    'reports.topSales': 'Top Sales'
+  };
+
+  window.ALL_PERMISSIONS = ALL_PERMISSIONS;
+
+  window.fullPermissions = function () {
+    const p = {};
+    Object.keys(ALL_PERMISSIONS).forEach(function (k) {
+      p[k] = true;
+    });
+    return p;
+  };
+
+  window.emptyPermissions = function () {
+    const p = {};
+    Object.keys(ALL_PERMISSIONS).forEach(function (k) {
+      p[k] = false;
+    });
+    return p;
+  };
+
+  window.sampleUserPermissions = function () {
+    const p = window.emptyPermissions();
+    [
+      'customers.view',
+      'customers.add',
+      'customers.edit',
+      'products.view',
+      'products.add',
+      'products.edit',
+      'sales.view',
+      'sales.detailView',
+      'reports.view',
+      'reports.productMaster',
+      'reports.topSales'
+    ].forEach(function (k) {
+      p[k] = true;
+    });
+    return p;
+  };
+
+  // ========== User Store & State Management ==========
+  const DEFAULT_USERS = [
+    {
+      email: 'superadmin@hope.com',
+      firstName: 'Kurt Thomas Jon',
+      lastName: 'Abraham',
+      role: 'superadmin',
+      status: 'active',
+      perms: window.fullPermissions()
+    },
+    {
+      email: 'ceo@hope.com',
+      firstName: 'Tristan Travis',
+      lastName: 'Bacani',
+      role: 'superadmin',
+      status: 'active',
+      perms: window.fullPermissions()
+    },
+    {
+      email: 'admin@hope.com',
+      firstName: 'Mischa Andrei Sir',
+      lastName: 'Solis',
+      role: 'admin',
+      status: 'active',
+      perms: window.fullPermissions()
+    },
+    {
+      email: 'manager@hope.com',
+      firstName: 'Clark Jarred',
+      lastName: 'Deocampo',
+      role: 'admin',
+      status: 'active',
+      perms: window.fullPermissions()
+    },
+    {
+      email: 'user@hope.com',
+      firstName: 'Simon Conrad',
+      lastName: 'Mangubat',
+      role: 'user',
+      status: 'active',
+      perms: window.sampleUserPermissions()
+    }
+  ];
+
+  let memoryUsers = null;
+
+  window.getUsers = function () {
+    try {
+      const stored = localStorage.getItem('hope_erp_users_v4');
+      if (stored) return JSON.parse(stored);
+      localStorage.setItem('hope_erp_users_v4', JSON.stringify(DEFAULT_USERS));
+      return [...DEFAULT_USERS];
+    } catch (e) {
+      if (!memoryUsers) memoryUsers = [...DEFAULT_USERS];
+      return memoryUsers;
+    }
+  };
+
+  window.saveUsers = function (users) {
+    try {
+      localStorage.setItem('hope_erp_users_v4', JSON.stringify(users));
+    } catch (e) {
+      memoryUsers = users;
+    }
+  };
+
+  window.findUser = function (email) {
+    if (!email) return null;
+    return window
+      .getUsers()
+      .find(function (u) {
+        return u.email.toLowerCase() === email.toLowerCase();
+      });
+  };
+
+  window.upsertUser = function (user) {
+    const users = window.getUsers();
+    const idx = users.findIndex(function (u) {
+      return u.email.toLowerCase() === user.email.toLowerCase();
+    });
+    if (idx >= 0) users[idx] = user;
+    else users.push(user);
+    window.saveUsers(users);
   };
 
   // ========== Modal Controls ==========
@@ -159,15 +324,60 @@
     });
   });
 
-  // Temporary stubs for forms until assigned PRs arrive
+  // ========== Form Handlers ==========
+  window.handleRegister = function (e) {
+    if (e) e.preventDefault();
+    try {
+      const firstName = document.getElementById('regFirstName').value.trim();
+      const lastName = document.getElementById('regLastName').value.trim();
+      const email = document.getElementById('regEmail').value.trim();
+      const errorEl = document.getElementById('registerError');
+      const successEl = document.getElementById('registerSuccess');
+
+      if (errorEl) errorEl.classList.remove('show');
+      if (successEl) successEl.classList.remove('show');
+
+      if (!firstName || !lastName || !email) {
+        if (errorEl) {
+          errorEl.textContent = 'Please fill in all fields.';
+          errorEl.classList.add('show');
+        }
+        return;
+      }
+
+      if (window.findUser(email)) {
+        if (errorEl) {
+          errorEl.textContent = 'An account with this email already exists. Please sign in.';
+          errorEl.classList.add('show');
+        }
+        return;
+      }
+
+      const newUser = {
+        email: email,
+        firstName: firstName,
+        lastName: lastName,
+        role: 'user',
+        status: 'pending',
+        perms: window.emptyPermissions()
+      };
+      window.upsertUser(newUser);
+
+      if (successEl) {
+        successEl.textContent =
+          'Registration submitted. An admin must approve your account before you can sign in.';
+        successEl.classList.add('show');
+      }
+      const form = document.getElementById('registerForm');
+      if (form) form.reset();
+    } catch (err) {
+      console.error('[Register Error]', err);
+    }
+  };
+
   window.handleLogin = function (e) {
     if (e) e.preventDefault();
     console.log('[Auth] Login handler placeholder (PR S1-DEV-03)');
-  };
-
-  window.handleRegister = function (e) {
-    if (e) e.preventDefault();
-    console.log('[Auth] Register handler placeholder (PR S1-DEV-02)');
   };
 
   window.handleGoogleSignIn = function () {
