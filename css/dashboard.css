@@ -1,0 +1,172 @@
+/* ==========================================================================
+   Hope, Inc. ERP — Dashboard & Navigation Styles
+   Task: S1-UIX-03 (Dashboard Header, Sidebar Navigation Layout & Wireframes)
+   Role: UI/UX Designer (Clark Jarred Deocampo)
+   Theme: GitHub Primer Dark
+   ========================================================================== */
+
+/* Main Dashboard Visibility Containers */
+#landing {
+  display: block;
+}
+
+#dashboard {
+  display: none;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* ==========================================================================
+   Top Header Bar & Branding
+   ========================================================================== */
+.gh-header {
+  background: var(--header);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.gh-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 32px;
+}
+
+.gh-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #fff;
+  text-decoration: none;
+}
+
+.gh-brand .logo-icon {
+  width: 28px;
+  height: 28px;
+  background: #fff;
+  color: var(--header);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   User Profile Pill & Dropdown Menu
+   ========================================================================== */
+.user-menu {
+  position: relative;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px 4px 6px;
+  background: var(--btn);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background-color 0.1s ease;
+}
+
+.user-menu:hover .user-info,
+.user-menu:focus-within .user-info {
+  background: var(--hover);
+}
+
+.user-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--primary-dark);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.user-details {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  min-width: 0;
+}
+
+.user-details .name {
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.user-details .role {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.user-dropdown {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  padding-top: 6px;
+  min-width: 210px;
+  display: none;
+  z-index: 150;
+}
+
+.user-menu:hover .user-dropdown,
+.user-menu:focus-within .user-dropdown {
+  display: block;
+}
+
+.user-dropdown-panel {
+  background: var(--subtle);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 4px;
+  box-shadow: 0 0 0 1px var(--border), 0 16px 32px rgba(1, 4, 9, 0.85);
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: var(--radius);
+  font-size: 14px;
+  white-space: nowrap;
+  cursor: pointer;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.menu-item:hover {
+  background: rgba(177, 186, 196, 0.12);
+}
+
+.menu-item.active {
+  font-weight: 600;
+}
+
+.menu-item .icon {
+  width: 20px;
+  text-align: center;
+  filter: grayscale(1);
+  opacity: 0.8;
+}
+
+#userMenuItems:not(:empty) {
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 4px;
+  padding-bottom: 4px;
+}
