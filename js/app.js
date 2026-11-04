@@ -1070,11 +1070,41 @@
   window.navigateTo = function (page) {
     if (!window.currentUser) return;
     if (['customers', 'products', 'hr', 'sales', 'reports'].includes(page) && !window.canModule(page)) {
-      alert('You do not have access to this module.');
+      document.querySelectorAll('.nav-item, .menu-item').forEach(function (el) {
+        el.classList.remove('active');
+      });
+      const pt = document.getElementById('pageTitle');
+      if (pt) pt.textContent = 'Access Denied';
+      const area = document.getElementById('contentArea');
+      if (area) {
+        area.innerHTML =
+          '<div class="access-denied-wrap">' +
+          '  <div class="access-denied-icon">🔒</div>' +
+          '  <h2>Access Denied</h2>' +
+          '  <p>You do not have authorization to view this module.</p>' +
+          '  <p class="access-denied-hint">Contact a system administrator to request elevated permissions.</p>' +
+          '  <button class="btn btn-primary" onclick="window.navigateTo(\'dashboard\')">Return to Dashboard</button>' +
+          '</div>';
+      }
       return;
     }
     if (page === 'users' && window.currentUser.role !== 'superadmin' && window.currentUser.role !== 'admin') {
-      alert('Access denied. Administrator privileges required.');
+      document.querySelectorAll('.nav-item, .menu-item').forEach(function (el) {
+        el.classList.remove('active');
+      });
+      const pt = document.getElementById('pageTitle');
+      if (pt) pt.textContent = 'Access Denied';
+      const area = document.getElementById('contentArea');
+      if (area) {
+        area.innerHTML =
+          '<div class="access-denied-wrap">' +
+          '  <div class="access-denied-icon">🔒</div>' +
+          '  <h2>Access Denied</h2>' +
+          '  <p>Administrator privileges are required to access <strong>User Management</strong>.</p>' +
+          '  <p class="access-denied-hint">Superadmin or Admin role is required.</p>' +
+          '  <button class="btn btn-primary" onclick="window.navigateTo(\'dashboard\')">Return to Dashboard</button>' +
+          '</div>';
+      }
       return;
     }
 
