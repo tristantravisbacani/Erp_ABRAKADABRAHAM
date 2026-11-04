@@ -377,7 +377,93 @@
 
   window.handleLogin = function (e) {
     if (e) e.preventDefault();
-    console.log('[Auth] Login handler placeholder (PR S1-DEV-03)');
+    try {
+      const emailInput = document.getElementById('loginEmail');
+      const passwordInput = document.getElementById('loginPassword');
+      const errorEl = document.getElementById('loginError');
+
+      if (errorEl) {
+        errorEl.classList.remove('show');
+        errorEl.textContent = '';
+      }
+
+      const email = emailInput ? emailInput.value.trim() : '';
+      const password = passwordInput ? passwordInput.value : '';
+
+      if (!email || !password) {
+        if (errorEl) {
+          errorEl.textContent = 'Please fill in all fields.';
+          errorEl.classList.add('show');
+        }
+        return;
+      }
+
+      let user = window.findUser(email);
+      if (!user) {
+        if (errorEl) {
+          errorEl.textContent = 'No account found for this email. Please create a new account first.';
+          errorEl.classList.add('show');
+        }
+        return;
+      }
+
+      // Normalize status and permissions for seed/legacy users
+      if (!user.status) user.status = 'active';
+      if (!user.perms) {
+        user.perms =
+          user.role === 'superadmin' || user.role === 'admin'
+            ? window.fullPermissions()
+            : window.sampleUserPermissions();
+        window.upsertUser(user);
+      }
+
+      const statusProblem = window.accountStatusError(user);
+      if (statusProblem) {
+        if (errorEl) {
+          errorEl.textContent = statusProblem;
+          errorEl.classList.add('show');
+        }
+        return;
+      }
+
+      window.currentUser = {
+        email: user.email,
+        name: (user.firstName + ' ' + (user.lastName || '')).trim(),
+        role: user.role,
+        firstName: user.firstName || 'User'
+      };
+
+      try {
+        const rememberMe = document.getElementById('rememberMe');
+        if (rememberMe && rememberMe.checked) {
+          localStorage.setItem('hope_erp_remember_email', email);
+        } else {
+          localStorage.removeItem('hope_erp_remember_email');
+        }
+      } catch (err) {}
+
+      if (typeof window.saveSession === 'function') {
+        window.saveSession(window.currentUser);
+      }
+      if (typeof window.showDashboard === 'function') {
+        window.showDashboard();
+      }
+    } catch (err) {
+      console.error('[Login error]', err);
+      const errorEl = document.getElementById('loginError');
+      if (errorEl) {
+        errorEl.textContent = 'Login failed: ' + err.message;
+        errorEl.classList.add('show');
+      }
+    }
+  };
+
+  window.accountStatusError = function (user) {
+    if (!user) return 'User account not found.';
+    if (user.status === 'blocked') return 'This account is blocked. Contact an administrator.';
+    if (user.status === 'pending') return 'This account is pending approval. Contact an administrator.';
+    if (user.status === 'disapproved' || user.status === 'rejected') return 'This registration was not approved.';
+    return '';
   };
 
   window.handleGoogleSignIn = function () {
