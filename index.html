@@ -319,6 +319,26 @@
     </div>
   </div>
 
+  <!-- ==================== USER MGMT: RIGHTS MODAL ==================== -->
+  <div class="modal-overlay" id="umRightsModal">
+    <div class="modal modal-xl">
+      <div class="modal-header">
+        <div>
+          <h2 id="umRightsTitle">Assign Rights</h2>
+          <p id="umRightsSub">Module and function access</p>
+        </div>
+        <button class="modal-close" onclick="closeRightsModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="umRightsBody" class="modal-body-scroll"></div>
+        <div style="display:flex;gap:10px;margin-top:16px;">
+          <button type="button" class="btn btn-primary btn-full" onclick="saveRights()">Save Rights</button>
+          <button type="button" class="btn btn-secondary" onclick="closeRightsModal()" style="min-width:100px;">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Supabase CDN Client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <!-- Environment Config -->
