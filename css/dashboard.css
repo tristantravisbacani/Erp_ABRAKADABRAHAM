@@ -622,3 +622,83 @@
   padding: 40px 20px;
   color: var(--text-muted);
 }
+
+/* ==========================================================================
+   Permissions Matrix & Rights Modal Styles
+   ========================================================================== */
+.rights-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  background: var(--surface);
+}
+
+.rights-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.rights-header input[type="checkbox"] {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  accent-color: var(--primary);
+}
+
+.rights-btn-group {
+  margin-left: auto;
+  display: flex;
+  gap: 6px;
+}
+
+.rights-btn-group .btn-sm {
+  padding: 3px 10px;
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+.rights-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 16px;
+  padding-left: 8px;
+}
+
+.rights-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+  font-size: 0.9rem;
+  cursor: pointer;
+  user-select: none;
+  transition: opacity 0.15s ease;
+}
+
+.rights-item.disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.rights-item input[type="checkbox"] {
+  cursor: pointer;
+  width: 15px;
+  height: 15px;
+  accent-color: var(--primary);
+}
+
+.rights-item input[type="checkbox"]:disabled {
+  cursor: not-allowed;
+}
+
+@media (max-width: 640px) {
+  .rights-grid {
+    grid-template-columns: 1fr;
+  }
+}
