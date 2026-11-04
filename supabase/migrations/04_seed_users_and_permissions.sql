@@ -61,3 +61,63 @@ ON CONFLICT (email) DO UPDATE SET
   last_name = EXCLUDED.last_name,
   role = EXCLUDED.role,
   status = EXCLUDED.status;
+
+
+-- ============================================================================
+-- 2. SEED PERMISSIONS FOR ADMINISTRATIVE ACCOUNTS
+-- Superadmin and Admin roles receive unrestricted access across all 41 rights
+-- ============================================================================
+
+INSERT INTO user_permission (user_id, right_code, is_allowed)
+SELECT 
+  u.id, 
+  r.right_code, 
+  TRUE
+FROM app_user u
+CROSS JOIN rights_catalogue r
+WHERE u.email IN (
+  'superadmin@hope.com', 
+  'ceo@hope.com', 
+  'admin@hope.com', 
+  'manager@hope.com'
+)
+ON CONFLICT (user_id, right_code) 
+DO UPDATE SET 
+  is_allowed = EXCLUDED.is_allowed,
+  updated_at = NOW();
+
+
+-- ============================================================================
+-- 3. SEED PERMISSIONS FOR STANDARD USER ACCOUNT
+-- Simon Mangubat (user@hope.com) receives operational permissions:
+-- Customers + Products (view/add/edit, no delete), Sales (view/detail),
+-- and selected Reports (Product Master, Top Sales).
+-- ============================================================================
+
+INSERT INTO user_permission (user_id, right_code, is_allowed)
+SELECT 
+  u.id, 
+  r.right_code,
+  CASE 
+    WHEN r.right_code IN (
+      'customers.view',
+      'customers.add',
+      'customers.edit',
+      'products.view',
+      'products.add',
+      'products.edit',
+      'sales.view',
+      'sales.detailView',
+      'reports.view',
+      'reports.productMaster',
+      'reports.topSales'
+    ) THEN TRUE 
+    ELSE FALSE 
+  END AS is_allowed
+FROM app_user u
+CROSS JOIN rights_catalogue r
+WHERE u.email = 'user@hope.com'
+ON CONFLICT (user_id, right_code) 
+DO UPDATE SET 
+  is_allowed = EXCLUDED.is_allowed,
+  updated_at = NOW();
