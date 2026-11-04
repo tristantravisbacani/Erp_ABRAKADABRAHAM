@@ -149,3 +149,30 @@ This specification delivers production-grade high-fidelity architectural wirefra
 |                                                 [ Cancel ]   [ Save Permissions (Grn) ] |
 +-----------------------------------------------------------------------------------------+
 ```
+
+
+---
+
+## 4. Developer Handoff Notes & Visual Guidelines
+
+### 4.1 Design Token Reference Matrix
+
+| Component | State / Context | Variable / Color Token | CSS Value |
+|---|---|---|---|
+| Background | Base Canvas | `--bg` | `#0d1117` |
+| Containers | Surface Cards | `--surface` | `#0d1117` |
+| Panels | Headers / Dropdowns | `--subtle` | `#151b23` |
+| Buttons | Primary Default | `--green` | `#238636` |
+| Buttons | Primary Hover | `--green-hover` | `#2ea043` |
+| Tabs | Active Indicator | `--tab` | `#f78166` |
+| Badges | Superadmin | Role Orange | `rgba(247, 129, 102, 0.15)` |
+| Badges | Admin | Role Purple | `rgba(171, 125, 248, 0.15)` |
+| Badges | User / Active | Role Blue | `rgba(56, 139, 253, 0.15)` |
+| Badges | Pending | Warning Gold | `rgba(210, 153, 34, 0.15)` (border: 0.1 opacity) |
+| Badges | Blocked | Danger Red | `rgba(248, 81, 73, 0.15)` |
+
+### 4.2 Interactive State & Focus Management Rules
+1. **Search Input Cursor Preservation:** Any live search inputs (e.g. user directory search) must utilize `window.rerenderKeepFocus(renderFn)` with `data-focus-key` to prevent focus dropout during rapid typing.
+2. **Modal Body Scroll Lock:** All modal triggers must call `window.syncBodyScroll()` upon activation to prevent background canvas scrolling.
+3. **Esc Key Handler:** Pressing `Escape` must dismiss any active modal dialog and return focus to the trigger button.
+4. **Input Sanitization:** All text rendered into table cells or dialog titles from user inputs MUST be passed through `window.escapeHtml()` to ensure absolute protection against cross-site scripting (XSS).
