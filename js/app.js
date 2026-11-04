@@ -702,6 +702,79 @@
     }
   });
 
+  // Helper to generate a 64-character simulated secure token
+  function generateResetToken() {
+    const chars = '0123456789abcdef';
+    let token = '';
+    for (let i = 0; i < 64; i++) {
+      token += chars[Math.floor(Math.random() * chars.length)];
+    }
+    return token;
+  }
+
+  // ========== Password Reset Step 1: Request Token ==========
+  window.handleReset = function (e) {
+    if (e) e.preventDefault();
+    try {
+      const emailInput = document.getElementById('resetEmail');
+      const errorEl = document.getElementById('resetError');
+      const successEl = document.getElementById('resetSuccess');
+      const tokenSection = document.getElementById('resetTokenSection');
+      const tokenInput = document.getElementById('resetToken');
+
+      if (errorEl) {
+        errorEl.classList.remove('show');
+        errorEl.textContent = '';
+      }
+      if (successEl) {
+        successEl.classList.remove('show');
+        successEl.textContent = '';
+      }
+
+      const email = emailInput ? emailInput.value.trim() : '';
+      if (!email) {
+        if (errorEl) {
+          errorEl.textContent = 'Please enter your email address.';
+          errorEl.classList.add('show');
+        }
+        return;
+      }
+
+      // Generate simulated secure token matching 03_password_reset_schema.sql
+      const token = generateResetToken();
+      const expiresAt = Date.now() + 2 * 3600 * 1000; // 2 hour validity window
+
+      try {
+        const storedTokens = JSON.parse(localStorage.getItem('hope_erp_reset_tokens') || '[]');
+        storedTokens.push({
+          token: token,
+          email: email.toLowerCase(),
+          expiresAt: expiresAt,
+          isUsed: false,
+          createdAt: new Date().toISOString()
+        });
+        localStorage.setItem('hope_erp_reset_tokens', JSON.stringify(storedTokens));
+      } catch (err) {}
+
+      if (successEl) {
+        successEl.innerHTML =
+          'If an account exists for <strong>' +
+          window.escapeHtml(email) +
+          '</strong>, a secure reset link has been dispatched.<br>' +
+          '<small style="display:block;margin-top:6px;color:var(--text-muted);">' +
+          'Demo Mode: Token generated below for testing.</small>';
+        successEl.classList.add('show');
+      }
+
+      if (tokenSection) {
+        tokenSection.style.display = 'block';
+        if (tokenInput) tokenInput.value = token;
+      }
+    } catch (err) {
+      console.error('[Reset Error]', err);
+    }
+  };
+
   window.handleGoogleSignIn = function () {
     console.log('[Auth] Google OAuth handler placeholder');
     alert('Google OAuth integration configured. Set OAuth credentials in Supabase to enable.');
