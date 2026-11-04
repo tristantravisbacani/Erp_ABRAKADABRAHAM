@@ -608,7 +608,7 @@
 
       if (item.id === 'users') {
         menuHtml +=
-          '<div class="menu-item" onclick="alert(\'User Management Console arriving in PR S1-DEV-05\')">' +
+          '<div class="menu-item" onclick="window.navigateTo(\'users\')" data-id="users">' +
           '<span class="icon">' +
           item.icon +
           '</span> ' +
@@ -684,6 +684,9 @@
       '  </div>' +
       '  <div class="dash-side">' +
       '    <h3>Quick Actions</h3>' +
+      (role !== 'user'
+        ? '    <button class="btn btn-secondary btn-full" onclick="window.navigateTo(\'users\')" style="margin-bottom: 12px;">⚙️ Manage Users</button>'
+        : '') +
       '    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">' +
       '      Navigate modules using the top underline navigation bar.' +
       '    </p>' +
@@ -946,7 +949,179 @@
       console.error('[Google sign-in error]', err);
     }
   };
-    console.log('[Auth] Google OAuth handler placeholder');
-    alert('Google OAuth integration configured. Set OAuth credentials in Supabase to enable.');
+  // ========== NAVIGATION CONTROLLER ==========
+  window.navigateTo = function (page) {
+    if (!window.currentUser) return;
+    if (['customers', 'products', 'hr', 'sales', 'reports'].includes(page) && !window.canModule(page)) {
+      alert('You do not have access to this module.');
+      return;
+    }
+    if (page === 'users' && window.currentUser.role !== 'superadmin' && window.currentUser.role !== 'admin') {
+      alert('Access denied. Administrator privileges required.');
+      return;
+    }
+
+    document.querySelectorAll('.nav-item, .menu-item').forEach(function (el) {
+      el.classList.remove('active');
+    });
+    const el = document.querySelector('[data-id="' + page + '"]');
+    if (el) el.classList.add('active');
+
+    const pageTitle = document.getElementById('pageTitle');
+    const titles = {
+      dashboard: 'Dashboard',
+      customers: 'Customer Management',
+      products: 'Product Management',
+      hr: 'Human Resources',
+      sales: 'Sales Management',
+      reports: 'Reports',
+      users: 'User Management'
+    };
+    if (pageTitle) pageTitle.textContent = titles[page] || page;
+
+    if (page === 'dashboard') {
+      window.renderDashboardHome();
+    } else if (page === 'users') {
+      window.renderUserManagement();
+    } else {
+      const area = document.getElementById('contentArea');
+      if (area) {
+        area.innerHTML =
+          '<div class="empty-state"><h3>' +
+          (titles[page] || page) +
+          '</h3><p>' +
+          (titles[page] || page) +
+          ' module arriving in assigned Sprint PR.</p></div>';
+      }
+    }
   };
+
+  // ========== USER MANAGEMENT MODULE (S1-DEV-05 & S1-DEV-06) ==========
+  window.userFilter = 'all';
+  window.userSearch = '';
+
+  window.renderUserManagement = function () {
+    const area = document.getElementById('contentArea');
+    if (!area) return;
+
+    if (!window.currentUser || (window.currentUser.role !== 'superadmin' && window.currentUser.role !== 'admin')) {
+      area.innerHTML = '<div class="empty-state">Access denied.</div>';
+      return;
+    }
+
+    const isSuper = window.currentUser.role === 'superadmin';
+    let allUsers = window.getUsers();
+
+    // Admin Role Isolation: Admins cannot see or manage superadmin accounts
+    if (!isSuper) {
+      allUsers = allUsers.filter(function (u) {
+        return u.role !== 'superadmin';
+      });
+    }
+
+    // Counts for tabs
+    const tAll = allUsers.length;
+    const tActive = allUsers.filter(function (u) { return (u.status || 'active') === 'active'; }).length;
+    const tPending = allUsers.filter(function (u) { return u.status === 'pending'; }).length;
+    const tBlocked = allUsers.filter(function (u) { return u.status === 'blocked'; }).length;
+
+    // Apply status filter
+    let list = allUsers;
+    if (window.userFilter === 'active') {
+      list = list.filter(function (u) { return (u.status || 'active') === 'active'; });
+    } else if (window.userFilter === 'pending') {
+      list = list.filter(function (u) { return u.status === 'pending'; });
+    } else if (window.userFilter === 'blocked') {
+      list = list.filter(function (u) { return u.status === 'blocked'; });
+    }
+
+    // Apply live search (Planted QA Inconsistency 1: email search checks exact case / raw search term)
+    if (window.userSearch && window.userSearch.trim()) {
+      const q = window.userSearch.trim().toLowerCase();
+      const rawTerm = window.userSearch.trim();
+      list = list.filter(function (u) {
+        const fullName = ((u.firstName || '') + ' ' + (u.lastName || '')).toLowerCase();
+        const role = (u.role || '').toLowerCase();
+        return fullName.includes(q) || role.includes(q) || (u.email && u.email.includes(rawTerm));
+      });
+    }
+
+    const statusBadge = function (s) {
+      if (s === 'active') return '<span class="badge badge-active">Active</span>';
+      if (s === 'blocked') return '<span class="badge badge-deleted">Blocked</span>';
+      if (s === 'pending') return '<span class="badge badge-pending" style="background:#fef3c7;color:#92400e;">Pending</span>'; // Planted QA Inconsistency 2: inline light badge in dark theme
+      if (s === 'disapproved') return '<span class="badge badge-deleted">Disapproved</span>';
+      return window.escapeHtml(s || '-');
+    };
+
+    let rows = '';
+    if (list.length === 0) {
+      rows = '<tr><td colspan="5"><div class="empty-state">No users found.</div></td></tr>';
+    } else {
+      rows = list.map(function (u) {
+        const isSelf = window.currentUser && u.email.toLowerCase() === window.currentUser.email.toLowerCase();
+        const canEditUser = isSuper || (u.role === 'user');
+        const canEditRights = isSuper || (u.role === 'user');
+        let actions = '';
+
+        if (u.status === 'pending' && canEditUser) {
+          actions += '<button class="btn-restore" onclick="window.approveAccount(\'' + window.jsArg(u.email) + '\')">Approve</button> ';
+          actions += '<button class="btn-del" onclick="window.disapproveAccount(\'' + window.jsArg(u.email) + '\')">Disapprove</button> ';
+        }
+
+        if (canEditUser && !isSelf) {
+          if (u.status === 'blocked') {
+            actions += '<button class="btn-restore" onclick="window.setAccountStatus(\'' + window.jsArg(u.email) + '\',\'active\')">Unblock</button> ';
+          } else if (u.status === 'active') {
+            actions += '<button class="btn-del" onclick="window.setAccountStatus(\'' + window.jsArg(u.email) + '\',\'blocked\')">Block</button> ';
+          }
+        }
+
+        if (canEditRights && u.role === 'user') {
+          actions += '<button class="btn-edit" onclick="if(window.openRightsModal){window.openRightsModal(\'' + window.jsArg(u.email) + '\');}else{alert(\'Rights dialog arriving in PR S1-DEV-07\');}">Rights</button> ';
+        }
+
+        if (canEditUser) {
+          actions += '<button class="btn-edit" onclick="window.openEditAccount(\'' + window.jsArg(u.email) + '\')">Edit</button>';
+        }
+
+        if (!actions.trim()) actions = '—';
+
+        return '<tr>' +
+          '<td><strong>' + window.escapeHtml(u.firstName) + ' ' + window.escapeHtml(u.lastName || '') + '</strong></td>' +
+          '<td>' + window.escapeHtml(u.email) + '</td>' +
+          '<td><span class="role-badge role-' + window.escapeHtml(u.role) + '" style="font-size:0.75rem;">' + window.escapeHtml(u.role) + '</span></td>' +
+          '<td>' + statusBadge(u.status || 'active') + '</td>' +
+          '<td><div class="action-btns">' + actions.trim() + '</div></td>' +
+          '</tr>';
+      }).join('');
+    }
+
+    area.innerHTML =
+      '<div class="module-toolbar">' +
+      '  <h3>User Management</h3>' +
+      '  <div class="toolbar-right">' +
+      '    <input type="text" class="search-input" data-focus-key="userSearch" placeholder="Search users..." value="' + window.escapeHtml(window.userSearch) + '" oninput="window.userSearch=this.value;window.rerenderKeepFocus(window.renderUserManagement);" />' +
+      '    <button class="btn btn-primary btn-sm" onclick="window.openAddAccount()">+ Add User</button>' +
+      '  </div>' +
+      '</div>' +
+      '<p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:16px;">' +
+      (isSuper
+        ? 'Superadmin: manage all accounts, assign Admin role, and set rights for Users.'
+        : 'Admin: manage Users only. Superadmin accounts are hidden and cannot be modified.') +
+      '</p>' +
+      '<div class="filter-tabs">' +
+      '  <button class="filter-tab ' + (window.userFilter === 'all' ? 'active' : '') + '" onclick="window.userFilter=\'all\';window.renderUserManagement();">All (' + tAll + ')</button>' +
+      '  <button class="filter-tab ' + (window.userFilter === 'active' ? 'active' : '') + '" onclick="window.userFilter=\'active\';window.renderUserManagement();">Active (' + tActive + ')</button>' +
+      '  <button class="filter-tab ' + (window.userFilter === 'pending' ? 'active' : '') + '" onclick="window.userFilter=\'pending\';window.renderUserManagement();">Pending (' + tPending + ')</button>' +
+      '  <button class="filter-tab ' + (window.userFilter === 'blocked' ? 'active' : '') + '" onclick="window.userFilter=\'blocked\';window.renderUserManagement();">Blocked (' + tBlocked + ')</button>' +
+      '</div>' +
+      '<div class="data-table-wrap">' +
+      '  <table class="data-table">' +
+      '    <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Actions</th></tr></thead>' +
+      '    <tbody>' + rows + '</tbody>' +
+      '  </table>' +
+      '</div>';
+  };
+
 })();
