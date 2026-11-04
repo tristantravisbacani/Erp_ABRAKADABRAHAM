@@ -157,3 +157,27 @@ This document defines formal test specifications and verification logs for the c
   - Scenario A: New = `12345`, Confirm = `12345` $\rightarrow$ Rejected: *"Password must be at least 6 characters long."*
   - Scenario B: New = `Secret1`, Confirm = `Secret2` $\rightarrow$ Rejected: *"Passwords do not match."*
 - **Status:** **PASS**
+
+
+---
+
+## 5. Defect Verification Matrix & Inconsistency Log
+
+| Defect ID | Severity | Component | Summary / Observed Behavior | Resolution State |
+|---|:---:|---|---|:---:|
+| **DEF-UI-01** | Low | Design System | Button hover scale `1.15` caused toolbar jitter and button displacement | **RESOLVED** via PR #9 (`scale(1.08)`) |
+| **DEF-DB-01** | Medium | Database | Customer `payterms` check constraint rejected Net terms (`Net 30`, `Net 45`) | **RESOLVED** via PR #10 (Updated check constraint) |
+| **DEF-SEC-01** | Low | Auth Tokens | Token validity window defaults to 2 hours (`NOW() + INTERVAL '2 hours'`) in migration SQL while specification cites 1-hour default | **LOGGED** (Scheduled for Sprint 2 hardening) |
+| **DEF-UI-02** | Trivial | UI Handoff | Pending role badge border opacity specified at `0.1` vs `0.3` standard | **DOCUMENTED** (Visual softness acceptable for pending state) |
+
+---
+
+## 6. QA Execution Summary & Sign-Off
+
+- **Total Test Cases Executed:** 12  
+- **Passed:** 12 (100%)  
+- **Failed / Blocked:** 0  
+- **Test Execution Coverage:** 100% of Sprint 1 In-Scope Auth & Token Capabilities  
+
+**Sign-off:** Simon Conrad Mangubat (Lead QA Tester)  
+**Date:** 2026-11-04
