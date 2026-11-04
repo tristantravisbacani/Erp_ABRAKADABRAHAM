@@ -112,3 +112,116 @@ This specification defines the test suite and validation logs for the **User Man
   - Table filters in real-time without input blur via `window.rerenderKeepFocus()`.
   - *Observation:* Uppercase email search fails to return records due to case-sensitive check on raw input (logged as `DEF-UM-01`).
 - **Status:** **PASS (Defect Logged)**
+
+---
+
+## 4. Test Suite 3: Admin Role Isolation & Privilege Separation (`TC-UM-ISOL`)
+
+### TC-UM-08: Superadmin Account Visibility Isolation
+- **Description:** Verify that when an Administrator logs in and opens User Management, Superadmin accounts are completely hidden from the accounts list.
+- **Preconditions:** System contains Superadmin (`superadmin@hope.com`), Admin (`admin@hope.com`), and standard Users.
+- **Execution Steps:**
+  1. Authenticate as Admin (`admin@hope.com`).
+  2. Navigate to User Management (`window.navigateTo('users')`).
+  3. Inspect accounts table rows and total counter.
+- **Expected Result:**
+  - Table displays standard users and fellow administrators.
+  - `superadmin@hope.com` is completely absent from DOM rows and search queries.
+  - Subtitle displays: *"Admin: manage Users only. Superadmin accounts are hidden and cannot be modified."*
+- **Status:** **PASS**
+
+### TC-UM-09: Admin Privilege Escalation Prevention
+- **Description:** Verify that an Admin cannot promote any standard user or themselves to Admin or Superadmin.
+- **Execution Steps:**
+  1. While logged in as Admin, click `Edit` on a standard User account.
+  2. Attempt to select role `Admin` or `Superadmin`.
+- **Expected Result:**
+  - Role dropdown `#umRole` provides only `<option value="user">User</option>`.
+  - Manual DOM modification attempts to force role `superadmin` are blocked by server/controller logic: *"Admin can only create User accounts."*
+- **Status:** **PASS**
+
+### TC-UM-10: Admin Rights Management Boundary
+- **Description:** Verify that an Admin can only manage rights for standard users (`role === 'user'`) and cannot modify rights for other administrators.
+- **Execution Steps:**
+  1. Inspect action buttons for other Admin rows while logged in as Admin.
+  2. Inspect action buttons for standard User rows.
+- **Expected Result:**
+  - `Rights` button is rendered exclusively on rows where `u.role === 'user'`.
+  - Admin rows do not display `Rights` button.
+- **Status:** **PASS**
+
+---
+
+## 5. Test Suite 4: Account Approval Workflows (`TC-UM-APPR`)
+
+### TC-UM-11: Pending Account Approval Flow (`approveAccount`)
+- **Description:** Verify that an Administrator or Superadmin can approve a self-registered user in pending status.
+- **Preconditions:** User `elena.reyes@company.com` registered in `pending` status.
+- **Execution Steps:**
+  1. Navigate to User Management -> click `Pending` tab.
+  2. Locate `elena.reyes@company.com`.
+  3. Click `Approve` button (`window.approveAccount()`).
+- **Expected Result:**
+  - Account status immediately updates to `active`.
+  - Initial default permissions (`window.sampleUserPermissions()`) are granted.
+  - Account disappears from Pending tab and appears in Active tab.
+  - User can now authenticate successfully into the dashboard.
+- **Status:** **PASS**
+
+### TC-UM-12: Pending Account Disapproval Flow (`disapproveAccount`)
+- **Description:** Verify that an Administrator or Superadmin can disapprove a pending registration.
+- **Preconditions:** New registration in pending status (`test.pending@example.com`).
+- **Execution Steps:**
+  1. Click `Disapprove` action button on pending row.
+- **Expected Result:**
+  - Account status transitions to `disapproved`.
+  - Status badge displays red `Disapproved`.
+  - Subsequent login attempts by that user fail with: *"This registration was not approved."*
+- **Status:** **PASS**
+
+---
+
+## 6. Test Suite 5: Last Superadmin Guard & Self-Protection (`TC-UM-GUARD`)
+
+### TC-UM-13: Last Superadmin Guard — Blocking Prevention
+- **Description:** Verify that the system strictly prevents blocking the last active Superadmin account.
+- **Preconditions:** Only 1 active Superadmin (`superadmin@hope.com`) exists in the registry.
+- **Execution Steps:**
+  1. Attempt to call `setAccountStatus('superadmin@hope.com', 'blocked')`.
+- **Expected Result:**
+  - Operation is blocked immediately.
+  - Alert displays: *"Cannot block the last remaining active Superadmin."*
+  - Account remains `active`.
+- **Status:** **PASS**
+
+### TC-UM-14: Last Superadmin Guard — Role Demotion Prevention
+- **Description:** Verify that the system blocks demoting the last active Superadmin to `admin` or `user`.
+- **Execution Steps:**
+  1. Open Edit modal for the sole Superadmin.
+  2. Change role select `#umRole` to `Admin`.
+  3. Submit form.
+- **Expected Result:**
+  - Submission rejected.
+  - Error banner `#umUserError` displays: *"Cannot demote or deactivate the last remaining Superadmin."*
+  - User role in storage remains `superadmin`.
+- **Status:** **PASS**
+
+### TC-UM-15: Last Superadmin Guard — Disapproval Prevention
+- **Description:** Verify that calling `disapproveAccount` on the last remaining Superadmin is halted.
+- **Execution Steps:**
+  1. Execute `window.disapproveAccount('superadmin@hope.com')`.
+- **Expected Result:**
+  - Operation blocked with alert: *"Cannot disapprove the last remaining Superadmin."*
+- **Status:** **PASS**
+
+### TC-UM-16: Self-Protection Guardrails
+- **Description:** Verify that authenticated users cannot block or deactivate their own active accounts.
+- **Execution Steps:**
+  1. Locate current user's row in User Management table.
+  2. Verify that `Block` button is suppressed on the self-row.
+  3. Attempt to trigger `window.setAccountStatus(window.currentUser.email, 'blocked')` via console.
+- **Expected Result:**
+  - `Block` button is omitted from action button group for `isSelf`.
+  - Manual execution triggers alert: *"You cannot block your own account."*
+  - If editing self in modal, changing status from `active` produces validation error.
+- **Status:** **PASS**
