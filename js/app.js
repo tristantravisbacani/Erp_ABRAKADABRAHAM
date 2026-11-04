@@ -1124,4 +1124,265 @@
       '</div>';
   };
 
+  // Helper to count active superadmins
+  window.countActiveSuperadmins = function () {
+    return window.getUsers().filter(function (u) {
+      return u.role === 'superadmin' && (u.status || 'active') === 'active';
+    }).length;
+  };
+
+  // Opens the empty "add account" form.
+  window.openAddAccount = function () {
+    const isSuper = window.currentUser && window.currentUser.role === 'superadmin';
+    const title = document.getElementById('umUserTitle');
+    if (title) title.textContent = 'Add User';
+    const editEmail = document.getElementById('umEditEmail');
+    if (editEmail) editEmail.value = '';
+    const first = document.getElementById('umFirst');
+    if (first) first.value = '';
+    const last = document.getElementById('umLast');
+    if (last) last.value = '';
+    const email = document.getElementById('umEmail');
+    if (email) {
+      email.value = '';
+      email.readOnly = false;
+    }
+    const status = document.getElementById('umStatus');
+    if (status) status.value = 'active';
+    const role = document.getElementById('umRole');
+    if (role) {
+      role.innerHTML = isSuper
+        ? '<option value="user">User</option><option value="admin">Admin</option><option value="superadmin">Superadmin</option>'
+        : '<option value="user">User</option>';
+      role.disabled = false;
+    }
+    const err = document.getElementById('umUserError');
+    if (err) err.classList.remove('show');
+    const modal = document.getElementById('umUserModal');
+    if (modal) modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  };
+
+  // Opens the form filled in with the selected account.
+  window.openEditAccount = function (email) {
+    const u = window.findUser(email);
+    if (!u) return;
+    const isSuper = window.currentUser && window.currentUser.role === 'superadmin';
+    if (!isSuper && u.role === 'superadmin') return;
+
+    const title = document.getElementById('umUserTitle');
+    if (title) title.textContent = 'Edit User';
+    const editEmail = document.getElementById('umEditEmail');
+    if (editEmail) editEmail.value = u.email;
+    const first = document.getElementById('umFirst');
+    if (first) first.value = u.firstName || '';
+    const last = document.getElementById('umLast');
+    if (last) last.value = u.lastName || '';
+    const emailField = document.getElementById('umEmail');
+    if (emailField) {
+      emailField.value = u.email;
+      emailField.readOnly = true;
+    }
+    const status = document.getElementById('umStatus');
+    if (status) status.value = u.status || 'active';
+
+    const role = document.getElementById('umRole');
+    if (role) {
+      if (isSuper) {
+        role.innerHTML =
+          '<option value="user">User</option><option value="admin">Admin</option><option value="superadmin">Superadmin</option>';
+        role.disabled = false;
+      } else {
+        // Admin cannot promote to admin/superadmin
+        role.innerHTML = '<option value="user">User</option>';
+        if (u.role !== 'user') {
+          role.innerHTML = '<option value="' + window.escapeHtml(u.role) + '">' + window.escapeHtml(u.role) + '</option>';
+          role.disabled = true;
+        } else {
+          role.disabled = false;
+        }
+      }
+      role.value = u.role;
+    }
+
+    const err = document.getElementById('umUserError');
+    if (err) err.classList.remove('show');
+    const modal = document.getElementById('umUserModal');
+    if (modal) modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  };
+
+  // Closes the account popup.
+  window.closeAccountModal = function () {
+    const modal = document.getElementById('umUserModal');
+    if (modal) modal.classList.remove('active');
+    const role = document.getElementById('umRole');
+    if (role) role.disabled = false;
+    window.syncBodyScroll();
+  };
+
+  // Checks the form, then saves the account: adds a new one or updates the one being edited.
+  window.saveAccount = function (ev) {
+    if (ev) ev.preventDefault();
+    const err = document.getElementById('umUserError');
+    if (err) err.classList.remove('show');
+
+    const isSuper = window.currentUser && window.currentUser.role === 'superadmin';
+    const editEmail = (document.getElementById('umEditEmail') ? document.getElementById('umEditEmail').value : '').trim();
+    const firstName = (document.getElementById('umFirst') ? document.getElementById('umFirst').value : '').trim();
+    const lastName = (document.getElementById('umLast') ? document.getElementById('umLast').value : '').trim();
+    const email = (document.getElementById('umEmail') ? document.getElementById('umEmail').value : '').trim();
+    const role = document.getElementById('umRole') ? document.getElementById('umRole').value : 'user';
+    const status = document.getElementById('umStatus') ? document.getElementById('umStatus').value : 'active';
+
+    if (!firstName || !lastName || !email) {
+      if (err) {
+        err.textContent = 'All fields required.';
+        err.classList.add('show');
+      }
+      return;
+    }
+
+    if (!isSuper && (role === 'admin' || role === 'superadmin') && !editEmail) {
+      if (err) {
+        err.textContent = 'Admin can only create User accounts.';
+        err.classList.add('show');
+      }
+      return;
+    }
+
+    if (editEmail) {
+      const u = window.findUser(editEmail);
+      if (!u) return;
+      if (!isSuper && u.role === 'superadmin') {
+        if (err) {
+          err.textContent = 'Cannot modify Superadmin.';
+          err.classList.add('show');
+        }
+        return;
+      }
+
+      const isSelfEdit = window.currentUser && u.email.toLowerCase() === window.currentUser.email.toLowerCase();
+      if (isSelfEdit && ((isSuper && role !== u.role) || status !== 'active')) {
+        if (err) {
+          // Planted QA Inconsistency 3: Mentions Superadmin even if current user is Admin
+          err.textContent = 'You cannot change your own role or block/deactivate your own account. Contact a Superadmin.';
+          err.classList.add('show');
+        }
+        return;
+      }
+
+      // Last Superadmin Guard
+      if (u.role === 'superadmin' && (role !== 'superadmin' || status !== 'active')) {
+        if (window.countActiveSuperadmins() <= 1) {
+          if (err) {
+            err.textContent = 'Cannot demote or deactivate the last remaining Superadmin.';
+            err.classList.add('show');
+          }
+          return;
+        }
+      }
+
+      const oldRole = u.role;
+      u.firstName = firstName;
+      u.lastName = lastName;
+      u.status = status;
+      if (isSuper) u.role = role;
+
+      if (u.role === 'superadmin' || u.role === 'admin') {
+        u.perms = window.fullPermissions();
+      } else if (oldRole !== 'user') {
+        u.perms = window.emptyPermissions();
+      }
+
+      window.upsertUser(u);
+
+      if (isSelfEdit) {
+        window.currentUser.firstName = firstName;
+        window.currentUser.name = (firstName + ' ' + lastName).trim();
+        window.saveSession(window.currentUser);
+        window.updateUserInfo();
+      }
+    } else {
+      if (window.findUser(email)) {
+        if (err) {
+          err.textContent = 'Email already exists.';
+          err.classList.add('show');
+        }
+        return;
+      }
+      const perms = (role === 'superadmin' || role === 'admin')
+        ? window.fullPermissions()
+        : window.emptyPermissions();
+      window.upsertUser({
+        email: email,
+        firstName: firstName,
+        lastName: lastName,
+        role: role,
+        status: status,
+        perms: perms
+      });
+    }
+
+    window.closeAccountModal();
+    window.renderUserManagement();
+  };
+
+  // Approves a pending account.
+  window.approveAccount = function (email) {
+    const u = window.findUser(email);
+    if (!u) return;
+    if (window.currentUser && window.currentUser.role === 'admin' && u.role !== 'user') return;
+    u.status = 'active';
+    if (!u.perms || !Object.values(u.perms).some(Boolean)) {
+      u.perms = window.sampleUserPermissions();
+    }
+    window.upsertUser(u);
+    window.renderUserManagement();
+  };
+
+  // Rejects / disapproves a pending account.
+  window.disapproveAccount = function (email) {
+    const u = window.findUser(email);
+    if (!u) return;
+    if (window.currentUser && window.currentUser.role === 'admin' && u.role !== 'user') return;
+    // Last Superadmin Guard
+    if (u.role === 'superadmin' && window.countActiveSuperadmins() <= 1) {
+      alert('Cannot disapprove the last remaining Superadmin.');
+      return;
+    }
+    u.status = 'disapproved';
+    window.upsertUser(u);
+    window.renderUserManagement();
+  };
+
+  // Changes an account between active and blocked.
+  window.setAccountStatus = function (email, status) {
+    const u = window.findUser(email);
+    if (!u) return;
+    if (window.currentUser && window.currentUser.role === 'admin' && u.role === 'superadmin') return;
+    if (window.currentUser && email.toLowerCase() === window.currentUser.email.toLowerCase()) {
+      alert('You cannot block your own account.');
+      return;
+    }
+    // Last Superadmin Guard
+    if (u.role === 'superadmin' && status !== 'active' && window.countActiveSuperadmins() <= 1) {
+      alert('Cannot block the last remaining active Superadmin.');
+      return;
+    }
+    u.status = status;
+    window.upsertUser(u);
+    window.renderUserManagement();
+  };
+
+  // Modal backdrop click listener
+  document.addEventListener('DOMContentLoaded', function () {
+    const umModal = document.getElementById('umUserModal');
+    if (umModal) {
+      umModal.addEventListener('click', function (e) {
+        if (e.target.id === 'umUserModal') window.closeAccountModal();
+      });
+    }
+  });
+
 })();
