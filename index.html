@@ -267,6 +267,58 @@
     </div>
   </div>
 
+  <!-- ==================== USER MGMT: ADD/EDIT USER MODAL ==================== -->
+  <div class="modal-overlay" id="umUserModal">
+    <div class="modal modal-lg">
+      <div class="modal-header">
+        <div>
+          <h2 id="umUserTitle">Add User</h2>
+          <p>Account details</p>
+        </div>
+        <button class="modal-close" onclick="closeAccountModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-error" id="umUserError"></div>
+        <form id="umUserForm" onsubmit="saveAccount(event)">
+          <input type="hidden" id="umEditEmail" value="" />
+          <div class="form-row">
+            <div class="form-group">
+              <label for="umFirst">First Name</label>
+              <input type="text" id="umFirst" required />
+            </div>
+            <div class="form-group">
+              <label for="umLast">Last Name</label>
+              <input type="text" id="umLast" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="umEmail">Email</label>
+            <input type="email" id="umEmail" required pattern="[^\s'&quot;&lt;&gt;&amp;\\]+@[^\s'&quot;&lt;&gt;&amp;\\]+" title="Email can't contain spaces, quotes or the symbols &lt; &gt; &amp;" />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="umRole">Role</label>
+              <select id="umRole" required></select>
+            </div>
+            <div class="form-group">
+              <label for="umStatus">Status</label>
+              <select id="umStatus" required>
+                <option value="active">Active</option>
+                <option value="pending">Pending</option>
+                <option value="blocked">Blocked</option>
+                <option value="disapproved">Disapproved</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;margin-top:16px;">
+            <button type="submit" class="btn btn-primary btn-full">Save User</button>
+            <button type="button" class="btn btn-secondary" onclick="closeAccountModal()" style="min-width:100px;">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <!-- Supabase CDN Client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <!-- Environment Config -->
