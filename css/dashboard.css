@@ -1,0 +1,475 @@
+/* ==========================================================================
+   Hope, Inc. ERP — Dashboard & Navigation Styles
+   Task: S1-UIX-03 (Dashboard Header, Sidebar Navigation Layout & Wireframes)
+   Role: UI/UX Designer (Clark Jarred Deocampo)
+   Theme: GitHub Primer Dark
+   ========================================================================== */
+
+/* Main Dashboard Visibility Containers */
+#landing {
+  display: block;
+}
+
+#dashboard {
+  display: none;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* ==========================================================================
+   Top Header Bar & Branding
+   ========================================================================== */
+.gh-header {
+  background: var(--header);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.gh-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 32px;
+}
+
+.gh-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #fff;
+  text-decoration: none;
+}
+
+.gh-brand .logo-icon {
+  width: 28px;
+  height: 28px;
+  background: #fff;
+  color: var(--header);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   User Profile Pill & Dropdown Menu
+   ========================================================================== */
+.user-menu {
+  position: relative;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px 4px 6px;
+  background: var(--btn);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background-color 0.1s ease;
+}
+
+.user-menu:hover .user-info,
+.user-menu:focus-within .user-info {
+  background: var(--hover);
+}
+
+.user-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--primary-dark);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.user-details {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  min-width: 0;
+}
+
+.user-details .name {
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.user-details .role {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.user-dropdown {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  padding-top: 6px;
+  min-width: 210px;
+  display: none;
+  z-index: 150;
+}
+
+.user-menu:hover .user-dropdown,
+.user-menu:focus-within .user-dropdown {
+  display: block;
+}
+
+.user-dropdown-panel {
+  background: var(--subtle);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 4px;
+  box-shadow: 0 0 0 1px var(--border), 0 16px 32px rgba(1, 4, 9, 0.85);
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: var(--radius);
+  font-size: 14px;
+  white-space: nowrap;
+  cursor: pointer;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.menu-item:hover {
+  background: rgba(177, 186, 196, 0.12);
+}
+
+.menu-item.active {
+  font-weight: 600;
+}
+
+.menu-item .icon {
+  width: 20px;
+  text-align: center;
+  filter: grayscale(1);
+  opacity: 0.8;
+}
+
+#userMenuItems:not(:empty) {
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 4px;
+  padding-bottom: 4px;
+}
+
+
+/* ==========================================================================
+   Navigation Tabs & Module Switcher (Underline Nav)
+   ========================================================================== */
+.sidebar-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 24px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.sidebar-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.nav-section {
+  display: contents;
+}
+
+.nav-section-title {
+  display: none;
+}
+
+.nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  margin: 8px 0;
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: 14px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.1s ease;
+}
+
+.nav-item:hover {
+  background: rgba(177, 186, 196, 0.12);
+}
+
+.nav-item.active {
+  font-weight: 600;
+}
+
+.nav-item.active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -8px;
+  height: 2px;
+  background: var(--tab);
+  border-radius: 6px;
+}
+
+.nav-item .icon {
+  font-size: 1rem;
+  filter: grayscale(1);
+  opacity: 0.8;
+}
+
+.nav-item.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ==========================================================================
+   Main Content Layout & Page Containers
+   ========================================================================== */
+.page-wrap {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+.page-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 24px 0;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.topbar-title {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: rgba(56, 139, 253, 0.15);
+  color: var(--primary);
+  border: 1px solid rgba(56, 139, 253, 0.3);
+}
+
+.role-badge.superadmin {
+  background: rgba(247, 129, 102, 0.15);
+  color: var(--tab);
+  border-color: rgba(247, 129, 102, 0.3);
+}
+
+.role-badge.admin {
+  background: rgba(171, 125, 248, 0.15);
+  color: var(--accent);
+  border-color: rgba(171, 125, 248, 0.3);
+}
+
+.content-area {
+  padding-bottom: 48px;
+}
+
+/* ==========================================================================
+   Dashboard Widgets, Statistics & Grid
+   ========================================================================== */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat-card .label {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.stat-card .value {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.stat-card .change {
+  font-size: 12px;
+  color: var(--success);
+}
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.panel h3 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.welcome-msg {
+  background: rgba(56, 139, 253, 0.1);
+  border: 1px solid rgba(56, 139, 253, 0.4);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin-bottom: 24px;
+}
+
+.welcome-msg h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.welcome-msg p {
+  color: var(--text-muted);
+}
+
+.dash-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 24px;
+  align-items: stretch;
+}
+
+.dash-main {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 0;
+}
+
+.dash-main .welcome-msg {
+  margin-bottom: 0;
+}
+
+.dash-side {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.dash-main .stats-grid {
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  margin-bottom: 0;
+  flex: 1;
+}
+
+.dash-side h3 {
+  font-size: 16px;
+  font-weight: 600;
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ==========================================================================
+   Filter Tabs & Underline Switches
+   ========================================================================== */
+.filter-tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+
+.filter-tab {
+  position: relative;
+  padding: 8px 16px;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  color: var(--text);
+  border-radius: var(--radius) var(--radius) 0 0;
+  transition: background-color 0.1s;
+}
+
+.filter-tab:hover {
+  background: rgba(177, 186, 196, 0.12);
+}
+
+.filter-tab.active {
+  font-weight: 600;
+}
+
+.filter-tab.active::after {
+  content: '';
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: -1px;
+  height: 2px;
+  background: var(--tab);
+  border-radius: 6px;
+}
+
+/* ==========================================================================
+   Responsive Breakpoints
+   ========================================================================== */
+@media (max-width: 960px) {
+  .gh-top,
+  .page-wrap {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .sidebar-nav {
+    padding: 0 8px;
+  }
+
+  .dash-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .user-details {
+    display: none;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
