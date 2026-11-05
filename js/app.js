@@ -690,9 +690,7 @@
         html +=
           '<div class="nav-item' +
           isActive +
-          '" onclick="window.navigateTo(\'' + item.id + '\')" data-id="' + item.id + '">' + /*
-          item.label +
-          */
+          '" onclick="window.navigateTo(\'' + item.id + '\')" data-id="' + item.id + '">' +
           '<span class="icon">' +
           item.icon +
           '</span> ' +
@@ -748,7 +746,7 @@
       quickButtons += '<button class="quick-btn" onclick="window.navigateTo(\'users\')" data-id="quick-users">' + window.quickActionIcon('lock') + ' Manage Users</button>';
     }
     if (!quickButtons) {
-      quickButtons = '<p style="font-size:0.85rem;color:var(--text-muted);padding:8px 0;">No quick actions available. Contact an administrator.</p>';
+      quickButtons = '<p class="empty-quick-actions">No quick actions available. Contact an administrator.</p>';
     }
 
     const roleMessages = {
@@ -798,15 +796,6 @@
       '    <div class="quick-actions">' +
       quickButtons +
       '    </div>' +
-      (false ?
-      '    <h3>Quick Actions</h3>' +
-      (role !== 'user'
-        ? '    <button class="btn btn-secondary btn-full" onclick="window.navigateTo(\'users\')" style="margin-bottom: 12px;">⚙️ Manage Users</button>'
-        : '') +
-      '    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">' +
-      '      Navigate modules using the top underline navigation bar.' +
-      '    </p>' +
-      : '') +
       '    <button class="btn btn-primary btn-full" onclick="window.handleLogout()" style="margin-top: auto;">Sign out</button>' +
       '  </div>' +
       '</div>';
@@ -1182,21 +1171,21 @@
       list = list.filter(function (u) { return u.status === 'blocked'; });
     }
 
-    // Apply live search (Planted QA Inconsistency 1: email search checks exact case / raw search term)
+    // Apply live search (case-insensitive across name, email, and role)
     if (window.userSearch && window.userSearch.trim()) {
       const q = window.userSearch.trim().toLowerCase();
-      const rawTerm = window.userSearch.trim();
       list = list.filter(function (u) {
         const fullName = ((u.firstName || '') + ' ' + (u.lastName || '')).toLowerCase();
         const role = (u.role || '').toLowerCase();
-        return fullName.includes(q) || role.includes(q) || (u.email && u.email.includes(rawTerm));
+        const email = (u.email || '').toLowerCase();
+        return fullName.includes(q) || role.includes(q) || email.includes(q);
       });
     }
 
     const statusBadge = function (s) {
       if (s === 'active') return '<span class="badge badge-active">Active</span>';
       if (s === 'blocked') return '<span class="badge badge-deleted">Blocked</span>';
-      if (s === 'pending') return '<span class="badge badge-pending" style="background:#fef3c7;color:#92400e;">Pending</span>'; // Planted QA Inconsistency 2: inline light badge in dark theme
+      if (s === 'pending') return '<span class="badge badge-pending">Pending</span>';
       if (s === 'disapproved') return '<span class="badge badge-deleted">Disapproved</span>';
       return window.escapeHtml(s || '-');
     };
@@ -1412,8 +1401,7 @@
       const isSelfEdit = window.currentUser && u.email.toLowerCase() === window.currentUser.email.toLowerCase();
       if (isSelfEdit && ((isSuper && role !== u.role) || status !== 'active')) {
         if (err) {
-          // Planted QA Inconsistency 3: Mentions Superadmin even if current user is Admin
-          err.textContent = 'You cannot change your own role or block/deactivate your own account. Contact a Superadmin.';
+          err.textContent = 'You cannot change your own role or block/deactivate your own account.';
           err.classList.add('show');
         }
         return;
@@ -1645,12 +1633,7 @@
     });
     if (!g || !window.rightsDraft) return;
 
-    // Planted QA Inconsistency: In reports module, "None" clears child reports but leaves reports.view checked
-    if (groupKey === 'reports' && !on) {
-      // Intentionally leave window.rightsDraft[g.view] untouched for QA defect verification
-    } else {
-      window.rightsDraft[g.view] = on;
-    }
+    window.rightsDraft[g.view] = on;
 
     g.items.forEach(function (k) {
       window.rightsDraft[k] = on;
@@ -1681,8 +1664,11 @@
     }
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') {
-        window.closeAccountModal();
-        window.closeRightsModal();
+        if (umRightsModal && umRightsModal.classList.contains('active')) {
+          window.closeRightsModal();
+        } else if (umModal && umModal.classList.contains('active')) {
+          window.closeAccountModal();
+        }
       }
     });
     if (umModal) {

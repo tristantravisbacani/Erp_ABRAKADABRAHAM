@@ -684,6 +684,7 @@
 .rights-item.disabled {
   opacity: 0.45;
   cursor: not-allowed;
+  pointer-events: none;
 }
 
 .rights-item input[type="checkbox"] {
@@ -734,6 +735,13 @@
 .quick-btn:hover {
   background: var(--hover);
   transform: scale(1.03);
+  color: var(--text-bright, #fff);
+}
+
+.empty-quick-actions {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  padding: 8px 0;
 }
 
 .qa-icon {

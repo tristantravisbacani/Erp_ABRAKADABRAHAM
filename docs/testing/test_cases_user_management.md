@@ -110,8 +110,8 @@ This specification defines the test suite and validation logs for the **User Man
   4. Type uppercase domain `@HOPE.COM`.
 - **Expected Result:**
   - Table filters in real-time without input blur via `window.rerenderKeepFocus()`.
-  - *Observation:* Uppercase email search fails to return records due to case-sensitive check on raw input (logged as `DEF-UM-01`).
-- **Status:** **PASS (Defect Logged)**
+  - Uppercase and lowercase email queries match case-insensitively (resolved in fix PR).
+- **Status:** **PASS**
 
 ---
 
@@ -242,12 +242,12 @@ This specification defines the test suite and validation logs for the **User Man
 | **TC-UM-08** | Role Isolation | Superadmin accounts hidden from Admin users | Admin | **PASS** | None |
 | **TC-UM-09** | Role Isolation | Admin role escalation prevention | Admin | **PASS** | None |
 | **TC-UM-10** | Role Isolation | Admin restricted to managing standard user rights | Admin | **PASS** | None |
-| **TC-UM-11** | Approval Flow | Superadmin / Admin approves pending registration | Superadmin | **PASS** | `DEF-UM-02` |
+| **TC-UM-11** | Approval Flow | Superadmin / Admin approves pending registration | Superadmin | **PASS** | `DEF-UM-02` (Resolved) |
 | **TC-UM-12** | Approval Flow | Superadmin / Admin disapproves pending registration | Admin | **PASS** | None |
 | **TC-UM-13** | Guardrails | System blocks blocking last remaining Superadmin | Superadmin | **PASS** | None |
 | **TC-UM-14** | Guardrails | System blocks demoting last remaining Superadmin | Superadmin | **PASS** | None |
 | **TC-UM-15** | Guardrails | System blocks disapproving last remaining Superadmin | Superadmin | **PASS** | None |
-| **TC-UM-16** | Guardrails | Self-blocking and self-demotion prevention | All | **PASS (Warning)** | `DEF-UM-03` |
+| **TC-UM-16** | Guardrails | Self-blocking and self-demotion prevention | All | **PASS** | `DEF-UM-03` (Resolved) |
 
 ---
 
@@ -258,19 +258,46 @@ This specification defines the test suite and validation logs for the **User Man
 - **Found in:** `js/app.js` (`renderUserManagement`)  
 - **Description:** Searching for users by name or role converts queries to lower case (`fullName.includes(q)`), but email search performs an exact case substring match on `u.email.includes(rawTerm)`.  
 - **Impact:** Entering `@HOPE.COM` or uppercase letters returns zero results even when corresponding lowercase email addresses exist.  
-- **Remediation Recommendation:** Change matching clause to `(u.email && u.email.toLowerCase().includes(q))`.
+- **Remediation Recommendation:** Change matching clause to `(u.email && u.email.toLowerCase().includes(q))`.  
+- **Status:** **Resolved** (Normalized email matching with lowercase conversion).
 
 ### DEF-UM-02: Pending Status Badge Inline Style Causes Dark Theme Contrast Mismatch
 - **Severity:** Low (UI / Design System Alignment)  
 - **Found in:** `js/app.js` (`renderUserManagement`)  
 - **Description:** The pending badge is rendered with hardcoded inline style `style="background:#fef3c7;color:#92400e;"` which belongs to light mode. In GitHub Primer dark mode, this produces an un-themed, high-contrast banner.  
-- **Remediation Recommendation:** Remove inline style and rely on CSS class `.badge-pending` defined in `css/dashboard.css`.
+- **Remediation Recommendation:** Remove inline style and rely on CSS class `.badge-pending` defined in `css/dashboard.css`.  
+- **Status:** **Resolved** (Removed inline styles, standardizing on theme `.badge-pending`).
 
 ### DEF-UM-03: Self-Edit Alert Message Copy Inconsistency for Admin Role
 - **Severity:** Low (Copywriting / Usability)  
 - **Found in:** `js/app.js` (`saveAccount`)  
 - **Description:** When an administrator attempts to change their own role or block their account, the alert reads: *"You cannot change your own role or block/deactivate your own account. Contact a Superadmin."* While acceptable, the message assumes a Superadmin must be contacted rather than tailoring the copy when an Admin is viewing their profile.  
-- **Remediation Recommendation:** Standardize message or provide contextual copy based on `window.currentUser.role`.
+- **Remediation Recommendation:** Standardize message to: *"You cannot change your own role or block/deactivate your own account."*  
+- **Status:** **Resolved** (Updated alert copy to uniform guard message).
+
+### DEF-RT-01: Reports Module "None" Toggle Left reports.view Checked
+- **Severity:** Low (UI / RBAC Consistency)  
+- **Found in:** `js/app.js` (`selectAllInGroup`)  
+- **Description:** Deselecting all rights in the reports module cleared child report items but retained `reports.view`.  
+- **Status:** **Resolved** (Uniform toggle logic applied across all modules).
+
+### DEF-MD-01: Escape Key Cascading Dismissal
+- **Severity:** Low (Modal Interaction)  
+- **Found in:** `js/app.js` (`DOMContentLoaded` keydown listener)  
+- **Description:** Pressing Escape simultaneously dismissed both User and Rights modals.  
+- **Status:** **Resolved** (Escape now prioritizes and closes only the topmost active modal).
+
+### DEF-UI-01: Disabled Permission Checkbox Interaction Focus
+- **Severity:** Low (Accessibility / Pointer Interaction)  
+- **Found in:** `css/dashboard.css` (`.rights-item.disabled`)  
+- **Description:** Disabled permission items had reduced opacity but could still receive focus/pointer events.  
+- **Status:** **Resolved** (Added `pointer-events: none;` to `.rights-item.disabled`).
+
+### DEF-UI-02: Quick Action Hover Color Sync
+- **Severity:** Low (UI Visual Polish)  
+- **Found in:** `css/dashboard.css` (`.quick-btn:hover`)  
+- **Description:** Quick action icon hovered to primary accent while text label remained default text color.  
+- **Status:** **Resolved** (Synchronized text color transition to `--text-bright` on hover).
 
 ---
 
