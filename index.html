@@ -104,7 +104,7 @@
 
           <form id="loginForm" onsubmit="handleLogin(event)">
             <div class="field">
-              <input type="email" id="loginEmail" placeholder="Email address" aria-label="Email address" autocomplete="username" required pattern="[^\s'&quot;&lt;&gt;&amp;\\]+@[^\s'&quot;&lt;&gt;&amp;\\]+" title="Email can't contain spaces, quotes or the symbols &lt; &gt; &amp;" />
+              <input type="email" id="loginEmail" placeholder="Email address" aria-label="Email address" autocomplete="username" required pattern="[^\s'&quot;&lt;&gt;&amp;\\]+@[^\s'&quot;&lt;&gt;&amp;\\]+" title="Email can't contain spaces, quotes or the symbols &lt; &gt; &amp;" oninput="this.value = this.value.trim()" />
             </div>
             <div class="field password-wrapper">
               <input type="password" id="loginPassword" placeholder="Password" aria-label="Password" required />

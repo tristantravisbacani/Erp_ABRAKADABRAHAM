@@ -295,12 +295,11 @@
           reportAccess(['reports.topCustomers', 'reports.topProducts', 'reports.topSales']);
       },
       employees: function () {
-        return ['hr.view', 'hr.jhView', 'sales.view'].some(window.can) ||
+        return ['hr.view', 'hr.jhView'].some(window.can) ||
           reportAccess([
             'reports.activeEmployees',
             'reports.allEmployees',
-            'reports.empJobHistory',
-            'reports.topSales'
+            'reports.empJobHistory'
           ]);
       },
       jobs: function () {
@@ -341,6 +340,21 @@
 
   async function fetchDataset(client, name, scope) {
     const config = DATASETS[name];
+    if (name === 'employees' && !canReadDataset(name) && (
+      ['sales.view', 'sales.detailView'].some(window.can) ||
+      (window.can('reports.view') && window.can('reports.topSales'))
+    )) {
+      const { data, error } = await client.rpc('get_sales_employee_names');
+      if (error) throw error;
+      return data.map(function (row) {
+        return {
+          empNo: row.emp_no,
+          lastName: row.last_name,
+          firstName: row.first_name,
+          isDeleted: row.is_deleted
+        };
+      });
+    }
     if (!canReadDataset(name)) return [];
     const { data, error } = await client
       .from(config.table)

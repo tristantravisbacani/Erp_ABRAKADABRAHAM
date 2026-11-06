@@ -296,7 +296,6 @@
       '    <div class="quick-actions">' +
       quickButtons +
       '    </div>' +
-      '    <button class="btn btn-primary btn-full" onclick="window.handleLogout()" style="margin-top: auto;">Sign out</button>' +
       '  </div>' +
       '</div>';
   };
