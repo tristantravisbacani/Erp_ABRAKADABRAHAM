@@ -2,7 +2,7 @@
 
 ## Current implementation status
 
-The browser Supabase client is configured with the project URL and publishable key. The initial migration creates protected profile, permission, and audit tables. The current login, registration, password-reset, and ERP modules still use the existing local demo implementation; they do not yet read or write Supabase data.
+The browser Supabase client is configured with the project URL and publishable key. The initial migration has been applied to the configured project, and the five demo Auth users and sandbox profiles have been provisioned. The current login, registration, password-reset, and ERP modules still use the existing local demo implementation; they do not yet read or write Supabase data.
 
 The publishable key is intended for browser use. Never put the Supabase secret key or a service-role key in frontend code, repository files, or demo notes. `.env` is ignored by Git.
 
@@ -30,7 +30,7 @@ This password is intentionally public for professor/demo access. Never reuse it 
 | `manager@hope.com` | Admin |
 | `user@hope.com` | User |
 
-Create each user in **Authentication → Users** in the Supabase Dashboard with the shared demo password above and confirm the email address. Do not reuse a real account password. After all five users exist and the migration has run, execute [`../supabase/seed/demo_profiles.sql`](../supabase/seed/demo_profiles.sql) in the SQL Editor. It activates these five profiles and assigns them the `sandbox` scope.
+The configured project already has these users, created in **Authentication → Users** with the shared demo password and auto-confirmed for testing. To provision a fresh project, create each user in the Dashboard with the shared demo password above and auto-confirm the email address. Do not reuse a real account password. After all five users exist and the migration has run, execute [`../supabase/seed/demo_profiles.sql`](../supabase/seed/demo_profiles.sql) in the SQL Editor. It sets their demo names and roles, activates the profiles, and assigns them the `sandbox` scope.
 
 Do not grant these accounts access to production records. The ERP module tables and their RLS policies are not part of this initial migration; add them before migrating module data, with policies that enforce both permissions and the profile's `access_scope`.
 

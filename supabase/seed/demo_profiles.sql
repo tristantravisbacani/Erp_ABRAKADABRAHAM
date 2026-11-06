@@ -4,6 +4,20 @@ declare
 begin
   update public.profiles as profile
   set
+    first_name = case lower(profile.email)
+      when 'ceo@hope.com' then 'Tristan Travis'
+      when 'superadmin@hope.com' then 'Kurt Thomas Jon'
+      when 'admin@hope.com' then 'Mischa Andrei Sir'
+      when 'manager@hope.com' then 'Clark Jarred'
+      when 'user@hope.com' then 'Simon Conrad'
+    end,
+    last_name = case lower(profile.email)
+      when 'ceo@hope.com' then 'Bacani'
+      when 'superadmin@hope.com' then 'Abraham'
+      when 'admin@hope.com' then 'Solis'
+      when 'manager@hope.com' then 'Deocampo'
+      when 'user@hope.com' then 'Mangubat'
+    end,
     role = case lower(profile.email)
       when 'ceo@hope.com' then 'superadmin'
       when 'superadmin@hope.com' then 'superadmin'
