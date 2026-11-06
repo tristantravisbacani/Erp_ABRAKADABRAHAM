@@ -294,6 +294,8 @@
       window.renderCustomers();
     } else if (page === 'products') {
       window.renderProducts();
+    } else if (page === 'hr') {
+      window.renderHR();
     } else if (page === 'users') {
       window.renderUserManagement();
     } else {
