@@ -61,9 +61,42 @@
     { prodCode: 'PS0002', description: 'Ms WinServer 2012', unit: 'pc', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
     { prodCode: 'PS0003', description: 'Cisco Virt Hardware', unit: 'pc', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' }
   ];
+  const PRICE_STORAGE_KEY = 'hope_erp_prices_v2';
+  const PRICE_FIXTURES = [
+    ['2010-05-15', 'AK0001', 12], ['2010-05-15', 'AK0002', 8.37], ['2010-05-15', 'AK0003', 99.99],
+    ['2010-05-15', 'AM0001', 36.45], ['2010-05-15', 'AM0002', 69.26], ['2010-05-15', 'AM0003', 20.43],
+    ['2010-05-15', 'AM0004', 88.14], ['2010-05-15', 'AM0005', 49.27], ['2010-05-15', 'AP0001', 299.99],
+    ['2010-05-15', 'AP0002', 304.48], ['2010-05-15', 'AP0003', 349.99], ['2010-05-15', 'MD0001', 119.68],
+    ['2010-05-15', 'MD0002', 149.99], ['2010-05-15', 'MD0003', 239.96], ['2010-05-15', 'MD0004', 132.21],
+    ['2010-05-15', 'MD0005', 825], ['2010-05-15', 'MD0006', 124.29], ['2010-05-15', 'NB0001', 300],
+    ['2010-05-15', 'NB0002', 298], ['2010-05-15', 'NB0003', 199], ['2010-05-15', 'NB0004', 279],
+    ['2010-05-15', 'PA0001', 219], ['2010-05-15', 'PA0002', 102.99], ['2010-07-12', 'PC0001', 454.54],
+    ['2010-05-15', 'PC0001', 499.99], ['2010-07-12', 'PC0002', 197.99], ['2010-05-15', 'PC0002', 179.99],
+    ['2010-05-15', 'PC0003', 390], ['2010-05-15', 'PC0004', 538], ['2010-05-15', 'PF0001', 123.75],
+    ['2010-05-15', 'PF0002', 64.25], ['2010-05-15', 'PF0003', 28.87], ['2010-05-15', 'PF0004', 92.85],
+    ['2010-05-15', 'PF0005', 119], ['2010-05-15', 'PF0006', 7.5], ['2010-05-15', 'PR0001', 81.72],
+    ['2010-05-15', 'PR0002', 99.99], ['2010-05-15', 'PR0003', 123], ['2010-08-01', 'MD0001', 131.65],
+    ['2010-08-01', 'MD0002', 164.99], ['2010-08-01', 'MD0003', 263.96], ['2010-08-01', 'MD0004', 145.43],
+    ['2010-08-01', 'MD0005', 907.5], ['2010-08-01', 'MD0006', 136.72], ['2010-08-16', 'PF0001', 112.5],
+    ['2010-08-16', 'PF0002', 58.41], ['2010-08-16', 'PF0003', 26.25], ['2010-08-16', 'PF0004', 84.41],
+    ['2010-08-16', 'PF0005', 108.18], ['2010-08-16', 'PF0006', 6.82], ['2010-08-16', 'AM0001', 38.27],
+    ['2010-08-16', 'AM0002', 72.72], ['2010-08-16', 'AM0003', 21.45], ['2010-08-16', 'AM0004', 92.55],
+    ['2010-08-16', 'AM0005', 51.73], ['2010-08-16', 'AP0001', 314.99], ['2010-08-16', 'AP0002', 319.7],
+    ['2010-08-16', 'AP0003', 367.49], ['2010-08-16', 'AD0001', 58], ['2010-08-16', 'AD0002', 69.99],
+    ['2010-08-16', 'AD0003', 54.44], ['2010-08-16', 'AD0004', 71.99], ['2010-08-16', 'NH0001', 21.99],
+    ['2010-08-16', 'NH0002', 24.99], ['2010-08-16', 'NH0003', 171.69], ['2010-12-01', 'NT0001', 412.49],
+    ['2010-12-01', 'NT0002', 324.99], ['2010-12-01', 'NT0003', 287], ['2010-12-01', 'NT0004', 219.89],
+    ['2010-12-01', 'NT0005', 499.99], ['2010-12-01', 'NT0006', 57.99], ['2010-12-01', 'PS0001', 3200],
+    ['2010-12-01', 'PS0002', 699.99], ['2010-12-01', 'PS0003', 599.99], ['2010-12-01', 'MP0001', 199.95],
+    ['2010-12-01', 'MP0002', 126.72], ['2010-12-01', 'MP0003', 425], ['2010-12-01', 'MP0004', 302],
+    ['2011-02-01', 'NB0005', 1184.72]
+  ];
 
   let memoryProducts = null;
+  let memoryPrices = null;
   let productFilter = 'active';
+  let priceFilter = 'active';
+  let selectedProductCode = null;
 
   function cloneDefaultProducts() {
     return DEFAULT_PRODUCTS.map(function (product) {
@@ -101,6 +134,56 @@
     } catch (error) {
       console.error('[Product storage write error]', error);
     }
+  }
+
+  function getPrices() {
+    if (memoryPrices) return memoryPrices;
+    try {
+      const stored = localStorage.getItem(PRICE_STORAGE_KEY);
+      if (stored !== null) {
+        const prices = JSON.parse(stored);
+        if (!Array.isArray(prices)) throw new Error('Stored price history must be an array.');
+        return prices;
+      }
+
+      const prices = PRICE_FIXTURES.map(function (fixture) {
+        return {
+          effDate: fixture[0],
+          prodCode: fixture[1],
+          unitPrice: fixture[2],
+          isDeleted: false,
+          stamp: 'CREATED system 2026-11-01 9:00 AM'
+        };
+      });
+      localStorage.setItem(PRICE_STORAGE_KEY, JSON.stringify(prices));
+      return prices;
+    } catch (error) {
+      console.error('[Price history storage read error]', error);
+      if (!memoryPrices) {
+        memoryPrices = PRICE_FIXTURES.map(function (fixture) {
+          return {
+            effDate: fixture[0],
+            prodCode: fixture[1],
+            unitPrice: fixture[2],
+            isDeleted: false,
+            stamp: 'CREATED system 2026-11-01 9:00 AM'
+          };
+        });
+      }
+      return memoryPrices;
+    }
+  }
+
+  function latestPrice(productCode) {
+    const today = window.todayStr();
+    const price = getPrices()
+      .filter(function (item) {
+        return item.prodCode === productCode && !item.isDeleted && item.effDate <= today;
+      })
+      .sort(function (a, b) {
+        return b.effDate.localeCompare(a.effDate);
+      })[0];
+    return price ? '$' + Number(price.unitPrice).toFixed(2) : '—';
   }
 
   function makeStamp(action) {
@@ -160,16 +243,18 @@
       return !product.isDeleted;
     }).length;
     const inactiveCount = allProducts.length - activeCount;
-    const columnCount = canSeeDeleted ? 6 : 4;
+    const columnCount = canSeeDeleted ? 7 : 5;
     const rows = products.length
       ? products.map(function (product) {
           const isDeleted = !!product.isDeleted;
           let actions = '—';
           if (isDeleted && canSeeDeleted) {
             actions =
+              `<button type="button" class="btn-edit" onclick="window.openPriceHistory('${window.jsArg(product.prodCode)}')">Prices</button>` +
               `<button type="button" class="btn-restore" onclick="window.restoreProduct('${window.jsArg(product.prodCode)}')">Restore</button>`;
           } else if (!isDeleted) {
-            actions = '';
+            actions =
+              `<button type="button" class="btn-edit" onclick="window.openPriceHistory('${window.jsArg(product.prodCode)}')">Prices</button>`;
             if (window.can('products.edit')) {
               actions +=
                 `<button type="button" class="btn-edit" onclick="window.openEditProduct('${window.jsArg(product.prodCode)}')">Edit</button>`;
@@ -198,7 +283,9 @@
             window.escapeHtml(product.description) +
             '</td><td>' +
             window.escapeHtml(product.unit) +
-            '</td>' +
+            '</td><td><strong>' +
+            latestPrice(product.prodCode) +
+            '</strong></td>' +
             adminColumns +
             '<td><div class="action-btns">' +
             actions +
@@ -227,8 +314,8 @@
         ')</button></div>'
       : '';
     const headings = canSeeDeleted
-      ? '<th>Prod Code</th><th>Description</th><th>Unit</th><th>Status</th><th>Stamp</th><th>Actions</th>'
-      : '<th>Prod Code</th><th>Description</th><th>Unit</th><th>Actions</th>';
+      ? '<th>Prod Code</th><th>Description</th><th>Unit</th><th>Current Price</th><th>Status</th><th>Stamp</th><th>Actions</th>'
+      : '<th>Prod Code</th><th>Description</th><th>Unit</th><th>Current Price</th><th>Actions</th>';
 
     area.innerHTML =
       '<div class="module-toolbar"><h3>Product Management</h3>' +
@@ -251,6 +338,7 @@
   window.productSearch = '';
   window.getProducts = getProducts;
   window.saveProducts = saveProducts;
+  window.getPrices = getPrices;
   window.renderProducts = renderProducts;
   window.openAddProduct = function () {
     if (!window.can('products.add')) {
@@ -444,4 +532,111 @@
     productFilter = filter;
     renderProducts();
   };
+  window.openPriceHistory = function (prodCode) {
+    const product = getProducts().find(function (item) {
+      return item.prodCode === prodCode;
+    });
+    if (!product) {
+      window.alert('Product not found.');
+      return;
+    }
+
+    selectedProductCode = prodCode;
+    priceFilter = 'active';
+    const title = document.getElementById('priceHistoryTitle');
+    const subtitle = document.getElementById('priceHistorySubtitle');
+    if (title) title.textContent = 'Price History — ' + product.prodCode;
+    if (subtitle) {
+      subtitle.textContent = product.description + ' · Unit: ' + product.unit;
+    }
+    renderPriceHistory();
+    window.openModal('priceHistory');
+  };
+  window.closePriceHistory = function () {
+    selectedProductCode = null;
+    window.closeModal('priceHistory');
+  };
+  window.setPriceFilter = function (filter) {
+    if (['active', 'deleted', 'all'].indexOf(filter) < 0) {
+      console.warn('[Price history filter] Invalid filter:', filter);
+      return;
+    }
+    const role = window.currentUser && window.currentUser.role;
+    if (filter !== 'active' && role !== 'superadmin' && role !== 'admin') {
+      console.warn('[Price history filter] Insufficient permissions for filter:', filter);
+      return;
+    }
+    priceFilter = filter;
+    renderPriceHistory();
+  };
+
+  function renderPriceHistory() {
+    if (!selectedProductCode) return;
+    const role = window.currentUser && window.currentUser.role;
+    const canSeeDeleted = role === 'superadmin' || role === 'admin';
+    let prices = getPrices().filter(function (price) {
+      return price.prodCode === selectedProductCode;
+    });
+    if (!canSeeDeleted) {
+      prices = prices.filter(function (price) {
+        return !price.isDeleted;
+      });
+    } else if (priceFilter === 'active') {
+      prices = prices.filter(function (price) {
+        return !price.isDeleted;
+      });
+    } else if (priceFilter === 'deleted') {
+      prices = prices.filter(function (price) {
+        return price.isDeleted;
+      });
+    }
+    prices.sort(function (a, b) {
+      return b.effDate.localeCompare(a.effDate);
+    });
+
+    const tableHead = document.getElementById('priceHistoryHead');
+    const tableBody = document.getElementById('priceHistoryBody');
+    const toolbar = document.getElementById('priceHistoryToolbar');
+    if (!tableHead || !tableBody || !toolbar) {
+      console.error('[Price history render error] Required modal elements are missing.');
+      return;
+    }
+
+    tableHead.innerHTML = canSeeDeleted
+      ? '<th>Effective Date</th><th>Unit Price</th><th>Status</th><th>Stamp</th>'
+      : '<th>Effective Date</th><th>Unit Price</th>';
+    toolbar.innerHTML = canSeeDeleted
+      ? '<div class="filter-tabs" role="group" aria-label="Filter price history">' +
+        '<button type="button" class="filter-tab' +
+        (priceFilter === 'active' ? ' active' : '') +
+        '" onclick="window.setPriceFilter(&quot;active&quot;)">Active</button>' +
+        '<button type="button" class="filter-tab' +
+        (priceFilter === 'deleted' ? ' active' : '') +
+        '" onclick="window.setPriceFilter(&quot;deleted&quot;)">Inactive</button>' +
+        '<button type="button" class="filter-tab' +
+        (priceFilter === 'all' ? ' active' : '') +
+        '" onclick="window.setPriceFilter(&quot;all&quot;)">All</button></div>'
+      : '';
+    tableBody.innerHTML = prices.length
+      ? prices.map(function (price) {
+          return '<tr' +
+            (price.isDeleted ? ' class="deleted-row"' : '') +
+            '><td>' +
+            window.escapeHtml(price.effDate) +
+            '</td><td><strong>$' +
+            Number(price.unitPrice).toFixed(2) +
+            '</strong></td>' +
+            (canSeeDeleted
+              ? '<td><span class="badge ' +
+                (price.isDeleted ? 'badge-deleted">Inactive' : 'badge-active">Active') +
+                '</span></td><td><div class="product-stamp">' +
+                window.escapeHtml(price.stamp || '—') +
+                '</div></td>'
+              : '') +
+            '</tr>';
+        }).join('')
+      : '<tr><td colspan="' +
+        (canSeeDeleted ? 4 : 2) +
+        '"><div class="empty-state">No price history for this product.</div></td></tr>';
+  }
 })();
