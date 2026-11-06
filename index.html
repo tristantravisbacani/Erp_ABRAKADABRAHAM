@@ -394,6 +394,37 @@
     </div>
   </div>
 
+  <!-- ==================== DEPARTMENT ADD/EDIT MODAL ==================== -->
+  <div class="modal-overlay" id="departmentModal">
+    <div class="modal modal-lg">
+      <div class="modal-header">
+        <div>
+          <h2 id="departmentModalTitle">Add Department</h2>
+          <p>Enter department details</p>
+        </div>
+        <button type="button" class="modal-close" onclick="window.closeDepartmentModal()" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-error" id="departmentError" role="alert"></div>
+        <form id="departmentForm" onsubmit="window.saveDepartment(event)">
+          <input type="hidden" id="departmentEditCode" value="" />
+          <div class="form-group">
+            <label for="departmentCode">Department Code</label>
+            <input type="text" id="departmentCode" required pattern="[A-Za-z0-9._\-]+" title="Letters, numbers, dot, dash and underscore only" />
+          </div>
+          <div class="form-group">
+            <label for="departmentName">Department Name</label>
+            <input type="text" id="departmentName" required />
+          </div>
+          <div class="product-form-actions">
+            <button type="submit" class="btn btn-primary btn-full" id="departmentSaveBtn">Save Department</button>
+            <button type="button" class="btn btn-secondary" onclick="window.closeDepartmentModal()">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <!-- ==================== EMPLOYEE ADD/EDIT MODAL ==================== -->
   <div class="modal-overlay" id="employeeModal">
     <div class="modal modal-lg">
