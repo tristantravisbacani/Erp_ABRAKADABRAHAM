@@ -1312,7 +1312,8 @@
     }
     if (!window.confirm('Mark this job as inactive?')) return;
 
-    const job = getJobs().find(function (item) {
+    const jobs = getJobs();
+    const job = jobs.find(function (item) {
       return item.jobCode === jobCode && !item.isDeleted;
     });
     if (!job) {
