@@ -252,7 +252,8 @@
         <form id="resetForm" onsubmit="handleReset(event)">
           <div class="form-group">
             <label for="resetEmail">Email address</label>
-            <input type="email" id="resetEmail" placeholder="you@company.com" required pattern="[^\s'&quot;&lt;&gt;&amp;\\]+@[^\s'&quot;&lt;&gt;&amp;\\]+" title="Email can't contain spaces, quotes or the symbols &lt; &gt; &amp;" />
+            <input type="email" id="resetEmail" placeholder="you@company.com" required pattern="[^\s'&quot;&lt;&gt;&amp;\\]+@[^\s'&quot;&lt;&gt;&amp;\\]+" title="Email can't contain spaces, quotes or the symbols &lt; &gt; &amp;" aria-describedby="resetDemoNotice" />
+            <p id="resetDemoNotice" style="font-size: 13px; color: var(--text-muted); margin: 8px 0 0;">Shared demo accounts keep their public demo password; password reset is for real accounts.</p>
           </div>
           <button type="submit" class="btn btn-primary btn-full">Send Reset Link</button>
         </form>

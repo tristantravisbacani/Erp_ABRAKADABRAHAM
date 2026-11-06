@@ -2,7 +2,7 @@
 
 ## Current implementation status
 
-The browser Supabase client is configured with the project URL and publishable key. The initial migration has been applied to the configured project, and the five demo Auth users and sandbox profiles have been provisioned. Email/password login, session restore, sign-out, signup, password-reset, and Google OAuth flows use Supabase Auth. ERP module data and user administration are still localStorage-backed.
+The browser Supabase client is configured with the project URL and publishable key. The initial migration has been applied to the configured project, and the five demo Auth users and sandbox profiles have been provisioned. Email/password login, session restore, sign-out, signup, password-reset for real accounts, and Google OAuth flows use Supabase Auth. The app deliberately does not send reset requests for the five shared demo accounts; their public shared password remains unchanged. ERP module data and user administration are still localStorage-backed.
 
 The publishable key is intended for browser use. Never put the Supabase secret key or a service-role key in frontend code, repository files, or demo notes. `.env` is ignored by Git.
 
@@ -36,8 +36,8 @@ Do not grant these accounts access to production records. The ERP module tables 
 
 ## Auth configuration
 
-1. In **Authentication → URL Configuration**, set the Site URL to the deployed app origin and add each development/deployment origin to the Redirect URLs allow list. Password confirmation, password-reset, and OAuth redirects return to the current page URL.
-2. Keep email confirmations enabled for public signups. New signups receive only the default `user` role and `pending` account status; the profile trigger ignores role/status data submitted by the browser.
+1. In **Authentication → URL Configuration**, the current Site URL is `http://127.0.0.1:8765` for local testing, and the Redirect URLs allow list includes `http://127.0.0.1:8765/**` and `http://localhost:8765/**`. Password confirmation, password-reset, and OAuth redirects return to the current page URL. Before deployment, change the Site URL to the deployed app origin and add its redirect URL; no deployed origin is configured yet.
+2. Keep email confirmations enabled for public signups. Email sign-in is enabled and confirmation is currently required. New signups receive only the default `user` role and `pending` account status; the profile trigger ignores role/status data submitted by the browser.
 3. Configure Google OAuth under **Authentication → Sign In / Providers** and the Google Cloud OAuth client before enabling that sign-in option in a deployed app.
 4. Until the user-management UI is migrated, approve a legitimate signup from the SQL Editor only after verifying the account. For example:
 
@@ -50,6 +50,6 @@ Do not grant these accounts access to production records. The ERP module tables 
    ```
 
    Do not use the example email literally. This manual approval step only changes the profile status; profile role and permission changes must remain admin-controlled.
-5. Serve the repository through a local HTTP server for Auth testing and add that exact origin to the redirect allow list. Opening the page with `file://` is not supported.
+5. Serve the repository through a local HTTP server for Auth testing and ensure that origin is in the redirect allow list. Opening the page with `file://` is not supported. The app skips password-reset requests for the five shared demo accounts; requests for other account emails use Supabase Auth. Custom SMTP is currently disabled in the project, so configure a production email provider before relying on recovery emails for real users.
 
 The login screen lists the shared demo-only password because it is public by design. Do not reuse it for real accounts. Demo accounts should only be used to demonstrate non-sensitive sandbox data.
