@@ -298,6 +298,8 @@
       window.renderHR();
     } else if (page === 'sales') {
       window.renderSales();
+    } else if (page === 'reports') {
+      window.renderReports();
     } else if (page === 'users') {
       window.renderUserManagement();
     } else {

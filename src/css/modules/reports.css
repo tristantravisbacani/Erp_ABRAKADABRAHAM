@@ -1,0 +1,132 @@
+.report-tabs {
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.report-print-area {
+  padding: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.report-print-area > h3 {
+  margin: 0 0 16px;
+}
+
+.report-filter-bar {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.report-filter-bar label,
+.report-employee-filter label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.report-filter-bar .search-input,
+.report-employee-filter .search-input {
+  min-width: 150px;
+}
+
+.report-filter-bar .report-top-count {
+  width: 88px;
+  min-width: 88px;
+}
+
+.report-actions {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.report-note {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.report-employee-filter {
+  max-width: 400px;
+  margin-bottom: 16px;
+}
+
+.report-employee-filter .search-input {
+  width: 100%;
+}
+
+@media (max-width: 760px) {
+  .report-print-area {
+    padding: 12px;
+  }
+
+  .report-filter-bar {
+    align-items: stretch;
+  }
+
+  .report-actions {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .report-actions button {
+    flex: 1;
+  }
+}
+
+@media print {
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  #landing,
+  .gh-header,
+  .page-head,
+  .sidebar-nav,
+  .report-tabs,
+  .report-filter-bar,
+  .report-employee-filter,
+  .report-actions {
+    display: none !important;
+  }
+
+  #dashboard,
+  #contentArea,
+  .report-print-area {
+    display: block !important;
+    width: 100% !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: #fff !important;
+    color: #000 !important;
+    box-shadow: none !important;
+  }
+
+  .data-table-wrap {
+    overflow: visible !important;
+  }
+
+  .data-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+  }
+
+  .data-table th,
+  .data-table td {
+    color: #000 !important;
+    border: 1px solid #999 !important;
+  }
+
+  .badge {
+    border: 1px solid #777;
+  }
+}
