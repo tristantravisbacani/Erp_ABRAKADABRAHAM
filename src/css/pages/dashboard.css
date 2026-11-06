@@ -59,6 +59,12 @@
   font-weight: 700;
 }
 
+.header-account-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 /* ==========================================================================
    User Profile Pill & Dropdown Menu
    ========================================================================== */
@@ -472,6 +478,10 @@
 
   .user-details {
     display: none;
+  }
+
+  .header-account-group {
+    gap: 8px;
   }
 
   .stats-grid,

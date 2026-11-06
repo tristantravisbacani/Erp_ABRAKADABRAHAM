@@ -20,8 +20,8 @@
   <!-- ==================== LANDING / LOGIN PAGE ==================== -->
   <div id="landing">
     <!-- Top System Indicator Bar -->
-    <header style="padding: 10px 24px; display: flex; justify-content: flex-end; align-items: center; border-bottom: 1px solid var(--border); background: var(--subtle);">
-      <span class="status-pill status-local">Local Storage</span>
+    <header class="landing-status-bar">
+      <span class="status-pill status-checking" data-supabase-status role="status" aria-live="polite" title="Checking whether the cloud service is reachable. This does not indicate whether you are signed in.">Checking connection</span>
     </header>
 
     <div class="auth-page">
@@ -151,18 +151,21 @@
     <header class="gh-header">
       <div class="gh-top">
         <div class="gh-brand"><div class="logo-icon">H</div><span>Hope, Inc. ERP</span></div>
-        <div class="user-menu">
-          <div class="user-info" tabindex="0" aria-haspopup="true">
-            <div class="user-avatar" id="userAvatar">U</div>
-            <div class="user-details">
-              <div class="name" id="userName">User</div>
-              <div class="role" id="userRoleLabel">User</div>
+        <div class="header-account-group">
+          <span class="status-pill status-checking" data-supabase-status role="status" aria-live="polite" title="Checking whether the cloud service is reachable. This does not indicate whether you are signed in.">Checking connection</span>
+          <div class="user-menu">
+            <div class="user-info" tabindex="0" aria-haspopup="true">
+              <div class="user-avatar" id="userAvatar">U</div>
+              <div class="user-details">
+                <div class="name" id="userName">User</div>
+                <div class="role" id="userRoleLabel">User</div>
+              </div>
             </div>
-          </div>
-          <div class="user-dropdown">
-            <div class="user-dropdown-panel">
-              <div id="userMenuItems"><!-- User Management (admins only), filled by JS --></div>
-              <div class="menu-item" onclick="handleLogout()"><span class="icon">🚪</span> Logout</div>
+            <div class="user-dropdown">
+              <div class="user-dropdown-panel">
+                <div id="userMenuItems"><!-- User Management (admins only), filled by JS --></div>
+                <div class="menu-item" onclick="handleLogout()"><span class="icon">🚪</span> Logout</div>
+              </div>
             </div>
           </div>
         </div>

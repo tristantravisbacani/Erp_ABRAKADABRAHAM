@@ -242,20 +242,12 @@
       quickButtons = '<p class="empty-quick-actions">No quick actions available. Contact an administrator.</p>';
     }
 
-    const roleMessages = window.currentUser.authProvider === 'supabase'
-      ? {
-          superadmin:
-          'You are signed in to Supabase as Superadmin. Customer, Product, HR, Sales, and Price History data use Supabase; Reports use permission-checked database functions. User administration is managed in Supabase.',
-          admin:
-          'You are signed in to Supabase as Admin. Customer, Product, HR, Sales, and Price History data use Supabase; Reports use permission-checked database functions. User administration is managed in Supabase.',
-          user:
-          'You are signed in to Supabase. Customer, Product, HR, Sales, and Price History data use Supabase; Reports use permission-checked database functions. Access follows your assigned profile permissions.'
-        }
-      : {
-          superadmin: 'You have full system access. You can manage all modules, approve users, and assign rights.',
-          admin: 'You can manage core modules and standard user rights (except Superadmin accounts).',
-          user: 'You have operational access to modules assigned to your profile by an administrator.'
-        };
+    const roleMessages = {
+      superadmin: 'You have full system access and can manage administrator accounts and permissions.',
+      admin: 'You can manage ERP modules and user access based on your administrator permissions.',
+      user: 'Your access to ERP modules and reports is based on the permissions assigned to your account.'
+    };
+    const roleMessage = roleMessages[role] || 'Your access to ERP modules is based on the permissions assigned to your account.';
 
     area.innerHTML =
       '<div class="dash-grid">' +
@@ -265,7 +257,7 @@
       window.escapeHtml(window.currentUser.firstName || 'User') +
       '!</h2>' +
       '      <p>' +
-        (roleMessages[role] || 'Welcome to Hope, Inc. ERP system.') +
+        roleMessage +
         '</p>' +
         '    </div>' +
         '    <div class="stats-grid">' +
