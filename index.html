@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="src/css/modules/customers.css" />
   <link rel="stylesheet" href="src/css/modules/products.css" />
   <link rel="stylesheet" href="src/css/modules/hr.css" />
+  <link rel="stylesheet" href="src/css/modules/sales.css" />
 </head>
 <body>
 
@@ -593,6 +594,49 @@
     </div>
   </div>
 
+  <!-- ==================== SALES ADD/EDIT MODAL ==================== -->
+  <div class="modal-overlay" id="salesModal">
+    <div class="modal modal-lg">
+      <div class="modal-header">
+        <div>
+          <h2 id="salesModalTitle">New Sale</h2>
+          <p>Enter transaction details</p>
+        </div>
+        <button type="button" class="modal-close" onclick="window.closeSalesModal()" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-error" id="salesError" role="alert"></div>
+        <form id="salesForm" onsubmit="window.saveSale(event)">
+          <input type="hidden" id="salesEditNo" value="" />
+          <div class="form-row">
+            <div class="form-group">
+              <label for="salesTransNo">Transaction No.</label>
+              <input type="text" id="salesTransNo" placeholder="e.g. TR000013" required pattern="[A-Za-z0-9._\-]+" title="Letters, numbers, dot, dash and underscore only" />
+            </div>
+            <div class="form-group">
+              <label for="salesDate">Sales Date</label>
+              <input type="date" id="salesDate" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="salesCustomerNo">Customer</label>
+              <select id="salesCustomerNo" required></select>
+            </div>
+            <div class="form-group">
+              <label for="salesEmployeeNo">Employee</label>
+              <select id="salesEmployeeNo" required></select>
+            </div>
+          </div>
+          <div class="sales-form-actions">
+            <button type="submit" class="btn btn-primary btn-full" id="salesSaveBtn">Save Sale</button>
+            <button type="button" class="btn btn-secondary" onclick="window.closeSalesModal()">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <!-- ==================== USER MGMT: ADD/EDIT USER MODAL ==================== -->
   <div class="modal-overlay" id="umUserModal">
     <div class="modal modal-lg">
@@ -673,5 +717,6 @@
   <script src="src/js/modules/customers.js"></script>
   <script src="src/js/modules/products.js"></script>
   <script src="src/js/modules/hr.js"></script>
+  <script src="src/js/modules/sales.js"></script>
 </body>
 </html>
