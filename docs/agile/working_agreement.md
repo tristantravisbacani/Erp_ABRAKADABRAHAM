@@ -29,7 +29,7 @@ A task / PR is considered **Done** only when all of the following conditions are
 1. **Acceptance Criteria Verified:** Every acceptance criterion defined in the corresponding user story has been built and manually verified.
 2. **Code & Architecture Hygiene:**
    - Code is clean, well-commented, and preserves existing comments/contracts.
-   - Decoupled into appropriate files (`css/`, `js/`).
+   - Decoupled into appropriate source files under `src/css/` and `src/js/`.
    - Browser console shows zero unhandled errors or warnings.
 3. **Data Layer:**
    - Demo data currently uses browser localStorage.
