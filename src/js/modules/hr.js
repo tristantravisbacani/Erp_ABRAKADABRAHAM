@@ -142,7 +142,12 @@
     });
   }
 
+  function isSupabaseDataActive() {
+    return !!(window.currentUser && window.currentUser.authProvider === 'supabase');
+  }
+
   function getEmployees() {
+    if (isSupabaseDataActive()) return window.getSupabaseERPRecords('employees');
     if (memoryEmployees) return memoryEmployees;
 
     try {
@@ -166,6 +171,7 @@
   }
 
   function saveEmployees(employees) {
+    if (isSupabaseDataActive()) return window.saveSupabaseERPRecords('employees', employees);
     memoryEmployees = employees;
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(employees));
@@ -175,6 +181,7 @@
   }
 
   function getJobs() {
+    if (isSupabaseDataActive()) return window.getSupabaseERPRecords('jobs');
     if (memoryJobs) return memoryJobs;
     try {
       const stored = localStorage.getItem(JOB_STORAGE_KEY);
@@ -201,6 +208,7 @@
   }
 
   function saveJobs(jobs) {
+    if (isSupabaseDataActive()) return window.saveSupabaseERPRecords('jobs', jobs);
     memoryJobs = jobs;
     try {
       localStorage.setItem(JOB_STORAGE_KEY, JSON.stringify(jobs));
@@ -210,6 +218,7 @@
   }
 
   function getDepartments() {
+    if (isSupabaseDataActive()) return window.getSupabaseERPRecords('departments');
     if (memoryDepartments) return memoryDepartments;
     try {
       const stored = localStorage.getItem(DEPARTMENT_STORAGE_KEY);
@@ -236,6 +245,7 @@
   }
 
   function saveDepartments(departments) {
+    if (isSupabaseDataActive()) return window.saveSupabaseERPRecords('departments', departments);
     memoryDepartments = departments;
     try {
       localStorage.setItem(DEPARTMENT_STORAGE_KEY, JSON.stringify(departments));
@@ -245,6 +255,7 @@
   }
 
   function getJobHistories() {
+    if (isSupabaseDataActive()) return window.getSupabaseERPRecords('jobHistories');
     if (memoryJobHistories) return memoryJobHistories;
     try {
       const stored = localStorage.getItem(JOB_HISTORY_STORAGE_KEY);
@@ -271,6 +282,7 @@
   }
 
   function saveJobHistories(histories) {
+    if (isSupabaseDataActive()) return window.saveSupabaseERPRecords('jobHistories', histories);
     memoryJobHistories = histories;
     try {
       localStorage.setItem(JOB_HISTORY_STORAGE_KEY, JSON.stringify(histories));
@@ -293,6 +305,17 @@
     const firstName = window.currentUser && window.currentUser.firstName;
     const actor = firstName ? firstName.toLowerCase().replace(/\s+/g, '') : 'user';
     return action + ' ' + actor + ' ' + date + ' ' + hours + ':' + minutes + ' ' + ampm;
+  }
+
+  function showSaveError(label, error, element) {
+    console.error('[' + label + ' save error]', error);
+    const message = 'Could not save changes. ' + (error && error.message ? error.message : 'Please try again.');
+    if (element) {
+      element.textContent = message;
+      element.classList.add('show');
+    } else {
+      window.alert(message);
+    }
   }
 
   function isValidDate(value) {
@@ -824,6 +847,16 @@
   window.saveDepartments = saveDepartments;
   window.getJobHistories = getJobHistories;
   window.saveJobHistories = saveJobHistories;
+  window.getDemoEmployeeFixtures = cloneEmployees;
+  window.getDemoJobFixtures = function () {
+    return DEFAULT_JOBS.map(function (job) { return Object.assign({}, job); });
+  };
+  window.getDemoDepartmentFixtures = function () {
+    return DEFAULT_DEPARTMENTS.map(function (department) { return Object.assign({}, department); });
+  };
+  window.getDemoJobHistoryFixtures = function () {
+    return DEFAULT_JOB_HISTORIES.map(function (history) { return Object.assign({}, history); });
+  };
   window.renderHR = renderHR;
   window.setEmployeeSearch = function (query) {
     employeeSearch = String(query == null ? '' : query);
@@ -1021,7 +1054,7 @@
     const effectiveDate = document.getElementById('jobHistoryEffectiveDate');
     if (effectiveDate) effectiveDate.readOnly = false;
   };
-  window.saveJobHistory = function (event) {
+  window.saveJobHistory = async function (event) {
     if (event) event.preventDefault();
 
     const editKeyInput = document.getElementById('jobHistoryEditKey');
@@ -1112,11 +1145,16 @@
       });
     }
 
-    saveJobHistories(histories);
+    try {
+      await saveJobHistories(histories);
+    } catch (saveError) {
+      showSaveError('Job history', saveError, error);
+      return;
+    }
     window.closeJobHistoryForm();
     renderJobHistoryList();
   };
-  window.softDeleteJobHistory = function (empNo, jobCode, effectiveDate) {
+  window.softDeleteJobHistory = async function (empNo, jobCode, effectiveDate) {
     if (!window.can('hr.jhDelete')) {
       window.alert('You do not have permission to delete job history.');
       return;
@@ -1136,10 +1174,15 @@
     }
     history.isDeleted = true;
     history.stamp = makeStamp('DELETED');
-    saveJobHistories(histories);
+    try {
+      await saveJobHistories(histories);
+    } catch (saveError) {
+      showSaveError('Job history', saveError);
+      return;
+    }
     renderJobHistoryList();
   };
-  window.restoreJobHistory = function (empNo, jobCode, effectiveDate) {
+  window.restoreJobHistory = async function (empNo, jobCode, effectiveDate) {
     const role = window.currentUser && window.currentUser.role;
     if (role !== 'superadmin' && role !== 'admin') {
       window.alert('Only Superadmin or Admin can restore job history.');
@@ -1169,7 +1212,12 @@
     }
     history.isDeleted = false;
     history.stamp = makeStamp('RESTORED');
-    saveJobHistories(histories);
+    try {
+      await saveJobHistories(histories);
+    } catch (saveError) {
+      showSaveError('Job history', saveError);
+      return;
+    }
     renderJobHistoryList();
   };
   window.openAddJob = function () {
@@ -1237,7 +1285,7 @@
     const jobCode = document.getElementById('jobCode');
     if (jobCode) jobCode.readOnly = false;
   };
-  window.saveJob = function (event) {
+  window.saveJob = async function (event) {
     if (event) event.preventDefault();
 
     const editCode = document.getElementById('jobEditCode');
@@ -1301,18 +1349,24 @@
       });
     }
 
-    saveJobs(jobs);
+    try {
+      await saveJobs(jobs);
+    } catch (saveError) {
+      showSaveError('Job', saveError, error);
+      return;
+    }
     window.closeJobModal();
     renderHR();
   };
-  window.softDeleteJob = function (jobCode) {
+  window.softDeleteJob = async function (jobCode) {
     if (!window.can('hr.jobDelete')) {
       window.alert('You do not have permission to delete jobs.');
       return;
     }
     if (!window.confirm('Mark this job as inactive?')) return;
 
-    const job = getJobs().find(function (item) {
+    const jobs = getJobs();
+    const job = jobs.find(function (item) {
       return item.jobCode === jobCode && !item.isDeleted;
     });
     if (!job) {
@@ -1321,10 +1375,15 @@
     }
     job.isDeleted = true;
     job.stamp = makeStamp('DELETED');
-    saveJobs(jobs);
+    try {
+      await saveJobs(jobs);
+    } catch (saveError) {
+      showSaveError('Job', saveError);
+      return;
+    }
     renderHR();
   };
-  window.restoreJob = function (jobCode) {
+  window.restoreJob = async function (jobCode) {
     const role = window.currentUser && window.currentUser.role;
     if (role !== 'superadmin' && role !== 'admin') {
       window.alert('Only Superadmin or Admin can restore jobs.');
@@ -1341,7 +1400,12 @@
     }
     job.isDeleted = false;
     job.stamp = makeStamp('RESTORED');
-    saveJobs(jobs);
+    try {
+      await saveJobs(jobs);
+    } catch (saveError) {
+      showSaveError('Job', saveError);
+      return;
+    }
     renderHR();
   };
   window.openAddDepartment = function () {
@@ -1409,7 +1473,7 @@
     const code = document.getElementById('departmentCode');
     if (code) code.readOnly = false;
   };
-  window.saveDepartment = function (event) {
+  window.saveDepartment = async function (event) {
     if (event) event.preventDefault();
 
     const editCode = document.getElementById('departmentEditCode');
@@ -1473,11 +1537,16 @@
       });
     }
 
-    saveDepartments(departments);
+    try {
+      await saveDepartments(departments);
+    } catch (saveError) {
+      showSaveError('Department', saveError, error);
+      return;
+    }
     window.closeDepartmentModal();
     renderHR();
   };
-  window.softDeleteDepartment = function (deptCode) {
+  window.softDeleteDepartment = async function (deptCode) {
     if (!window.can('hr.deptDelete')) {
       window.alert('You do not have permission to delete departments.');
       return;
@@ -1494,10 +1563,15 @@
     }
     department.isDeleted = true;
     department.stamp = makeStamp('DELETED');
-    saveDepartments(departments);
+    try {
+      await saveDepartments(departments);
+    } catch (saveError) {
+      showSaveError('Department', saveError);
+      return;
+    }
     renderHR();
   };
-  window.restoreDepartment = function (deptCode) {
+  window.restoreDepartment = async function (deptCode) {
     const role = window.currentUser && window.currentUser.role;
     if (role !== 'superadmin' && role !== 'admin') {
       window.alert('Only Superadmin or Admin can restore departments.');
@@ -1514,7 +1588,12 @@
     }
     department.isDeleted = false;
     department.stamp = makeStamp('RESTORED');
-    saveDepartments(departments);
+    try {
+      await saveDepartments(departments);
+    } catch (saveError) {
+      showSaveError('Department', saveError);
+      return;
+    }
     renderHR();
   };
 
@@ -1594,7 +1673,7 @@
     const employeeNo = document.getElementById('employeeNo');
     if (employeeNo) employeeNo.readOnly = false;
   };
-  window.saveEmployee = function (event) {
+  window.saveEmployee = async function (event) {
     if (event) event.preventDefault();
 
     const editNo = document.getElementById('employeeEditNo');
@@ -1698,11 +1777,16 @@
       });
     }
 
-    saveEmployees(employees);
+    try {
+      await saveEmployees(employees);
+    } catch (saveError) {
+      showSaveError('Employee', saveError, error);
+      return;
+    }
     window.closeEmployeeModal();
     renderHR();
   };
-  window.softDeleteEmployee = function (empNo) {
+  window.softDeleteEmployee = async function (empNo) {
     if (!window.can('hr.empDelete')) {
       window.alert('You do not have permission to delete employees.');
       return;
@@ -1718,10 +1802,15 @@
     }
     employee.isDeleted = true;
     employee.stamp = makeStamp('DELETED');
-    saveEmployees(getEmployees());
+    try {
+      await saveEmployees(getEmployees());
+    } catch (saveError) {
+      showSaveError('Employee', saveError);
+      return;
+    }
     renderHR();
   };
-  window.restoreEmployee = function (empNo) {
+  window.restoreEmployee = async function (empNo) {
     const role = window.currentUser && window.currentUser.role;
     if (role !== 'superadmin' && role !== 'admin') {
       window.alert('Only Superadmin or Admin can restore employees.');
@@ -1737,7 +1826,12 @@
     }
     employee.isDeleted = false;
     employee.stamp = makeStamp('RESTORED');
-    saveEmployees(getEmployees());
+    try {
+      await saveEmployees(getEmployees());
+    } catch (saveError) {
+      showSaveError('Employee', saveError);
+      return;
+    }
     renderHR();
   };
 

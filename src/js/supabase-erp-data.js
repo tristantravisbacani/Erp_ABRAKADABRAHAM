@@ -81,6 +81,172 @@
           stamp: record.stamp || ''
         };
       }
+    },
+    employees: {
+      table: 'erp_employees',
+      select: 'access_scope, emp_no, last_name, first_name, gender, birth_date, hire_date, sep_date, is_deleted, stamp, updated_at',
+      key: [{ column: 'emp_no', field: 'empNo' }],
+      fromDatabase: function (row) {
+        return {
+          empNo: row.emp_no,
+          lastName: row.last_name,
+          firstName: row.first_name,
+          gender: row.gender,
+          birthDate: row.birth_date,
+          hireDate: row.hire_date,
+          sepDate: row.sep_date || '',
+          isDeleted: row.is_deleted,
+          stamp: row.stamp,
+          updatedAt: row.updated_at
+        };
+      },
+      toDatabase: function (record, scope) {
+        return {
+          access_scope: scope,
+          emp_no: record.empNo,
+          last_name: record.lastName,
+          first_name: record.firstName,
+          gender: record.gender,
+          birth_date: record.birthDate,
+          hire_date: record.hireDate,
+          sep_date: record.sepDate || null,
+          is_deleted: !!record.isDeleted,
+          stamp: record.stamp || ''
+        };
+      }
+    },
+    jobs: {
+      table: 'erp_jobs',
+      select: 'access_scope, job_code, job_desc, is_deleted, stamp, updated_at',
+      key: [{ column: 'job_code', field: 'jobCode' }],
+      fromDatabase: function (row) {
+        return {
+          jobCode: row.job_code,
+          jobDesc: row.job_desc,
+          isDeleted: row.is_deleted,
+          stamp: row.stamp,
+          updatedAt: row.updated_at
+        };
+      },
+      toDatabase: function (record, scope) {
+        return {
+          access_scope: scope,
+          job_code: record.jobCode,
+          job_desc: record.jobDesc,
+          is_deleted: !!record.isDeleted,
+          stamp: record.stamp || ''
+        };
+      }
+    },
+    departments: {
+      table: 'erp_departments',
+      select: 'access_scope, dept_code, dept_name, is_deleted, stamp, updated_at',
+      key: [{ column: 'dept_code', field: 'deptCode' }],
+      fromDatabase: function (row) {
+        return {
+          deptCode: row.dept_code,
+          deptName: row.dept_name,
+          isDeleted: row.is_deleted,
+          stamp: row.stamp,
+          updatedAt: row.updated_at
+        };
+      },
+      toDatabase: function (record, scope) {
+        return {
+          access_scope: scope,
+          dept_code: record.deptCode,
+          dept_name: record.deptName,
+          is_deleted: !!record.isDeleted,
+          stamp: record.stamp || ''
+        };
+      }
+    },
+    jobHistories: {
+      table: 'erp_job_histories',
+      select: 'access_scope, id, emp_no, job_code, eff_date, salary, dept_code, is_deleted, stamp, updated_at',
+      key: [{ column: 'id', field: 'id' }],
+      fromDatabase: function (row) {
+        return {
+          id: row.id,
+          empNo: row.emp_no,
+          jobCode: row.job_code,
+          effDate: row.eff_date,
+          salary: Number(row.salary),
+          deptCode: row.dept_code,
+          isDeleted: row.is_deleted,
+          stamp: row.stamp,
+          updatedAt: row.updated_at
+        };
+      },
+      toDatabase: function (record, scope) {
+        const row = {
+          access_scope: scope,
+          emp_no: record.empNo,
+          job_code: record.jobCode,
+          eff_date: record.effDate,
+          salary: Number(record.salary),
+          dept_code: record.deptCode,
+          is_deleted: !!record.isDeleted,
+          stamp: record.stamp || ''
+        };
+        if (record.id) row.id = record.id;
+        return row;
+      }
+    },
+    sales: {
+      table: 'erp_sales',
+      select: 'access_scope, trans_no, sales_date, cust_no, emp_no, is_deleted, stamp, updated_at',
+      key: [{ column: 'trans_no', field: 'transNo' }],
+      fromDatabase: function (row) {
+        return {
+          transNo: row.trans_no,
+          salesDate: row.sales_date,
+          custNo: row.cust_no,
+          empNo: row.emp_no,
+          isDeleted: row.is_deleted,
+          stamp: row.stamp,
+          updatedAt: row.updated_at
+        };
+      },
+      toDatabase: function (record, scope) {
+        return {
+          access_scope: scope,
+          trans_no: record.transNo,
+          sales_date: record.salesDate,
+          cust_no: record.custNo,
+          emp_no: record.empNo,
+          is_deleted: !!record.isDeleted,
+          stamp: record.stamp || ''
+        };
+      }
+    },
+    salesDetails: {
+      table: 'erp_sales_details',
+      select: 'access_scope, id, trans_no, prod_code, quantity, is_deleted, stamp, updated_at',
+      key: [{ column: 'id', field: 'id' }],
+      fromDatabase: function (row) {
+        return {
+          id: row.id,
+          transNo: row.trans_no,
+          prodCode: row.prod_code,
+          quantity: row.quantity,
+          isDeleted: row.is_deleted,
+          stamp: row.stamp,
+          updatedAt: row.updated_at
+        };
+      },
+      toDatabase: function (record, scope) {
+        const row = {
+          access_scope: scope,
+          trans_no: record.transNo,
+          prod_code: record.prodCode,
+          quantity: record.quantity,
+          is_deleted: !!record.isDeleted,
+          stamp: record.stamp || ''
+        };
+        if (record.id) row.id = record.id;
+        return row;
+      }
     }
   };
 
@@ -111,6 +277,56 @@
     return window.supabaseClient;
   }
 
+  function canReadDataset(name) {
+    const reportAccess = function (permissions) {
+      return window.can('reports.view') && permissions.some(window.can);
+    };
+    const permissions = {
+      customers: function () {
+        return ['customers.view', 'sales.view'].some(window.can) ||
+          reportAccess(['reports.topCustomers', 'reports.topSales']);
+      },
+      products: function () {
+        return ['products.view', 'sales.view'].some(window.can) ||
+          reportAccess(['reports.productMaster', 'reports.topProducts', 'reports.topSales']);
+      },
+      prices: function () {
+        return ['products.view', 'sales.view'].some(window.can) ||
+          reportAccess(['reports.topCustomers', 'reports.topProducts', 'reports.topSales']);
+      },
+      employees: function () {
+        return ['hr.view', 'hr.jhView', 'sales.view'].some(window.can) ||
+          reportAccess([
+            'reports.activeEmployees',
+            'reports.allEmployees',
+            'reports.empJobHistory',
+            'reports.topSales'
+          ]);
+      },
+      jobs: function () {
+        return ['hr.view', 'hr.jhView'].some(window.can) ||
+          reportAccess(['reports.activeEmployees', 'reports.allEmployees', 'reports.empJobHistory']);
+      },
+      departments: function () {
+        return ['hr.view', 'hr.jhView'].some(window.can) ||
+          reportAccess(['reports.activeEmployees', 'reports.allEmployees', 'reports.empJobHistory']);
+      },
+      jobHistories: function () {
+        return ['hr.view', 'hr.jhView'].some(window.can) ||
+          reportAccess(['reports.empJobHistory']);
+      },
+      sales: function () {
+        return ['sales.view', 'sales.detailView'].some(window.can) ||
+          reportAccess(['reports.topCustomers', 'reports.topProducts', 'reports.topSales']);
+      },
+      salesDetails: function () {
+        return ['sales.view', 'sales.detailView'].some(window.can) ||
+          reportAccess(['reports.topCustomers', 'reports.topProducts', 'reports.topSales']);
+      }
+    };
+    return !!(permissions[name] && permissions[name]());
+  }
+
   window.getSupabaseERPRecords = function (name) {
     if (
       !cloudData ||
@@ -125,6 +341,7 @@
 
   async function fetchDataset(client, name, scope) {
     const config = DATASETS[name];
+    if (!canReadDataset(name)) return [];
     const { data, error } = await client
       .from(config.table)
       .select(config.select)
@@ -134,12 +351,14 @@
   }
 
   async function loadAllDatasets(client, scope) {
-    const results = await Promise.all([
-      fetchDataset(client, 'customers', scope),
-      fetchDataset(client, 'products', scope),
-      fetchDataset(client, 'prices', scope)
-    ]);
-    return { customers: results[0], products: results[1], prices: results[2] };
+    const names = Object.keys(DATASETS);
+    const results = await Promise.all(names.map(function (name) {
+      return fetchDataset(client, name, scope);
+    }));
+    return names.reduce(function (records, name, index) {
+      records[name] = results[index];
+      return records;
+    }, {});
   }
 
   window.initializeSupabaseERPData = async function () {
@@ -175,16 +394,57 @@
       records = await loadAllDatasets(client, scope);
     }
 
+    if (
+      scope === 'sandbox' &&
+      window.currentUser.role !== 'user' &&
+      records.employees.length === 0 &&
+      records.jobs.length === 0 &&
+      records.departments.length === 0 &&
+      records.jobHistories.length === 0 &&
+      records.sales.length === 0 &&
+      records.salesDetails.length === 0
+    ) {
+      const localFixtures = {
+        employees: window.getDemoEmployeeFixtures(),
+        jobs: window.getDemoJobFixtures(),
+        departments: window.getDemoDepartmentFixtures(),
+        jobHistories: window.getDemoJobHistoryFixtures(),
+        sales: window.getDemoSalesFixtures(),
+        salesDetails: window.getDemoSalesDetailFixtures()
+      };
+      const { error } = await client.rpc('seed_sandbox_hr_sales', {
+        p_employees: localFixtures.employees.map(function (record) {
+          return DATASETS.employees.toDatabase(record, scope);
+        }),
+        p_jobs: localFixtures.jobs.map(function (record) {
+          return DATASETS.jobs.toDatabase(record, scope);
+        }),
+        p_departments: localFixtures.departments.map(function (record) {
+          return DATASETS.departments.toDatabase(record, scope);
+        }),
+        p_job_histories: localFixtures.jobHistories.map(function (record) {
+          return DATASETS.jobHistories.toDatabase(record, scope);
+        }),
+        p_sales: localFixtures.sales.map(function (record) {
+          return DATASETS.sales.toDatabase(record, scope);
+        }),
+        p_sales_details: localFixtures.salesDetails.map(function (record) {
+          return DATASETS.salesDetails.toDatabase(record, scope);
+        })
+      });
+      if (error) throw error;
+      records = await loadAllDatasets(client, scope);
+    }
+
     if (getCurrentScope() !== scope || window.currentUser.id !== owner) {
       throw new Error('The active account changed while ERP data was loading. Please reload and sign in again.');
     }
 
     cloudData = records;
-    snapshots = {
-      customers: clone(records.customers),
-      products: clone(records.products),
-      prices: clone(records.prices)
-    };
+    snapshots = Object.keys(records).reduce(function (result, name) {
+      result[name] = clone(records[name]);
+      return result;
+    }, {});
     dataScope = scope;
     dataOwner = owner;
   };
@@ -235,6 +495,9 @@
         if (!result.data || result.data.length !== 1) {
           throw new Error('The record was not saved. It may have changed or your permissions may have been updated.');
         }
+        config.key.forEach(function (item) {
+          if (result.data[0][item.column] !== undefined) record[item.field] = result.data[0][item.column];
+        });
         record.updatedAt = result.data[0].updated_at;
       }
     } catch (error) {

@@ -245,11 +245,11 @@
     const roleMessages = window.currentUser.authProvider === 'supabase'
       ? {
           superadmin:
-          'You are signed in to Supabase as Superadmin. Customers, Products, and Price History use Supabase; HR and Sales remain local demo data. User administration is managed in Supabase.',
+          'You are signed in to Supabase as Superadmin. Customer, Product, HR, Sales, and Price History data use Supabase; Reports are calculated in the browser. User administration is managed in Supabase.',
           admin:
-          'You are signed in to Supabase as Admin. Customers, Products, and Price History use Supabase; HR and Sales remain local demo data. User administration is managed in Supabase.',
+          'You are signed in to Supabase as Admin. Customer, Product, HR, Sales, and Price History data use Supabase; Reports are calculated in the browser. User administration is managed in Supabase.',
           user:
-          'You are signed in to Supabase. Customers, Products, and Price History use Supabase; HR and Sales remain local demo data. Access follows your assigned profile permissions.'
+          'You are signed in to Supabase. Customer, Product, HR, Sales, and Price History data use Supabase; Reports are calculated in the browser. Access follows your assigned profile permissions.'
         }
       : {
           superadmin: 'You have full system access. You can manage all modules, approve users, and assign rights.',
