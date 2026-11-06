@@ -24,6 +24,7 @@
 
   window.finishLogout = function () {
     window.clearSession();
+    window.clearSupabaseERPData();
     window.currentUser = null;
 
     document.querySelectorAll('.modal-overlay.active').forEach(function (m) {
@@ -244,11 +245,11 @@
     const roleMessages = window.currentUser.authProvider === 'supabase'
       ? {
           superadmin:
-            'You are signed in to Supabase as Superadmin. ERP records remain local demo data; user administration is managed in Supabase.',
+          'You are signed in to Supabase as Superadmin. Customers, Products, and Price History use Supabase; HR and Sales remain local demo data. User administration is managed in Supabase.',
           admin:
-            'You are signed in to Supabase as Admin. ERP records remain local demo data; user administration is managed in Supabase.',
+          'You are signed in to Supabase as Admin. Customers, Products, and Price History use Supabase; HR and Sales remain local demo data. User administration is managed in Supabase.',
           user:
-            'You are signed in to Supabase. ERP records are still local demo data; access follows your assigned profile permissions.'
+          'You are signed in to Supabase. Customers, Products, and Price History use Supabase; HR and Sales remain local demo data. Access follows your assigned profile permissions.'
         }
       : {
           superadmin: 'You have full system access. You can manage all modules, approve users, and assign rights.',
@@ -335,6 +336,7 @@
       if (!data.session) return;
 
       await window.loadSupabaseUser(data.session.user);
+      await window.initializeSupabaseERPData();
       window.showDashboard();
       const callbackParams = new URLSearchParams(window.location.hash.slice(1));
       if (callbackParams.get('type') === 'recovery') {
@@ -342,6 +344,7 @@
       }
     } catch (err) {
       console.error('[Supabase Session Restore Error]', err);
+      window.clearSupabaseERPData();
       window.currentUser = null;
       const errorEl = document.getElementById('loginError');
       if (errorEl) {
