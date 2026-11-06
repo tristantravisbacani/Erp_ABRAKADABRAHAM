@@ -77,18 +77,27 @@
 
     const items = [
       { id: 'dashboard', icon: '📊', label: 'Dashboard', roles: ['superadmin', 'admin', 'user'] },
+      { section: 'Modules' },
       { id: 'customers', icon: '👥', label: 'Customers', roles: ['superadmin', 'admin', 'user'] },
       { id: 'products', icon: '📦', label: 'Products', roles: ['superadmin', 'admin', 'user'] },
       { id: 'hr', icon: '🏢', label: 'Human Resources', roles: ['superadmin', 'admin', 'user'] },
       { id: 'sales', icon: '💼', label: 'Sales', roles: ['superadmin', 'admin', 'user'] },
       { id: 'reports', icon: '📑', label: 'Reports', roles: ['superadmin', 'admin', 'user'] },
+      { section: 'Administration' },
       { id: 'users', icon: '⚙️', label: 'User Management', roles: ['superadmin', 'admin'] }
     ];
 
     let html = '';
     let menuHtml = '';
+    let pendingSection = null;
+    let sectionOpen = false;
 
     items.forEach(function (item) {
+      if (item.section) {
+        pendingSection = item.section;
+        return;
+      }
+
       if (!item.roles.includes(role)) return;
       if (role === 'user' && ['customers', 'products', 'hr', 'sales', 'reports'].includes(item.id)) {
         if (!window.canModule(item.id)) return;
@@ -103,6 +112,16 @@
           item.label +
           '</div>';
       } else {
+        if (pendingSection) {
+          if (sectionOpen) html += '</div>';
+          html +=
+            '<div class="nav-section"><div class="nav-section-title">' +
+            pendingSection +
+            '</div>';
+          sectionOpen = true;
+          pendingSection = null;
+        }
+
         const isActive = item.id === 'dashboard' ? ' active' : '';
         html +=
           '<div class="nav-item' +
@@ -116,6 +135,7 @@
       }
     });
 
+    if (sectionOpen) html += '</div>';
     nav.innerHTML = html;
     const userMenuItems = document.getElementById('userMenuItems');
     if (userMenuItems) userMenuItems.innerHTML = menuHtml;
