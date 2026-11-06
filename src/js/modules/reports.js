@@ -16,6 +16,10 @@
   let dateTo = '';
   let topCount = 10;
   let employeeNo = '';
+  let remoteReportKey = '';
+  let remoteReportData = null;
+  let remoteReportError = null;
+  let remoteRequestId = 0;
 
   function escape(value) {
     return window.escapeHtml(value);
@@ -114,7 +118,23 @@
       '</tbody></table></div>';
   }
 
-  function topCustomersReport() {
+  function topCustomersReport(remoteData) {
+    if (remoteData) {
+      const rows = remoteData.rows.map(function (item) {
+        return '<tr><td>' +
+          item.rank +
+          '</td><td><strong>' +
+          escape(item.custNo) +
+          '</strong></td><td>' +
+          escape(item.name) +
+          '</td><td><strong>' +
+          money(item.total) +
+          '</strong></td></tr>';
+      });
+      return '<h3>Top Customers by Sales</h3>' +
+        dateFilters(true) +
+        table(['Rank', 'Customer No.', 'Customer Name', 'Total Sales'], rows, 'No sales data for this period.');
+    }
     const data = getReportData();
     const totals = new Map();
     data.sales.forEach(function (sale) {
@@ -158,7 +178,23 @@
       table(['Rank', 'Customer No.', 'Customer Name', 'Total Sales'], rows, 'No sales data for this period.');
   }
 
-  function productMasterReport() {
+  function productMasterReport(remoteData) {
+    if (remoteData) {
+      const rows = remoteData.rows.map(function (product) {
+        return '<tr><td><strong>' +
+          escape(product.prodCode) +
+          '</strong></td><td>' +
+          escape(product.description) +
+          '</td><td>' +
+          escape(product.unit) +
+          '</td><td><strong>' +
+          (product.unitPrice == null ? '—' : money(product.unitPrice)) +
+          '</strong></td></tr>';
+      });
+      return '<h3>Product Master List (Current Price)</h3>' +
+        reportActions() +
+        table(['Product Code', 'Description', 'Unit', 'Current Price'], rows, 'No active products.');
+    }
     const products = window.getProducts().filter(function (product) {
       return !product.isDeleted;
     });
@@ -186,7 +222,25 @@
       table(['Product Code', 'Description', 'Unit', 'Current Price'], rows, 'No active products.');
   }
 
-  function topProductsReport() {
+  function topProductsReport(remoteData) {
+    if (remoteData) {
+      const rows = remoteData.rows.map(function (item) {
+        return '<tr><td>' +
+          item.rank +
+          '</td><td><strong>' +
+          escape(item.prodCode) +
+          '</strong></td><td>' +
+          escape(item.description) +
+          '</td><td>' +
+          item.quantity +
+          '</td><td><strong>' +
+          money(item.amount) +
+          '</strong></td></tr>';
+      });
+      return '<h3>Top Products by Sales Amount</h3>' +
+        dateFilters(true) +
+        table(['Rank', 'Product Code', 'Description', 'Quantity Sold', 'Sales Amount'], rows, 'No sales data for this period.');
+    }
     const data = getReportData();
     const totals = new Map();
     data.sales.forEach(function (sale) {
@@ -232,8 +286,8 @@
       table(['Rank', 'Product Code', 'Description', 'Quantity Sold', 'Sales Amount'], rows, 'No sales data for this period.');
   }
 
-  function activeEmployeesReport() {
-    const employees = window.getEmployees().filter(function (employee) {
+  function activeEmployeesReport(remoteData) {
+    const employees = remoteData ? remoteData.rows : window.getEmployees().filter(function (employee) {
       return !employee.isDeleted && !employee.sepDate;
     });
     const rows = employees.map(function (employee) {
@@ -257,8 +311,8 @@
       table(['Employee No.', 'Last Name', 'First Name', 'Gender', 'Birth Date', 'Hire Date'], rows, 'No active employees.');
   }
 
-  function allEmployeesReport() {
-    const employees = window.getEmployees().filter(function (employee) {
+  function allEmployeesReport(remoteData) {
+    const employees = remoteData ? remoteData.rows : window.getEmployees().filter(function (employee) {
       return !employee.isDeleted;
     });
     const rows = employees.map(function (employee) {
@@ -287,8 +341,8 @@
       table(['Employee No.', 'Last Name', 'First Name', 'Gender', 'Birth Date', 'Hire Date', 'Separation Date', 'Status'], rows, 'No employees.');
   }
 
-  function employeeJobHistoryReport() {
-    const employees = window.getEmployees().filter(function (employee) {
+  function employeeJobHistoryReport(remoteData) {
+    const employees = remoteData ? remoteData.employees : window.getEmployees().filter(function (employee) {
       return !employee.isDeleted;
     });
     if (employeeNo && !employees.some(function (employee) {
@@ -312,9 +366,9 @@
     }).join('');
     let historyTable = '<div class="empty-state">Select an employee to view job history.</div>';
     if (employeeNo) {
-      const jobs = window.getJobs();
-      const departments = window.getDepartments();
-      const histories = window.getJobHistories()
+      const jobs = remoteData ? [] : window.getJobs();
+      const departments = remoteData ? [] : window.getDepartments();
+      const histories = remoteData ? remoteData.rows : window.getJobHistories()
         .filter(function (history) {
           return history.empNo === employeeNo && !history.isDeleted;
         })
@@ -322,6 +376,21 @@
           return right.effDate.localeCompare(left.effDate);
         });
       const rows = histories.map(function (history) {
+        if (remoteData) {
+          return '<tr><td>' +
+            escape(history.effDate) +
+            '</td><td>' +
+            escape(history.jobCode) +
+            ' — ' +
+            escape(history.jobDesc || history.jobCode) +
+            '</td><td>' +
+            escape(history.deptCode) +
+            ' — ' +
+            escape(history.deptName || history.deptCode) +
+            '</td><td><strong>' +
+            money(history.salary) +
+            '</strong></td></tr>';
+        }
         const job = jobs.find(function (item) {
           return item.jobCode === history.jobCode;
         });
@@ -354,7 +423,27 @@
       historyTable;
   }
 
-  function topSalesReport() {
+  function topSalesReport(remoteData) {
+    if (remoteData) {
+      const rows = remoteData.rows.map(function (sale) {
+        return '<tr><td>' +
+          sale.rank +
+          '</td><td><strong>' +
+          escape(sale.transNo) +
+          '</strong></td><td>' +
+          escape(sale.date) +
+          '</td><td>' +
+          escape(sale.customer) +
+          '</td><td>' +
+          escape(sale.employee) +
+          '</td><td><strong>' +
+          money(sale.total) +
+          '</strong></td></tr>';
+      });
+      return '<h3>Top Sales</h3>' +
+        dateFilters(true) +
+        table(['Rank', 'Transaction No.', 'Date', 'Customer', 'Employee', 'Total'], rows, 'No sales in this period.');
+    }
     const data = getReportData();
     const customers = window.getCustomers();
     const employees = window.getEmployees();
@@ -397,22 +486,22 @@
       table(['Rank', 'Transaction No.', 'Date', 'Customer', 'Employee', 'Total'], rows, 'No sales in this period.');
   }
 
-  function renderSelectedReport() {
+  function renderSelectedReport(remoteData) {
     switch (selectedReport) {
       case 'topCustomers':
-        return topCustomersReport();
+        return topCustomersReport(remoteData);
       case 'productMaster':
-        return productMasterReport();
+        return productMasterReport(remoteData);
       case 'topProducts':
-        return topProductsReport();
+        return topProductsReport(remoteData);
       case 'activeEmployees':
-        return activeEmployeesReport();
+        return activeEmployeesReport(remoteData);
       case 'allEmployees':
-        return allEmployeesReport();
+        return allEmployeesReport(remoteData);
       case 'empJobHistory':
-        return employeeJobHistoryReport();
+        return employeeJobHistoryReport(remoteData);
       case 'topSales':
-        return topSalesReport();
+        return topSalesReport(remoteData);
       default:
         return '<div class="empty-state">Select a report.</div>';
     }
@@ -451,12 +540,88 @@
           '</button>';
       }).join('') +
       '</div>';
+    if (window.currentUser.authProvider !== 'supabase') {
+      area.innerHTML = tabs + '<section class="report-print-area" id="reportPrintArea">' +
+        renderSelectedReport() +
+        '</section>';
+      return;
+    }
+
+    const requestKey = JSON.stringify([
+      window.currentUser.id,
+      window.currentUser.accessScope,
+      selectedReport,
+      dateFrom,
+      dateTo,
+      topCount,
+      selectedReport === 'empJobHistory' ? employeeNo : ''
+    ]);
+    if (remoteReportKey !== requestKey) {
+      remoteReportKey = requestKey;
+      remoteReportData = null;
+      remoteReportError = null;
+      fetchRemoteReport(requestKey);
+    }
+    if (remoteReportError) {
+      area.innerHTML = tabs + '<section class="report-print-area" id="reportPrintArea">' +
+        '<div class="empty-state">Unable to load this report. Check your connection and permissions, then try again.</div>' +
+        '<button type="button" class="btn btn-secondary btn-sm" onclick="window.retryReportLoad()">Retry</button>' +
+        '</section>';
+      return;
+    }
+    if (!remoteReportData) {
+      area.innerHTML = tabs + '<section class="report-print-area" id="reportPrintArea">' +
+        '<div class="empty-state" role="status">Loading report…</div>' +
+        '</section>';
+      return;
+    }
     area.innerHTML = tabs + '<section class="report-print-area" id="reportPrintArea">' +
-      renderSelectedReport() +
+      renderSelectedReport(remoteReportData) +
       '</section>';
   }
 
+  function fetchRemoteReport(requestKey) {
+    const requestId = ++remoteRequestId;
+    const client = window.supabaseClient;
+    if (!client) {
+      remoteReportError = new Error('Supabase client is unavailable.');
+      console.error('Unable to load Supabase report:', remoteReportError);
+      return;
+    }
+
+    client.rpc('get_erp_report', {
+      p_report_id: selectedReport,
+      p_date_from: dateFrom || null,
+      p_date_to: dateTo || null,
+      p_top_count: topCount,
+      p_employee_no: selectedReport === 'empJobHistory' && employeeNo ? employeeNo : null
+    }).then(function (response) {
+      if (response.error) throw response.error;
+      if (!response.data || !Array.isArray(response.data.rows)) {
+        throw new Error('The report response has an invalid shape.');
+      }
+      if (selectedReport === 'empJobHistory' && !Array.isArray(response.data.employees)) {
+        throw new Error('The employee report response has an invalid shape.');
+      }
+      if (requestId !== remoteRequestId || requestKey !== remoteReportKey) return;
+      remoteReportData = response.data;
+      remoteReportError = null;
+      if (document.getElementById('reportPrintArea')) renderReports();
+    }).catch(function (error) {
+      if (requestId !== remoteRequestId || requestKey !== remoteReportKey) return;
+      remoteReportError = error;
+      console.error('Unable to load Supabase report:', error);
+      if (document.getElementById('reportPrintArea')) renderReports();
+    });
+  }
+
   window.renderReports = renderReports;
+  window.retryReportLoad = function () {
+    remoteReportKey = '';
+    remoteReportData = null;
+    remoteReportError = null;
+    renderReports();
+  };
   window.setSelectedReport = function (reportId) {
     if (!getAllowedReports().some(function (report) {
       return report.id === reportId;
