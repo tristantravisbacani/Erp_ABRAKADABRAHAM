@@ -144,6 +144,7 @@
       if (error) throw error;
 
       await window.loadSupabaseUser(data.user);
+      await window.initializeSupabaseERPData();
 
       try {
         const rememberMe = document.getElementById('rememberMe');
@@ -158,6 +159,7 @@
       if (typeof window.showDashboard === 'function') window.showDashboard();
     } catch (err) {
       console.error('[Supabase Login Error]', err);
+      window.clearSupabaseERPData();
       window.currentUser = null;
       showMessage('loginError', err.message || 'Sign in failed. Check your email and password.');
     }

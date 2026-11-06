@@ -96,7 +96,12 @@
     });
   }
 
+  window.getDemoCustomerFixtures = cloneDefaultCustomers;
+
   function getCustomers() {
+    if (window.currentUser && window.currentUser.authProvider === 'supabase') {
+      return window.getSupabaseERPRecords('customers');
+    }
     if (memoryCustomers) return memoryCustomers;
 
     try {
@@ -120,6 +125,9 @@
   }
 
   function saveCustomers(customers) {
+    if (window.currentUser && window.currentUser.authProvider === 'supabase') {
+      return window.saveSupabaseERPRecords('customers', customers);
+    }
     memoryCustomers = customers;
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(customers));
@@ -340,7 +348,7 @@
     const customerNo = document.getElementById('custNo');
     if (customerNo) customerNo.readOnly = false;
   };
-  window.saveCustomer = function (event) {
+  window.saveCustomer = async function (event) {
     if (event) event.preventDefault();
 
     const editNo = document.getElementById('custEditNo');
@@ -415,7 +423,14 @@
       });
     }
 
-    saveCustomers(customers);
+    try {
+      await saveCustomers(customers);
+    } catch (saveError) {
+      console.error('[Customer save error]', saveError);
+      error.textContent = saveError.message || 'Could not save this customer. Please try again.';
+      error.classList.add('show');
+      return;
+    }
     window.closeCustomerModal();
     renderCustomers();
   };
@@ -427,7 +442,7 @@
     customerFilter = filter;
     renderCustomers();
   };
-  window.softDeleteCustomer = function (custNo) {
+  window.softDeleteCustomer = async function (custNo) {
     if (!window.currentUser || !window.can('customers.delete')) {
       window.alert('You do not have permission to delete customers.');
       return;
@@ -445,10 +460,16 @@
 
     customer.isDeleted = true;
     customer.stamp = makeStamp('DELETED');
-    saveCustomers(customers);
+    try {
+      await saveCustomers(customers);
+    } catch (saveError) {
+      console.error('[Customer delete error]', saveError);
+      window.alert(saveError.message || 'Could not deactivate this customer. Please try again.');
+      return;
+    }
     renderCustomers();
   };
-  window.restoreCustomer = function (custNo) {
+  window.restoreCustomer = async function (custNo) {
     const role = window.currentUser && window.currentUser.role;
     if (role !== 'superadmin' && role !== 'admin') {
       window.alert('Only Superadmin or Admin can restore customers.');
@@ -466,7 +487,13 @@
 
     customer.isDeleted = false;
     customer.stamp = makeStamp('RESTORED');
-    saveCustomers(customers);
+    try {
+      await saveCustomers(customers);
+    } catch (saveError) {
+      console.error('[Customer restore error]', saveError);
+      window.alert(saveError.message || 'Could not restore this customer. Please try again.');
+      return;
+    }
     renderCustomers();
   };
 })();

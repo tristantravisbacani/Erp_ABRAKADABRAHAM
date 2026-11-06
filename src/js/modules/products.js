@@ -104,7 +104,23 @@
     });
   }
 
+  window.getDemoProductFixtures = cloneDefaultProducts;
+  window.getDemoPriceFixtures = function () {
+    return PRICE_FIXTURES.map(function (fixture) {
+      return {
+        effDate: fixture[0],
+        prodCode: fixture[1],
+        unitPrice: fixture[2],
+        isDeleted: false,
+        stamp: 'CREATED system 2026-11-01 9:00 AM'
+      };
+    });
+  };
+
   function getProducts() {
+    if (window.currentUser && window.currentUser.authProvider === 'supabase') {
+      return window.getSupabaseERPRecords('products');
+    }
     if (memoryProducts) return memoryProducts;
 
     try {
@@ -128,6 +144,9 @@
   }
 
   function saveProducts(products) {
+    if (window.currentUser && window.currentUser.authProvider === 'supabase') {
+      return window.saveSupabaseERPRecords('products', products);
+    }
     memoryProducts = products;
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
@@ -137,6 +156,9 @@
   }
 
   function getPrices() {
+    if (window.currentUser && window.currentUser.authProvider === 'supabase') {
+      return window.getSupabaseERPRecords('prices');
+    }
     if (memoryPrices) return memoryPrices;
     try {
       const stored = localStorage.getItem(PRICE_STORAGE_KEY);
@@ -175,6 +197,9 @@
   }
 
   function savePrices(prices) {
+    if (window.currentUser && window.currentUser.authProvider === 'supabase') {
+      return window.saveSupabaseERPRecords('prices', prices);
+    }
     memoryPrices = prices;
     try {
       localStorage.setItem(PRICE_STORAGE_KEY, JSON.stringify(prices));
@@ -422,7 +447,7 @@
     const productCode = document.getElementById('prodCode');
     if (productCode) productCode.readOnly = false;
   };
-  window.saveProduct = function (event) {
+  window.saveProduct = async function (event) {
     if (event) event.preventDefault();
 
     const editCode = document.getElementById('prodEditCode');
@@ -492,11 +517,18 @@
       });
     }
 
-    saveProducts(products);
+    try {
+      await saveProducts(products);
+    } catch (saveError) {
+      console.error('[Product save error]', saveError);
+      error.textContent = saveError.message || 'Could not save this product. Please try again.';
+      error.classList.add('show');
+      return;
+    }
     window.closeProductModal();
     renderProducts();
   };
-  window.softDeleteProduct = function (prodCode) {
+  window.softDeleteProduct = async function (prodCode) {
     if (!window.can('products.delete')) {
       window.alert('You do not have permission to delete products.');
       return;
@@ -514,10 +546,16 @@
 
     product.isDeleted = true;
     product.stamp = makeStamp('DELETED');
-    saveProducts(products);
+    try {
+      await saveProducts(products);
+    } catch (saveError) {
+      console.error('[Product delete error]', saveError);
+      window.alert(saveError.message || 'Could not deactivate this product. Please try again.');
+      return;
+    }
     renderProducts();
   };
-  window.restoreProduct = function (prodCode) {
+  window.restoreProduct = async function (prodCode) {
     const role = window.currentUser && window.currentUser.role;
     if (role !== 'superadmin' && role !== 'admin') {
       window.alert('Only Superadmin or Admin can restore products.');
@@ -535,7 +573,13 @@
 
     product.isDeleted = false;
     product.stamp = makeStamp('RESTORED');
-    saveProducts(products);
+    try {
+      await saveProducts(products);
+    } catch (saveError) {
+      console.error('[Product restore error]', saveError);
+      window.alert(saveError.message || 'Could not restore this product. Please try again.');
+      return;
+    }
     renderProducts();
   };
   window.setProductFilter = function (filter) {
@@ -666,7 +710,7 @@
     window.closeModal('price');
   };
 
-  window.savePrice = function (event) {
+  window.savePrice = async function (event) {
     if (event) event.preventDefault();
 
     const editKey = document.getElementById('priceEditKey');
@@ -737,14 +781,21 @@
       });
     }
 
-    savePrices(prices);
+    try {
+      await savePrices(prices);
+    } catch (saveError) {
+      console.error('[Product price save error]', saveError);
+      error.textContent = saveError.message || 'Could not save this price. Please try again.';
+      error.classList.add('show');
+      return;
+    }
     window.closePriceModal();
     selectedProductCode = prodCode;
     renderPriceHistory();
     renderProducts();
   };
 
-  window.softDeletePrice = function (prodCode, effDate) {
+  window.softDeletePrice = async function (prodCode, effDate) {
     if (!window.can('products.priceDelete')) {
       window.alert('You do not have permission to delete prices.');
       return;
@@ -760,12 +811,18 @@
     }
     price.isDeleted = true;
     price.stamp = makeStamp('DELETED');
-    savePrices(getPrices());
+    try {
+      await savePrices(getPrices());
+    } catch (saveError) {
+      console.error('[Product price delete error]', saveError);
+      window.alert(saveError.message || 'Could not deactivate this price. Please try again.');
+      return;
+    }
     renderPriceHistory();
     renderProducts();
   };
 
-  window.restorePrice = function (prodCode, effDate) {
+  window.restorePrice = async function (prodCode, effDate) {
     const role = window.currentUser && window.currentUser.role;
     if (role !== 'superadmin' && role !== 'admin') {
       window.alert('Only Superadmin or Admin can restore prices.');
@@ -790,7 +847,13 @@
 
     price.isDeleted = false;
     price.stamp = makeStamp('RESTORED');
-    savePrices(prices);
+    try {
+      await savePrices(prices);
+    } catch (saveError) {
+      console.error('[Product price restore error]', saveError);
+      window.alert(saveError.message || 'Could not restore this price. Please try again.');
+      return;
+    }
     renderPriceHistory();
     renderProducts();
   };

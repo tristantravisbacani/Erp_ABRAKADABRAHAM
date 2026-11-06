@@ -2,17 +2,17 @@
 
 ## Current implementation status
 
-The browser Supabase client is configured with the project URL and publishable key. The security foundation and user-administration migrations are applied to the configured project, and the five demo Auth users and sandbox profiles are provisioned. Email/password login, session restore, sign-out, signup, password-reset for real accounts, Google OAuth, user approval, profile role/status changes, and module-permission assignment use Supabase Auth and Postgres. The app deliberately does not send reset requests for the five shared demo accounts; their public shared password remains unchanged. ERP module records are still localStorage-backed.
+The browser Supabase client is configured with the project URL and publishable key. Authentication and user administration use Supabase Auth and Postgres. The Customers, Products, and Price History integration is implemented in this branch and requires the new catalog migration below before it can be used; it has not yet been applied to the configured project. Human Resources and Sales records remain localStorage-backed pending later migration phases. The five demo Auth users and sandbox profiles are provisioned; the app deliberately does not send password-reset requests for those shared accounts.
 
 The publishable key is intended for browser use. Never put the Supabase secret key or a service-role key in frontend code, repository files, or demo notes. `.env` is ignored by Git.
 
 ## Apply database migrations
 
 1. In the Supabase Dashboard, open **SQL Editor** for the project.
-2. Apply [`../supabase/migrations/20261106190000_create_security_foundation.sql`](../supabase/migrations/20261106190000_create_security_foundation.sql), then [`../supabase/migrations/20261106193000_manage_users_securely.sql`](../supabase/migrations/20261106193000_manage_users_securely.sql), in timestamp order.
-3. Confirm that `profiles`, `user_permissions`, and `audit_log` exist and that RLS is enabled on all three.
+2. For the already-configured project, run only [`../supabase/migrations/20261107000000_customer_product_data.sql`](../supabase/migrations/20261107000000_customer_product_data.sql); the first two migrations have already been applied. For a fresh project, apply [`../supabase/migrations/20261106190000_create_security_foundation.sql`](../supabase/migrations/20261106190000_create_security_foundation.sql), [`../supabase/migrations/20261106193000_manage_users_securely.sql`](../supabase/migrations/20261106193000_manage_users_securely.sql), and the catalog migration, in timestamp order.
+3. Confirm that `profiles`, `user_permissions`, `audit_log`, `erp_customers`, `erp_products`, and `erp_product_prices` exist and that RLS is enabled on all six.
 
-New Supabase Auth users receive a profile with the `user` role, `pending` status, and `production` scope. The trigger does not trust role or scope values supplied as sign-up metadata. Users can read their own profile and permissions. Active admins can read and manage regular-user profiles; only superadmins can assign administrator roles. Writes go through a security-definer RPC with checks for administrator status, protected demo accounts, valid permissions, self-demotion, and the last active superadmin. Client users cannot write profiles, permissions, or audit records directly.
+New Supabase Auth users receive a profile with the `user` role, `pending` status, and `production` scope. The trigger does not trust role or scope values supplied as sign-up metadata. Users can read their own profile and permissions. Active admins can read and manage regular-user profiles; only superadmins can assign administrator roles. User administration writes go through a security-definer RPC with checks for administrator status, protected demo accounts, valid permissions, self-demotion, and the last active superadmin. ERP catalog rows are separated by the profile's `access_scope`; RLS checks that scope and the relevant module/report permission. Database triggers enforce operation-specific rights and prevent hard deletes.
 
 ## Provision the public demo accounts
 
@@ -32,7 +32,11 @@ This password is intentionally public for professor/demo access. Never reuse it 
 
 The configured project already has these users, created in **Authentication → Users** with the shared demo password and auto-confirmed for testing. To provision a fresh project, create each user in the Dashboard with the shared demo password above and auto-confirm the email address. Do not reuse a real account password. After all five users exist and the migration has run, execute [`../supabase/seed/demo_profiles.sql`](../supabase/seed/demo_profiles.sql) in the SQL Editor. It sets their demo names and roles, activates the profiles, and assigns them the `sandbox` scope. It also gives `user@hope.com` the same 11 sample permissions as the local demo account.
 
-Do not grant these accounts access to production records. User management is connected to Supabase, but ERP module records are not yet migrated. Add module tables and RLS policies before migrating those records, enforcing permissions and the profile's `access_scope`.
+Do not grant these accounts access to production records. All Supabase ERP tables must enforce RLS against the profile's `access_scope` and permissions before any non-demo records are added.
+
+The first active sandbox Admin or Superadmin sign-in seeds the Customers, Products, and Price History tables from the application's built-in demo fixtures if all three sandbox tables are empty. This seed is restricted to the sandbox scope and is never run for production profiles. It does not import arbitrary browser localStorage contents. Existing localStorage changes are not automatically migrated.
+
+Customers, Products, and Price History read and write through Supabase after this migration is applied. Human Resources and Sales transactions/details remain localStorage-backed; Reports still runs in the browser over local HR/Sales data and catalog data. Do not treat those local HR/Sales records as production data or as protected by Supabase RLS.
 
 ## Auth configuration
 
