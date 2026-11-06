@@ -209,13 +209,28 @@ footer {
 
 #landing {
   min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+.landing-status-bar {
+  min-height: 43px;
+  padding: 8px 24px;
+  display: flex;
+  flex: 0 0 auto;
+  justify-content: flex-end;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  background: var(--subtle);
 }
 
 /* Split-screen login layout */
 .auth-page {
   display: grid;
   grid-template-columns: minmax(0, 1.25fr) minmax(380px, 1fr);
-  min-height: 100vh;
+  flex: 1 0 auto;
+  min-height: 0;
 }
 
 /* Left Hero & Visual Panel */
@@ -546,7 +561,7 @@ footer {
 @media (max-width: 960px) {
   .auth-page {
     grid-template-columns: 1fr;
-    min-height: 0;
+    flex: 0 0 auto;
   }
 
   .auth-left {
@@ -566,5 +581,116 @@ footer {
 
   .auth-right {
     padding: 32px 20px 48px;
+  }
+}
+
+@media (min-width: 961px) and (max-height: 850px) {
+  .auth-left {
+    padding: 24px 40px 20px;
+    gap: 24px;
+  }
+
+  .auth-headline {
+    font-size: clamp(2.6rem, 4.6vw, 4rem);
+  }
+
+  .auth-visual {
+    width: min(500px, 100%);
+    margin: auto auto 8px 0;
+  }
+
+  .auth-right {
+    padding: 12px 24px;
+  }
+
+  .auth-card h2 {
+    margin-bottom: 16px;
+  }
+
+  .auth-card .field {
+    margin-bottom: 10px;
+  }
+
+  .auth-row {
+    margin-top: 14px;
+  }
+
+  .auth-card .divider {
+    margin: 14px 0;
+  }
+
+  .auth-create {
+    margin-top: 14px;
+  }
+
+  .auth-card .demo-hint {
+    margin-top: 12px;
+    font-size: 12px;
+  }
+
+  .auth-footer {
+    margin-top: 14px;
+  }
+}
+
+@media (min-width: 961px) and (max-height: 680px) {
+  .auth-left {
+    padding: 12px 32px 8px;
+    gap: 16px;
+  }
+
+  .auth-headline {
+    font-size: clamp(2.3rem, 4vw, 3.3rem);
+  }
+
+  .auth-visual {
+    width: min(420px, 100%);
+    margin: auto 16px 4px 0;
+  }
+
+  .preview-header {
+    padding: 8px 12px;
+  }
+
+  .preview-body {
+    padding: 12px;
+    gap: 8px;
+  }
+
+  .module-card {
+    padding: 10px;
+    gap: 4px;
+  }
+
+  .auth-right {
+    padding: 6px 24px;
+  }
+
+  .auth-card h2 {
+    margin-bottom: 12px;
+  }
+
+  .auth-card input[type="email"],
+  .auth-card input[type="password"],
+  .auth-card input[type="text"] {
+    height: 48px;
+  }
+
+  .auth-submit,
+  .auth-card .btn-google,
+  .auth-create {
+    height: 48px;
+  }
+
+  .auth-card .divider {
+    margin: 12px 0;
+  }
+
+  .auth-create {
+    margin-top: 12px;
+  }
+
+  .auth-footer {
+    margin-top: 12px;
   }
 }
