@@ -448,7 +448,18 @@
 /* ==========================================================================
    Responsive Breakpoints
    ========================================================================== */
-@media (max-width: 960px) {
+@media (max-width: 900px) {
+  .dash-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-grid,
+  .dash-main .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
   .gh-top,
   .page-wrap {
     padding-left: 16px;
@@ -459,18 +470,13 @@
     padding: 0 8px;
   }
 
-  .dash-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 768px) {
   .user-details {
     display: none;
   }
 
-  .stats-grid {
-    grid-template-columns: 1fr 1fr;
+  .stats-grid,
+  .dash-main .stats-grid {
+    grid-template-columns: 1fr;
   }
 }
 
