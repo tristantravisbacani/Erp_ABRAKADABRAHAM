@@ -4,6 +4,16 @@
   white-space: nowrap;
 }
 
+.product-form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.product-form-actions .btn-secondary {
+  min-width: 100px;
+}
+
 @media (max-width: 760px) {
   .module-toolbar .toolbar-right {
     width: 100%;
@@ -12,5 +22,9 @@
   .module-toolbar .search-input {
     flex: 1;
     min-width: 180px;
+  }
+
+  .product-form-actions {
+    flex-direction: column;
   }
 }
