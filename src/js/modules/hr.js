@@ -53,14 +53,28 @@
     { jobCode: 'WMAN', jobDesc: 'Warehouse man', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
     { jobCode: 'HRS', jobDesc: 'HR Specialist', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' }
   ];
+  const DEPARTMENT_STORAGE_KEY = 'hope_erp_depts_v2';
+  const DEFAULT_DEPARTMENTS = [
+    { deptCode: 'ACT', deptName: 'Accounting', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { deptCode: 'BR1', deptName: 'Sales Branch 1', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { deptCode: 'BR2', deptName: 'Sales Branch 2', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { deptCode: 'EXC', deptName: 'Executive', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { deptCode: 'HRD', deptName: 'Human Resource', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { deptCode: 'IT', deptName: 'Information Tech', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { deptCode: 'PAY', deptName: 'Payroll', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { deptCode: 'WHS', deptName: 'Warehouse', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' }
+  ];
 
   let memoryEmployees = null;
   let memoryJobs = null;
+  let memoryDepartments = null;
   let employeeFilter = 'active';
   let employeeSearch = '';
   let hrTab = 'employees';
   let jobFilter = 'active';
   let jobSearch = '';
+  let departmentFilter = 'active';
+  let departmentSearch = '';
 
   function cloneEmployees() {
     return DEFAULT_EMPLOYEES.map(function (employee) {
@@ -135,6 +149,41 @@
     }
   }
 
+  function getDepartments() {
+    if (memoryDepartments) return memoryDepartments;
+    try {
+      const stored = localStorage.getItem(DEPARTMENT_STORAGE_KEY);
+      if (stored !== null) {
+        const departments = JSON.parse(stored);
+        if (!Array.isArray(departments)) throw new Error('Stored department data must be an array.');
+        return departments;
+      }
+
+      const departments = DEFAULT_DEPARTMENTS.map(function (department) {
+        return Object.assign({}, department);
+      });
+      localStorage.setItem(DEPARTMENT_STORAGE_KEY, JSON.stringify(departments));
+      return departments;
+    } catch (error) {
+      console.error('[Department storage read error]', error);
+      if (!memoryDepartments) {
+        memoryDepartments = DEFAULT_DEPARTMENTS.map(function (department) {
+          return Object.assign({}, department);
+        });
+      }
+      return memoryDepartments;
+    }
+  }
+
+  function saveDepartments(departments) {
+    memoryDepartments = departments;
+    try {
+      localStorage.setItem(DEPARTMENT_STORAGE_KEY, JSON.stringify(departments));
+    } catch (error) {
+      console.error('[Department storage write error]', error);
+    }
+  }
+
   function makeStamp(action) {
     const now = new Date();
     const date = window.localDateStr(now);
@@ -173,9 +222,18 @@
       (hrTab === 'jobs' ? ' active' : '') +
       '" role="tab" aria-selected="' +
       (hrTab === 'jobs') +
-      '" onclick="window.setHRTab(&quot;jobs&quot;)">Jobs</button></div>';
+      '" onclick="window.setHRTab(&quot;jobs&quot;)">Jobs</button>' +
+      '<button type="button" class="filter-tab' +
+      (hrTab === 'departments' ? ' active' : '') +
+      '" role="tab" aria-selected="' +
+      (hrTab === 'departments') +
+      '" onclick="window.setHRTab(&quot;departments&quot;)">Departments</button></div>';
     if (hrTab === 'jobs') {
       area.innerHTML = tabs + renderJobs(canSeeDeleted);
+      return;
+    }
+    if (hrTab === 'departments') {
+      area.innerHTML = tabs + renderDepartments(canSeeDeleted);
       return;
     }
 
@@ -416,11 +474,126 @@
       '</tbody></table></div>';
   }
 
+  function renderDepartments(canSeeDeleted) {
+    const allDepartments = getDepartments();
+    let departments = allDepartments;
+    if (!canSeeDeleted) {
+      departments = departments.filter(function (department) {
+        return !department.isDeleted;
+      });
+    } else if (departmentFilter === 'active') {
+      departments = departments.filter(function (department) {
+        return !department.isDeleted;
+      });
+    } else if (departmentFilter === 'deleted') {
+      departments = departments.filter(function (department) {
+        return !!department.isDeleted;
+      });
+    }
+
+    const query = departmentSearch.trim().toLowerCase();
+    if (query) {
+      departments = departments.filter(function (department) {
+        return [department.deptCode, department.deptName].some(function (value) {
+          return String(value == null ? '' : value).toLowerCase().includes(query);
+        });
+      });
+    }
+
+    const activeCount = allDepartments.filter(function (department) {
+      return !department.isDeleted;
+    }).length;
+    const inactiveCount = allDepartments.length - activeCount;
+    const columnCount = canSeeDeleted ? 5 : 3;
+    const headings = canSeeDeleted
+      ? '<th>Dept Code</th><th>Department Name</th><th>Status</th><th>Stamp</th><th>Actions</th>'
+      : '<th>Dept Code</th><th>Department Name</th><th>Actions</th>';
+    const rows = departments.length
+      ? departments.map(function (department) {
+          const isDeleted = !!department.isDeleted;
+          let actions = '—';
+          if (isDeleted && canSeeDeleted) {
+            actions = '<button type="button" class="btn-restore" onclick="window.restoreDepartment(&#39;' +
+              window.jsArg(department.deptCode) +
+              '&#39;)">Restore</button>';
+          } else if (!isDeleted) {
+            actions = '';
+            if (window.can('hr.deptEdit')) {
+              actions += '<button type="button" class="btn-edit" onclick="window.openEditDepartment(&#39;' +
+                window.jsArg(department.deptCode) +
+                '&#39;)">Edit</button>';
+            }
+            if (window.can('hr.deptDelete')) {
+              actions += '<button type="button" class="btn-del" onclick="window.softDeleteDepartment(&#39;' +
+                window.jsArg(department.deptCode) +
+                '&#39;)">Delete</button>';
+            }
+            if (!actions) actions = '—';
+          }
+          const adminColumns = canSeeDeleted
+            ? '<td><span class="badge ' +
+              (isDeleted ? 'badge-deleted">Inactive' : 'badge-active">Active') +
+              '</span></td><td><div class="employee-stamp">' +
+              window.escapeHtml(department.stamp || '—') +
+              '</div></td>'
+            : '';
+          return '<tr' +
+            (isDeleted ? ' class="deleted-row"' : '') +
+            '><td><strong>' +
+            window.escapeHtml(department.deptCode) +
+            '</strong></td><td>' +
+            window.escapeHtml(department.deptName) +
+            '</td>' +
+            adminColumns +
+            '<td><div class="action-btns">' +
+            actions +
+            '</div></td></tr>';
+        }).join('')
+      : '<tr><td colspan="' +
+        columnCount +
+        '"><div class="empty-state">No departments found.</div></td></tr>';
+
+    const filterTabs = canSeeDeleted
+      ? '<div class="filter-tabs" role="group" aria-label="Filter departments">' +
+        '<button type="button" class="filter-tab' +
+        (departmentFilter === 'active' ? ' active' : '') +
+        '" onclick="window.setDepartmentFilter(&quot;active&quot;)">Active (' +
+        activeCount +
+        ')</button><button type="button" class="filter-tab' +
+        (departmentFilter === 'deleted' ? ' active' : '') +
+        '" onclick="window.setDepartmentFilter(&quot;deleted&quot;)">Inactive (' +
+        inactiveCount +
+        ')</button><button type="button" class="filter-tab' +
+        (departmentFilter === 'all' ? ' active' : '') +
+        '" onclick="window.setDepartmentFilter(&quot;all&quot;)">All (' +
+        allDepartments.length +
+        ')</button></div>'
+      : '';
+
+    return '<div class="module-toolbar"><h3>Departments</h3>' +
+      '<div class="toolbar-right">' +
+      filterTabs +
+      '<input type="search" class="search-input" data-focus-key="departments" aria-label="Search departments" placeholder="Search departments..." value="' +
+      window.escapeHtml(departmentSearch) +
+      '" oninput="window.setDepartmentSearch(this.value);window.rerenderKeepFocus(window.renderHR);" />' +
+      (window.can('hr.deptAdd')
+        ? '<button type="button" class="btn btn-primary btn-sm" onclick="window.openAddDepartment()">+ Add Department</button>'
+        : '') +
+      '</div></div><div class="data-table-wrap"><table class="data-table">' +
+      '<thead><tr>' +
+      headings +
+      '</tr></thead><tbody>' +
+      rows +
+      '</tbody></table></div>';
+  }
+
   window.employeeSearch = '';
   window.getEmployees = getEmployees;
   window.saveEmployees = saveEmployees;
   window.getJobs = getJobs;
   window.saveJobs = saveJobs;
+  window.getDepartments = getDepartments;
+  window.saveDepartments = saveDepartments;
   window.renderHR = renderHR;
   window.setEmployeeSearch = function (query) {
     employeeSearch = String(query == null ? '' : query);
@@ -434,7 +607,7 @@
     renderHR();
   };
   window.setHRTab = function (tab) {
-    if (['employees', 'jobs'].indexOf(tab) < 0) {
+    if (['employees', 'jobs', 'departments'].indexOf(tab) < 0) {
       console.warn('[HR tab] Invalid tab:', tab);
       return;
     }
@@ -451,6 +624,17 @@
   };
   window.setJobSearch = function (query) {
     jobSearch = String(query == null ? '' : query);
+  };
+  window.setDepartmentFilter = function (filter) {
+    if (['active', 'deleted', 'all'].indexOf(filter) < 0) {
+      console.warn('[Department filter] Invalid filter:', filter);
+      return;
+    }
+    departmentFilter = filter;
+    renderHR();
+  };
+  window.setDepartmentSearch = function (query) {
+    departmentSearch = String(query == null ? '' : query);
   };
   window.openAddJob = function () {
     if (!window.can('hr.jobAdd')) {
@@ -622,6 +806,179 @@
     job.isDeleted = false;
     job.stamp = makeStamp('RESTORED');
     saveJobs(jobs);
+    renderHR();
+  };
+  window.openAddDepartment = function () {
+    if (!window.can('hr.deptAdd')) {
+      window.alert('You do not have permission to add departments.');
+      return;
+    }
+    const form = document.getElementById('departmentForm');
+    const editCode = document.getElementById('departmentEditCode');
+    const code = document.getElementById('departmentCode');
+    const title = document.getElementById('departmentModalTitle');
+    const saveButton = document.getElementById('departmentSaveBtn');
+    const error = document.getElementById('departmentError');
+    if (!form || !editCode || !code || !title || !saveButton || !error) {
+      console.error('[Department form error] Required form elements are missing.');
+      return;
+    }
+
+    form.reset();
+    editCode.value = '';
+    code.readOnly = false;
+    title.textContent = 'Add Department';
+    saveButton.textContent = 'Save Department';
+    error.textContent = '';
+    error.classList.remove('show');
+    window.openModal('department');
+  };
+  window.openEditDepartment = function (deptCode) {
+    if (!window.can('hr.deptEdit')) {
+      window.alert('You do not have permission to edit departments.');
+      return;
+    }
+    const departments = getDepartments();
+    const department = departments.find(function (item) {
+      return item.deptCode === deptCode && !item.isDeleted;
+    });
+    if (!department) {
+      window.alert('Active department not found.');
+      return;
+    }
+
+    const editCode = document.getElementById('departmentEditCode');
+    const code = document.getElementById('departmentCode');
+    const name = document.getElementById('departmentName');
+    const title = document.getElementById('departmentModalTitle');
+    const saveButton = document.getElementById('departmentSaveBtn');
+    const error = document.getElementById('departmentError');
+    if (!editCode || !code || !name || !title || !saveButton || !error) {
+      console.error('[Department form error] Required form elements are missing.');
+      return;
+    }
+
+    editCode.value = department.deptCode;
+    code.value = department.deptCode;
+    code.readOnly = true;
+    name.value = department.deptName;
+    title.textContent = 'Edit Department';
+    saveButton.textContent = 'Update Department';
+    error.textContent = '';
+    error.classList.remove('show');
+    window.openModal('department');
+  };
+  window.closeDepartmentModal = function () {
+    window.closeModal('department');
+    const code = document.getElementById('departmentCode');
+    if (code) code.readOnly = false;
+  };
+  window.saveDepartment = function (event) {
+    if (event) event.preventDefault();
+
+    const editCode = document.getElementById('departmentEditCode');
+    const codeInput = document.getElementById('departmentCode');
+    const nameInput = document.getElementById('departmentName');
+    const error = document.getElementById('departmentError');
+    if (!editCode || !codeInput || !nameInput || !error) {
+      console.error('[Department form error] Required form elements are missing.');
+      return;
+    }
+
+    const isEditing = !!editCode.value;
+    const permission = isEditing ? 'hr.deptEdit' : 'hr.deptAdd';
+    if (!window.can(permission)) {
+      error.textContent = 'You do not have permission to ' + (isEditing ? 'edit' : 'add') + ' departments.';
+      error.classList.add('show');
+      return;
+    }
+    error.textContent = '';
+    error.classList.remove('show');
+
+    const code = codeInput.value.trim();
+    const name = nameInput.value.trim();
+    if (!code || !name) {
+      error.textContent = 'All fields are required.';
+      error.classList.add('show');
+      return;
+    }
+    if (!/^[A-Za-z0-9._-]+$/.test(code)) {
+      error.textContent = 'Dept Code can contain only letters, numbers, dots, dashes, and underscores.';
+      error.classList.add('show');
+      return;
+    }
+
+    const departments = getDepartments();
+    if (isEditing) {
+      const department = departments.find(function (item) {
+        return item.deptCode === editCode.value && !item.isDeleted;
+      });
+      if (!department) {
+        error.textContent = 'Active department not found.';
+        error.classList.add('show');
+        return;
+      }
+      department.deptName = name;
+      department.stamp = makeStamp('EDITED');
+    } else {
+      const duplicate = departments.some(function (item) {
+        return String(item.deptCode).toLowerCase() === code.toLowerCase();
+      });
+      if (duplicate) {
+        error.textContent = 'Dept Code already exists.';
+        error.classList.add('show');
+        return;
+      }
+      departments.push({
+        deptCode: code,
+        deptName: name,
+        isDeleted: false,
+        stamp: makeStamp('CREATED')
+      });
+    }
+
+    saveDepartments(departments);
+    window.closeDepartmentModal();
+    renderHR();
+  };
+  window.softDeleteDepartment = function (deptCode) {
+    if (!window.can('hr.deptDelete')) {
+      window.alert('You do not have permission to delete departments.');
+      return;
+    }
+    if (!window.confirm('Mark this department as inactive?')) return;
+
+    const departments = getDepartments();
+    const department = departments.find(function (item) {
+      return item.deptCode === deptCode && !item.isDeleted;
+    });
+    if (!department) {
+      window.alert('Active department not found.');
+      return;
+    }
+    department.isDeleted = true;
+    department.stamp = makeStamp('DELETED');
+    saveDepartments(departments);
+    renderHR();
+  };
+  window.restoreDepartment = function (deptCode) {
+    const role = window.currentUser && window.currentUser.role;
+    if (role !== 'superadmin' && role !== 'admin') {
+      window.alert('Only Superadmin or Admin can restore departments.');
+      return;
+    }
+
+    const departments = getDepartments();
+    const department = departments.find(function (item) {
+      return item.deptCode === deptCode && item.isDeleted;
+    });
+    if (!department) {
+      window.alert('Inactive department not found.');
+      return;
+    }
+    department.isDeleted = false;
+    department.stamp = makeStamp('RESTORED');
+    saveDepartments(departments);
     renderHR();
   };
 
@@ -853,6 +1210,8 @@
       window.closeEmployeeModal();
     } else if (event.key === 'Escape' && document.getElementById('jobModal').classList.contains('active')) {
       window.closeJobModal();
+    } else if (event.key === 'Escape' && document.getElementById('departmentModal').classList.contains('active')) {
+      window.closeDepartmentModal();
     }
   });
 })();
