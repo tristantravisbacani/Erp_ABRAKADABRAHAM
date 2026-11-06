@@ -14,6 +14,20 @@
   min-width: 100px;
 }
 
+.price-history-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.modal-body-scroll {
+  max-height: min(60vh, 560px);
+  overflow: auto;
+}
+
 @media (max-width: 760px) {
   .module-toolbar .toolbar-right {
     width: 100%;
@@ -26,5 +40,9 @@
 
   .product-form-actions {
     flex-direction: column;
+  }
+
+  .price-history-toolbar .filter-tabs {
+    width: 100%;
   }
 }

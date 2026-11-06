@@ -305,6 +305,28 @@
     </div>
   </div>
 
+  <!-- ==================== PRODUCT PRICE HISTORY MODAL ==================== -->
+  <div class="modal-overlay" id="priceHistoryModal">
+    <div class="modal modal-xl">
+      <div class="modal-header">
+        <div>
+          <h2 id="priceHistoryTitle">Price History</h2>
+          <p id="priceHistorySubtitle">Unit prices by effective date</p>
+        </div>
+        <button type="button" class="modal-close" onclick="window.closePriceHistory()" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="price-history-toolbar" id="priceHistoryToolbar"></div>
+        <div class="data-table-wrap modal-body-scroll">
+          <table class="data-table">
+            <thead><tr id="priceHistoryHead"></tr></thead>
+            <tbody id="priceHistoryBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ==================== CUSTOMER ADD/EDIT MODAL ==================== -->
   <div class="modal-overlay" id="customerModal">
     <div class="modal modal-lg">
