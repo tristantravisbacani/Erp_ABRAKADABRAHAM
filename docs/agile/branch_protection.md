@@ -21,7 +21,7 @@ To satisfy our team's **Definition of Done** and grading criteria, the following
 3. **Branch Naming Conventions:**
    - Setup / Config: `setup/s<sprint>-<role>-<task#>-<name>` (e.g., `setup/s1-sm-01-repo-templates`)
    - Features: `feat/s<sprint>-<role>-<task#>-<name>` (e.g., `feat/s1-dev-01-app-scaffold`)
-   - Database / Migrations: `db/s<sprint>-<role>-<task#>-<name>` (e.g., `db/s1-dba-01-supabase-setup`)
+   - Database / Migrations: `db/s<sprint>-<role>-<task#>-<name>` (e.g., `db/s1-dba-01-base-schema`)
    - Testing: `test/s<sprint>-<role>-<task#>-<name>` (e.g., `test/s1-tst-01-sprint1-test-plan`)
    - UI / Design: `ui/s<sprint>-<role>-<task#>-<name>` (e.g., `ui/s1-uix-01-design-system`)
 

@@ -14,7 +14,7 @@ This specification defines the test suite and validation logs for the **User Man
 
 ### 1.1 Test Configuration & Platforms
 - **Browsers Tested:** Google Chrome 122.0, Mozilla Firefox 123.0, Microsoft Edge 122.0
-- **Storage Subsystems:** Local Storage (`hope_erp_users_v4`, `hope_erp_session_v4`), Supabase Cloud PostgreSQL
+- **Storage Subsystem:** Local Storage (`hope_erp_users_v4`, `hope_erp_session_v4`)
 - **Security & Authorization Framework:** Role-Based Access Control (RBAC), Admin Isolation Boundaries, OWASP ASVS v4.0.3 (Access Control & Privilege Separation)
 
 ---
@@ -255,7 +255,7 @@ This specification defines the test suite and validation logs for the **User Man
 
 ### DEF-UM-01: Live Search Email Matching is Case-Sensitive
 - **Severity:** Medium (Usability / Search Consistency)  
-- **Found in:** `js/app.js` (`renderUserManagement`)  
+- **Found in:** `src/js/modules/user-management.js` (`renderUserManagement`)
 - **Description:** Searching for users by name or role converts queries to lower case (`fullName.includes(q)`), but email search performs an exact case substring match on `u.email.includes(rawTerm)`.  
 - **Impact:** Entering `@HOPE.COM` or uppercase letters returns zero results even when corresponding lowercase email addresses exist.  
 - **Remediation Recommendation:** Change matching clause to `(u.email && u.email.toLowerCase().includes(q))`.  
@@ -263,39 +263,39 @@ This specification defines the test suite and validation logs for the **User Man
 
 ### DEF-UM-02: Pending Status Badge Inline Style Causes Dark Theme Contrast Mismatch
 - **Severity:** Low (UI / Design System Alignment)  
-- **Found in:** `js/app.js` (`renderUserManagement`)  
+- **Found in:** `src/js/modules/user-management.js` (`renderUserManagement`)
 - **Description:** The pending badge is rendered with hardcoded inline style `style="background:#fef3c7;color:#92400e;"` which belongs to light mode. In GitHub Primer dark mode, this produces an un-themed, high-contrast banner.  
-- **Remediation Recommendation:** Remove inline style and rely on CSS class `.badge-pending` defined in `css/dashboard.css`.  
+- **Remediation Recommendation:** Remove inline style and rely on CSS class `.badge-pending` defined in `src/css/modules/user-management.css`.
 - **Status:** **Resolved** (Removed inline styles, standardizing on theme `.badge-pending`).
 
 ### DEF-UM-03: Self-Edit Alert Message Copy Inconsistency for Admin Role
 - **Severity:** Low (Copywriting / Usability)  
-- **Found in:** `js/app.js` (`saveAccount`)  
+- **Found in:** `src/js/modules/user-management.js` (`saveAccount`)
 - **Description:** When an administrator attempts to change their own role or block their account, the alert reads: *"You cannot change your own role or block/deactivate your own account. Contact a Superadmin."* While acceptable, the message assumes a Superadmin must be contacted rather than tailoring the copy when an Admin is viewing their profile.  
 - **Remediation Recommendation:** Standardize message to: *"You cannot change your own role or block/deactivate your own account."*  
 - **Status:** **Resolved** (Updated alert copy to uniform guard message).
 
 ### DEF-RT-01: Reports Module "None" Toggle Left reports.view Checked
 - **Severity:** Low (UI / RBAC Consistency)  
-- **Found in:** `js/app.js` (`selectAllInGroup`)  
+- **Found in:** `src/js/modules/user-management.js` (`selectAllInGroup`)
 - **Description:** Deselecting all rights in the reports module cleared child report items but retained `reports.view`.  
 - **Status:** **Resolved** (Uniform toggle logic applied across all modules).
 
 ### DEF-MD-01: Escape Key Cascading Dismissal
 - **Severity:** Low (Modal Interaction)  
-- **Found in:** `js/app.js` (`DOMContentLoaded` keydown listener)  
+- **Found in:** `src/js/modules/user-management.js` (`DOMContentLoaded` keydown listener)
 - **Description:** Pressing Escape simultaneously dismissed both User and Rights modals.  
 - **Status:** **Resolved** (Escape now prioritizes and closes only the topmost active modal).
 
 ### DEF-UI-01: Disabled Permission Checkbox Interaction Focus
 - **Severity:** Low (Accessibility / Pointer Interaction)  
-- **Found in:** `css/dashboard.css` (`.rights-item.disabled`)  
+- **Found in:** `src/css/modules/user-management.css` (`.rights-item.disabled`)
 - **Description:** Disabled permission items had reduced opacity but could still receive focus/pointer events.  
 - **Status:** **Resolved** (Added `pointer-events: none;` to `.rights-item.disabled`).
 
 ### DEF-UI-02: Quick Action Hover Color Sync
 - **Severity:** Low (UI Visual Polish)  
-- **Found in:** `css/dashboard.css` (`.quick-btn:hover`)  
+- **Found in:** `src/css/pages/dashboard.css` (`.quick-btn:hover`)
 - **Description:** Quick action icon hovered to primary accent while text label remained default text color.  
 - **Status:** **Resolved** (Synchronized text color transition to `--text-bright` on hover).
 

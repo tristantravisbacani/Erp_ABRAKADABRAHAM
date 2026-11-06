@@ -16,7 +16,7 @@
 ## ✅ Acceptance Criteria Checklist
 - [ ] Requirements specified in task plan are fully satisfied
 - [ ] Code follows project standards and conventions
-- [ ] Supabase migrations / schema updates verified (if applicable)
+- [ ] Database schema or migration updates verified (if applicable)
 - [ ] Responsive UI verified across screen sizes (if applicable)
 - [ ] No regression introduced to existing modules
 
