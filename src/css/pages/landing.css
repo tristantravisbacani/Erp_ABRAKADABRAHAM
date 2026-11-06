@@ -458,11 +458,11 @@ footer {
   box-shadow: inset 0 0 0 1px var(--primary);
 }
 
-.auth-card .password-wrapper {
+.auth-card .password-input-wrapper {
   position: relative;
 }
 
-.auth-card .password-wrapper input {
+.auth-card .password-input-wrapper input {
   padding-right: 52px;
 }
 

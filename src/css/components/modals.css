@@ -109,6 +109,10 @@
   background: var(--surface);
 }
 
+.modal-body .password-input-wrapper input {
+  padding-right: 40px;
+}
+
 .modal-body .form-group input:focus {
   outline: none;
   border-color: var(--primary);
