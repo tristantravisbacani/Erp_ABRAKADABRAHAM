@@ -320,6 +320,22 @@
   color: var(--text-muted);
 }
 
+.auth-left {
+  justify-content: flex-start;
+  gap: 40px;
+}
+
+.auth-headline {
+  order: 1;
+  font-size: clamp(2.6rem, 4.6vw, 4rem);
+}
+
+.auth-visual {
+  order: 2;
+  width: min(500px, 100%);
+  margin: auto auto 24px 0;
+}
+
 /* ==========================================================================
    Responsive Breakpoints
    ========================================================================== */
