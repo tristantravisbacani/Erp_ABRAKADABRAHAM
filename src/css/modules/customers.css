@@ -26,7 +26,7 @@
 
   .module-toolbar .search-input {
     flex: 1;
-    min-width: 180px;
+    min-width: 200px;
   }
 
   .customer-form-actions {
