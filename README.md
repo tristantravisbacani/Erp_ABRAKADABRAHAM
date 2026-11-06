@@ -15,15 +15,3 @@ The application currently stores its demo data in browser local storage. Backend
 - `docs/` — project agreements, test plans, and UI specifications.
 
 `src/` contains the application source. `index.html` remains at the repository root as the entry point, so the app still works directly from a `file://` URL. JavaScript files are loaded in dependency order at the end of `index.html`. Keep the page markup there unless the app adopts a local web server or build step that can load separate HTML fragments.
-
-## Browser smoke tests
-
-The Playwright smoke tests cover demo sign-in, rendering each implemented module, and sign-out. With Node.js 22 installed, run:
-
-```sh
-npm install
-npx playwright install chromium
-npm test
-```
-
-Pull requests targeting `main` run the same tests in GitHub Actions.
