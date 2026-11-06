@@ -327,6 +327,41 @@
     </div>
   </div>
 
+  <!-- ==================== PRODUCT PRICE FORM MODAL ==================== -->
+  <div class="modal-overlay" id="priceModal">
+    <div class="modal modal-lg">
+      <div class="modal-header">
+        <div>
+          <h2 id="priceModalTitle">Add Price</h2>
+          <p id="priceModalSubtitle">Set a new effective unit price</p>
+        </div>
+        <button type="button" class="modal-close" onclick="window.closePriceModal()" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-error" id="priceError" role="alert"></div>
+        <form id="priceForm" onsubmit="window.savePrice(event)">
+          <input type="hidden" id="priceEditKey" value="" />
+          <div class="form-group">
+            <label for="priceProdCode">Product Code</label>
+            <input type="text" id="priceProdCode" readonly />
+          </div>
+          <div class="form-group">
+            <label for="priceEffDate">Effective Date</label>
+            <input type="date" id="priceEffDate" required />
+          </div>
+          <div class="form-group">
+            <label for="priceUnitPrice">Unit Price</label>
+            <input type="number" id="priceUnitPrice" step="0.01" min="0" placeholder="0.00" required />
+          </div>
+          <div class="product-form-actions">
+            <button type="submit" class="btn btn-primary btn-full" id="priceSaveBtn">Save Price</button>
+            <button type="button" class="btn btn-secondary" onclick="window.closePriceModal()">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <!-- ==================== CUSTOMER ADD/EDIT MODAL ==================== -->
   <div class="modal-overlay" id="customerModal">
     <div class="modal modal-lg">
