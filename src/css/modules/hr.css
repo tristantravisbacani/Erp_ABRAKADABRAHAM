@@ -28,6 +28,46 @@
   overflow-y: auto;
 }
 
+#jobHistoryFormModal {
+  z-index: 300;
+}
+
+#jobHistoryFormModal .modal,
+#jobHistoryListModal .modal {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 40px);
+}
+
+#jobHistoryFormModal .modal-body,
+#jobHistoryListModal .modal-body {
+  overflow-y: auto;
+}
+
+#jobHistoryFormModal .form-group select {
+  width: 100%;
+  padding: 5px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font: inherit;
+  line-height: 20px;
+  color: var(--text);
+  background: var(--surface);
+}
+
+.job-history-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.job-history-toolbar .filter-tabs {
+  margin-bottom: 0;
+}
+
 #employeeModal .form-group select {
   width: 100%;
   padding: 5px 12px;
@@ -60,6 +100,11 @@
   }
 
   #employeeModal .form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  #jobHistoryFormModal .form-row {
     grid-template-columns: 1fr;
     gap: 0;
   }
