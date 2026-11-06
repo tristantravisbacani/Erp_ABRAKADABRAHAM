@@ -176,10 +176,47 @@
     );
   };
 
+  function getDashboardRevenue() {
+    const detailsByTransaction = new Map();
+    window.getSalesDetails().filter(function (detail) {
+      return !detail.isDeleted;
+    }).forEach(function (detail) {
+      const details = detailsByTransaction.get(detail.transNo) || [];
+      details.push(detail);
+      detailsByTransaction.set(detail.transNo, details);
+    });
+
+    const prices = window.getPrices();
+    return window.getSales().filter(function (sale) {
+      return !sale.isDeleted;
+    }).reduce(function (total, sale) {
+      const details = detailsByTransaction.get(sale.transNo) || [];
+      return total + details.reduce(function (saleTotal, detail) {
+        const price = prices.filter(function (item) {
+          return item.prodCode === detail.prodCode &&
+            !item.isDeleted &&
+            item.effDate <= sale.salesDate;
+        }).sort(function (left, right) {
+          return right.effDate.localeCompare(left.effDate);
+        })[0];
+        return saleTotal + Number(detail.quantity || 0) * (price ? Number(price.unitPrice) || 0 : 0);
+      }, 0);
+    }, 0);
+  }
+
+  function formatCompactMoney(amount) {
+    if (amount >= 1e6) return '$' + (amount / 1e6).toFixed(2) + 'M';
+    if (amount >= 1e3) return '$' + (amount / 1e3).toFixed(1) + 'k';
+    return '$' + amount.toFixed(2);
+  }
+
   window.renderDashboardHome = function () {
     const area = document.getElementById('contentArea');
     if (!area || !window.currentUser) return;
     const role = window.currentUser.role;
+    const customers = window.getCustomers();
+    const products = window.getProducts();
+    const sales = window.getSales();
 
     let quickButtons = '';
     if (window.canModule('customers')) {
@@ -207,9 +244,9 @@
     const roleMessages = window.currentUser.authProvider === 'supabase'
       ? {
           superadmin:
-            'You are signed in to Supabase as Superadmin. ERP records and user administration are still local demo data.',
+            'You are signed in to Supabase as Superadmin. ERP records remain local demo data; user administration is managed in Supabase.',
           admin:
-            'You are signed in to Supabase as Admin. ERP records and user administration are still local demo data.',
+            'You are signed in to Supabase as Admin. ERP records remain local demo data; user administration is managed in Supabase.',
           user:
             'You are signed in to Supabase. ERP records are still local demo data; access follows your assigned profile permissions.'
         }
@@ -227,32 +264,30 @@
       window.escapeHtml(window.currentUser.firstName || 'User') +
       '!</h2>' +
       '      <p>' +
-      (roleMessages[role] || 'Welcome to Hope, Inc. ERP system.') +
-      '</p>' +
-      '    </div>' +
-      '    <div class="stats-grid">' +
-      '      <div class="stat-card">' +
-      '        <div class="label">System Modules</div>' +
-      '        <div class="value">5</div>' +
-      '        <div class="change">Customers, Products, HR, Sales, Reports</div>' +
-      '      </div>' +
-      '      <div class="stat-card">' +
-      '        <div class="label">Rights Catalog</div>' +
-      '        <div class="value">41</div>' +
-      '        <div class="change">Granular access rights</div>' +
-      '      </div>' +
-      '      <div class="stat-card">' +
-      '        <div class="label">Your Role</div>' +
-      '        <div class="value" style="font-size: 18px; text-transform: capitalize;">' +
-      window.escapeHtml(role) +
-      '</div>' +
-      '        <div class="change">Session Active</div>' +
-      '      </div>' +
-      '      <div class="stat-card">' +
-      '        <div class="label">Platform Status</div>' +
-      '        <div class="value" style="font-size: 18px; color: var(--success);">Operational</div>' +
-      '        <div class="change">Zero server errors</div>' +
-      '      </div>' +
+        (roleMessages[role] || 'Welcome to Hope, Inc. ERP system.') +
+        '</p>' +
+        '    </div>' +
+        '    <div class="stats-grid">' +
+        '      <div class="stat-card">' +
+        '        <div class="label">Total Customers</div>' +
+        '        <div class="value">' + customers.filter(function (customer) { return !customer.isDeleted; }).length + '</div>' +
+        '        <div class="change">' + customers.filter(function (customer) { return customer.isDeleted; }).length + ' inactive</div>' +
+        '      </div>' +
+        '      <div class="stat-card">' +
+        '        <div class="label">Products</div>' +
+        '        <div class="value">' + products.filter(function (product) { return !product.isDeleted; }).length + '</div>' +
+        '        <div class="change">' + products.filter(function (product) { return product.isDeleted; }).length + ' inactive</div>' +
+        '      </div>' +
+        '      <div class="stat-card">' +
+        '        <div class="label">Sales Transactions</div>' +
+        '        <div class="value">' + sales.filter(function (sale) { return !sale.isDeleted; }).length + '</div>' +
+        '        <div class="change">' + sales.filter(function (sale) { return sale.isDeleted; }).length + ' inactive</div>' +
+        '      </div>' +
+        '      <div class="stat-card">' +
+        '        <div class="label">Total Revenue</div>' +
+        '        <div class="value">' + formatCompactMoney(getDashboardRevenue()) + '</div>' +
+        '        <div class="change">from active sales</div>' +
+        '      </div>' +
       '    </div>' +
       '  </div>' +
       '  <div class="dash-side">' +
