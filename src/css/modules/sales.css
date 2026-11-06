@@ -1,7 +1,7 @@
 .sales-stamp {
   color: var(--text-muted);
   font-size: 12px;
-  white-space: nowrap;
+  max-width: 200px;
 }
 
 .sales-form-actions {
