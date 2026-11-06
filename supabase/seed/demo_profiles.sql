@@ -41,5 +41,25 @@ begin
       'Expected 5 demo profiles; updated %. Create all five Supabase Auth users first, then rerun this script.',
       updated_profiles;
   end if;
+
+  insert into public.user_permissions (user_id, permission, enabled)
+  select profile.id, permission, true
+  from public.profiles as profile
+  cross join unnest(array[
+    'customers.view',
+    'customers.add',
+    'customers.edit',
+    'products.view',
+    'products.add',
+    'products.edit',
+    'sales.view',
+    'sales.detailView',
+    'reports.view',
+    'reports.productMaster',
+    'reports.topSales'
+  ]) as demo_permissions(permission)
+  where lower(profile.email) = 'user@hope.com'
+  on conflict (user_id, permission) do update
+    set enabled = excluded.enabled;
 end;
 $$;
