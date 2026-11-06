@@ -363,6 +363,67 @@
     </div>
   </div>
 
+  <!-- ==================== EMPLOYEE ADD/EDIT MODAL ==================== -->
+  <div class="modal-overlay" id="employeeModal">
+    <div class="modal modal-lg">
+      <div class="modal-header">
+        <div>
+          <h2 id="employeeModalTitle">Add Employee</h2>
+          <p>Enter employee details</p>
+        </div>
+        <button type="button" class="modal-close" onclick="window.closeEmployeeModal()" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-error" id="employeeError" role="alert"></div>
+        <form id="employeeForm" onsubmit="window.saveEmployee(event)">
+          <input type="hidden" id="employeeEditNo" value="" />
+          <div class="form-row">
+            <div class="form-group">
+              <label for="employeeNo">Employee No.</label>
+              <input type="text" id="employeeNo" placeholder="e.g. 00065" required pattern="[A-Za-z0-9._\-]+" title="Letters, numbers, dot, dash and underscore only" />
+            </div>
+            <div class="form-group">
+              <label for="employeeGender">Gender</label>
+              <select id="employeeGender" required>
+                <option value="M">Male</option>
+                <option value="F">Female</option>
+                <option value="O">Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="employeeFirstName">First Name</label>
+              <input type="text" id="employeeFirstName" required />
+            </div>
+            <div class="form-group">
+              <label for="employeeLastName">Last Name</label>
+              <input type="text" id="employeeLastName" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="employeeBirthDate">Birth Date</label>
+              <input type="date" id="employeeBirthDate" required />
+            </div>
+            <div class="form-group">
+              <label for="employeeHireDate">Hire Date</label>
+              <input type="date" id="employeeHireDate" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="employeeSepDate">Separation Date (optional)</label>
+            <input type="date" id="employeeSepDate" />
+          </div>
+          <div class="product-form-actions">
+            <button type="submit" class="btn btn-primary btn-full" id="employeeSaveBtn">Save Employee</button>
+            <button type="button" class="btn btn-secondary" onclick="window.closeEmployeeModal()">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <!-- ==================== CUSTOMER ADD/EDIT MODAL ==================== -->
   <div class="modal-overlay" id="customerModal">
     <div class="modal modal-lg">
