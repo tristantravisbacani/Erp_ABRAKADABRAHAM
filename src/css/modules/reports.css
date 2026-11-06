@@ -82,8 +82,18 @@
 }
 
 @media print {
+  body * {
+    visibility: hidden !important;
+  }
+
   body {
     background: #fff !important;
+    color: #000 !important;
+  }
+
+  .report-print-area,
+  .report-print-area * {
+    visibility: visible !important;
     color: #000 !important;
   }
 
@@ -94,7 +104,10 @@
   .report-tabs,
   .report-filter-bar,
   .report-employee-filter,
-  .report-actions {
+  .report-actions,
+  .toolbar-right label,
+  .search-input,
+  .btn {
     display: none !important;
   }
 
@@ -111,8 +124,16 @@
     box-shadow: none !important;
   }
 
+  .report-print-area {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+  }
+
   .data-table-wrap {
     overflow: visible !important;
+    border: 0 !important;
+    background: #fff !important;
   }
 
   .data-table {
@@ -120,10 +141,27 @@
     border-collapse: collapse !important;
   }
 
+  .data-table th {
+    background: #eee !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .data-table td,
+  .data-table tr:hover td {
+    background: #fff !important;
+    border-color: #ccc !important;
+  }
+
   .data-table th,
   .data-table td {
     color: #000 !important;
     border: 1px solid #999 !important;
+  }
+
+  .module-toolbar h3 {
+    margin-bottom: 12px;
+    font-size: 18pt;
   }
 
   .badge {
