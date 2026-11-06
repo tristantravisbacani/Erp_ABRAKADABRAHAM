@@ -1,6 +1,6 @@
 # Erp_ABRAKADABRAHAM
 
-The application stores ERP demo data in browser local storage and uses Supabase Auth for sign-in, registration, and password reset. The initial Supabase profile/permission/audit schema is applied; ERP module data and user administration remain local. See [the Supabase setup guide](docs/supabase_setup.md).
+The application stores ERP module demo data in browser local storage and uses Supabase for authentication, profile and permission management, and account approval. The Supabase profile/permission/audit schemas are applied; ERP module records remain local. See [the Supabase setup guide](docs/supabase_setup.md).
 
 ## Project structure
 
