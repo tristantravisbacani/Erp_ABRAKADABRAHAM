@@ -14,7 +14,119 @@
     { transNo: 'TR000009', salesDate: '2010-07-10', custNo: 'C0007', empNo: '00021', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
     { transNo: 'TR000010', salesDate: '2010-07-10', custNo: 'C0008', empNo: '00021', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
     { transNo: 'TR000011', salesDate: '2010-07-10', custNo: 'C0009', empNo: '00005', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
-    { transNo: 'TR000012', salesDate: '2010-07-12', custNo: 'C0004', empNo: '00017', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' }
+    { transNo: 'TR000012', salesDate: '2010-07-12', custNo: 'C0004', empNo: '00017', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000013', salesDate: '2010-07-12', custNo: 'C0010', empNo: '00025', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000014', salesDate: '2010-07-12', custNo: 'C0011', empNo: '00021', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000015', salesDate: '2010-07-12', custNo: 'C0012', empNo: '00025', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000016', salesDate: '2010-07-12', custNo: 'C0013', empNo: '00027', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000017', salesDate: '2010-07-12', custNo: 'C0001', empNo: '00005', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000018', salesDate: '2010-07-13', custNo: 'C0006', empNo: '00021', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000019', salesDate: '2010-08-01', custNo: 'C0014', empNo: '00019', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000020', salesDate: '2010-08-05', custNo: 'C0007', empNo: '00021', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000021', salesDate: '2010-08-05', custNo: 'C0015', empNo: '00027', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000022', salesDate: '2010-08-10', custNo: 'C0016', empNo: '00021', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000023', salesDate: '2010-08-10', custNo: 'C0017', empNo: '00027', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000024', salesDate: '2010-08-10', custNo: 'C0018', empNo: '00027', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000025', salesDate: '2010-08-10', custNo: 'C0019', empNo: '00025', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000026', salesDate: '2010-08-12', custNo: 'C0011', empNo: '00021', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000027', salesDate: '2010-08-30', custNo: 'C0009', empNo: '00005', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000028', salesDate: '2010-08-30', custNo: 'C0008', empNo: '00021', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000029', salesDate: '2010-09-05', custNo: 'C0002', empNo: '00015', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000030', salesDate: '2010-09-05', custNo: 'C0010', empNo: '00025', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000031', salesDate: '2010-09-05', custNo: 'C0005', empNo: '00019', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000032', salesDate: '2010-09-05', custNo: 'C0014', empNo: '00019', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000033', salesDate: '2010-09-06', custNo: 'C0012', empNo: '00025', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000034', salesDate: '2010-09-06', custNo: 'C0018', empNo: '00027', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000035', salesDate: '2010-09-10', custNo: 'C0021', empNo: '00027', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000036', salesDate: '2010-09-10', custNo: 'C0022', empNo: '00019', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000037', salesDate: '2010-09-23', custNo: 'C0023', empNo: '00021', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000038', salesDate: '2010-09-23', custNo: 'C0024', empNo: '00005', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000039', salesDate: '2010-09-23', custNo: 'C0025', empNo: '00015', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000040', salesDate: '2010-10-05', custNo: 'C0021', empNo: '00019', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000041', salesDate: '2010-10-05', custNo: 'C0023', empNo: '00025', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000042', salesDate: '2010-10-25', custNo: 'C0026', empNo: '00005', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000043', salesDate: '2010-10-27', custNo: 'C0027', empNo: '00019', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000044', salesDate: '2010-11-09', custNo: 'C0028', empNo: '00027', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000045', salesDate: '2010-11-10', custNo: 'C0029', empNo: '00027', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000046', salesDate: '2010-11-20', custNo: 'C0030', empNo: '00019', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000047', salesDate: '2010-11-20', custNo: 'C0023', empNo: '00025', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000048', salesDate: '2010-12-05', custNo: 'C0026', empNo: '00005', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000049', salesDate: '2010-12-10', custNo: 'C0007', empNo: '00021', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000050', salesDate: '2010-12-10', custNo: 'C0003', empNo: '00005', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000051', salesDate: '2010-12-10', custNo: 'C0011', empNo: '00021', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000052', salesDate: '2011-01-10', custNo: 'C0031', empNo: '00051', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000053', salesDate: '2011-01-10', custNo: 'C0032', empNo: '00051', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000054', salesDate: '2011-01-10', custNo: 'C0033', empNo: '00051', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000055', salesDate: '2011-01-10', custNo: 'C0034', empNo: '00053', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000056', salesDate: '2011-01-10', custNo: 'C0035', empNo: '00055', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000057', salesDate: '2011-01-10', custNo: 'C0036', empNo: '00055', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000058', salesDate: '2011-01-10', custNo: 'C0029', empNo: '00027', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000059', salesDate: '2011-01-10', custNo: 'C0022', empNo: '00019', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000060', salesDate: '2011-01-10', custNo: 'C0026', empNo: '00005', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000061', salesDate: '2011-01-10', custNo: 'C0027', empNo: '00027', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000062', salesDate: '2011-01-10', custNo: 'C0013', empNo: '00027', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000063', salesDate: '2011-01-10', custNo: 'C0016', empNo: '00021', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000064', salesDate: '2011-01-17', custNo: 'C0037', empNo: '00057', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000065', salesDate: '2011-01-17', custNo: 'C0038', empNo: '00059', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000066', salesDate: '2011-01-17', custNo: 'C0039', empNo: '00061', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000067', salesDate: '2011-01-17', custNo: 'C0040', empNo: '00063', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000068', salesDate: '2011-01-20', custNo: 'C0041', empNo: '00059', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000069', salesDate: '2011-01-20', custNo: 'C0042', empNo: '00059', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000070', salesDate: '2011-01-25', custNo: 'C0043', empNo: '00059', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000071', salesDate: '2011-01-25', custNo: 'C0044', empNo: '00059', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000072', salesDate: '2011-01-25', custNo: 'C0045', empNo: '00059', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000073', salesDate: '2011-02-01', custNo: 'C0046', empNo: '00021', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000074', salesDate: '2011-02-01', custNo: 'C0047', empNo: '00005', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000075', salesDate: '2011-02-01', custNo: 'C0048', empNo: '00017', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000076', salesDate: '2011-02-02', custNo: 'C0045', empNo: '00059', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000077', salesDate: '2011-02-02', custNo: 'C0044', empNo: '00059', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000078', salesDate: '2011-02-07', custNo: 'C0035', empNo: '00055', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000079', salesDate: '2011-02-07', custNo: 'C0036', empNo: '00055', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000080', salesDate: '2011-02-07', custNo: 'C0040', empNo: '00063', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000081', salesDate: '2011-02-10', custNo: 'C0049', empNo: '00025', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000082', salesDate: '2011-02-10', custNo: 'C0050', empNo: '00027', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000083', salesDate: '2011-02-12', custNo: 'C0032', empNo: '00051', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000084', salesDate: '2011-02-12', custNo: 'C0033', empNo: '00051', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000085', salesDate: '2011-02-15', custNo: 'C0051', empNo: '00019', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000086', salesDate: '2011-02-15', custNo: 'C0052', empNo: '00019', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000087', salesDate: '2011-02-20', custNo: 'C0053', empNo: '00025', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000088', salesDate: '2011-02-20', custNo: 'C0054', empNo: '00005', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000089', salesDate: '2011-02-20', custNo: 'C0055', empNo: '00021', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000090', salesDate: '2011-03-02', custNo: 'C0056', empNo: '00051', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000091', salesDate: '2011-03-02', custNo: 'C0057', empNo: '00053', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000092', salesDate: '2011-03-02', custNo: 'C0058', empNo: '00053', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000093', salesDate: '2011-03-02', custNo: 'C0059', empNo: '00055', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000094', salesDate: '2011-03-02', custNo: 'C0060', empNo: '00051', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000095', salesDate: '2011-03-05', custNo: 'C0050', empNo: '00027', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000096', salesDate: '2011-03-05', custNo: 'C0051', empNo: '00019', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000097', salesDate: '2011-03-05', custNo: 'C0052', empNo: '00019', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000098', salesDate: '2011-03-05', custNo: 'C0055', empNo: '00021', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000099', salesDate: '2011-03-13', custNo: 'C0061', empNo: '00057', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000100', salesDate: '2011-03-13', custNo: 'C0062', empNo: '00057', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000101', salesDate: '2011-03-13', custNo: 'C0063', empNo: '00059', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000102', salesDate: '2011-03-21', custNo: 'C0064', empNo: '00063', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000103', salesDate: '2011-03-21', custNo: 'C0065', empNo: '00057', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000104', salesDate: '2011-03-30', custNo: 'C0009', empNo: '00005', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000105', salesDate: '2011-03-30', custNo: 'C0010', empNo: '00025', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000106', salesDate: '2011-03-30', custNo: 'C0022', empNo: '00019', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000107', salesDate: '2011-03-30', custNo: 'C0013', empNo: '00027', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000108', salesDate: '2011-04-07', custNo: 'C0066', empNo: '00025', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000109', salesDate: '2011-04-07', custNo: 'C0067', empNo: '00025', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000110', salesDate: '2011-04-07', custNo: 'C0068', empNo: '00025', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000111', salesDate: '2011-04-07', custNo: 'C0069', empNo: '00025', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000112', salesDate: '2011-04-07', custNo: 'C0070', empNo: '00025', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000113', salesDate: '2011-04-07', custNo: 'C0071', empNo: '00059', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000114', salesDate: '2011-04-07', custNo: 'C0072', empNo: '00059', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000115', salesDate: '2011-04-07', custNo: 'C0073', empNo: '00059', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000116', salesDate: '2011-04-07', custNo: 'C0074', empNo: '00059', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000117', salesDate: '2011-04-07', custNo: 'C0075', empNo: '00059', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000118', salesDate: '2011-04-07', custNo: 'C0076', empNo: '00059', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000119', salesDate: '2011-04-10', custNo: 'C0077', empNo: '00063', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000120', salesDate: '2011-04-10', custNo: 'C0078', empNo: '00055', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000121', salesDate: '2011-04-12', custNo: 'C0079', empNo: '00051', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000122', salesDate: '2011-04-12', custNo: 'C0080', empNo: '00025', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000123', salesDate: '2011-04-12', custNo: 'C0081', empNo: '00019', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000124', salesDate: '2011-04-15', custNo: 'C0082', empNo: '00017', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' }
   ];
   const DETAIL_STORAGE_KEY = 'hope_erp_sdetails_v2';
   const DEFAULT_SALES_DETAILS = [
@@ -48,7 +160,289 @@
     { transNo: 'TR000011', prodCode: 'MD0003', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
     { transNo: 'TR000011', prodCode: 'PC0004', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
     { transNo: 'TR000011', prodCode: 'PR0002', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
-    { transNo: 'TR000012', prodCode: 'NB0003', quantity: 7, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' }
+    { transNo: 'TR000012', prodCode: 'NB0003', quantity: 7, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000013', prodCode: 'AM0005', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000013', prodCode: 'AP0002', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000014', prodCode: 'PF0004', quantity: 10, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000015', prodCode: 'AK0003', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000015', prodCode: 'AM0001', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000015', prodCode: 'MD0002', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000015', prodCode: 'PC0001', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000016', prodCode: 'AP0002', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000016', prodCode: 'NB0002', quantity: 7, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000016', prodCode: 'PF0006', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000016', prodCode: 'PR0002', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000017', prodCode: 'PA0001', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000017', prodCode: 'PA0002', quantity: 4, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000018', prodCode: 'MD0001', quantity: 9, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000018', prodCode: 'PC0004', quantity: 9, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000019', prodCode: 'AP0002', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000020', prodCode: 'MD0005', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000021', prodCode: 'AM0002', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000021', prodCode: 'NB0002', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000022', prodCode: 'MD0006', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000022', prodCode: 'PA0002', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000022', prodCode: 'PC0002', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000023', prodCode: 'NB0001', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000024', prodCode: 'PA0002', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000025', prodCode: 'AP0002', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000026', prodCode: 'AM0005', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000026', prodCode: 'MD0003', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000026', prodCode: 'PC0001', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000027', prodCode: 'NB0003', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000027', prodCode: 'PF0003', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000028', prodCode: 'AM0001', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000028', prodCode: 'PF0004', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000029', prodCode: 'PF0001', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000030', prodCode: 'AM0001', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000030', prodCode: 'PA0001', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000030', prodCode: 'PF0006', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000030', prodCode: 'PR0003', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000031', prodCode: 'AM0003', quantity: 20, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000032', prodCode: 'NB0004', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000032', prodCode: 'PA0002', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000033', prodCode: 'NB0001', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000034', prodCode: 'MD0003', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000034', prodCode: 'PC0001', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000035', prodCode: 'NH0003', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000035', prodCode: 'PC0004', quantity: 10, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000035', prodCode: 'PR0002', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000036', prodCode: 'MD0005', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000037', prodCode: 'AM0002', quantity: 10, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000037', prodCode: 'PC0004', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000038', prodCode: 'AD0003', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000038', prodCode: 'AK0001', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000038', prodCode: 'PA0001', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000038', prodCode: 'PC0003', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000039', prodCode: 'NB0004', quantity: 10, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000039', prodCode: 'NH0002', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000039', prodCode: 'PF0001', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000039', prodCode: 'PF0006', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000040', prodCode: 'NB0002', quantity: 15, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000041', prodCode: 'NB0001', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000041', prodCode: 'PR0002', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000042', prodCode: 'AM0005', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000042', prodCode: 'AP0003', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000043', prodCode: 'AD0003', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000043', prodCode: 'NB0004', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000043', prodCode: 'NH0003', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000043', prodCode: 'PA0001', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000043', prodCode: 'PF0001', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000044', prodCode: 'AD0002', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000044', prodCode: 'PC0001', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000045', prodCode: 'AM0004', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000045', prodCode: 'MD0003', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000045', prodCode: 'PC0004', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000046', prodCode: 'AP0001', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000046', prodCode: 'NB0002', quantity: 10, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000047', prodCode: 'PA0001', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000048', prodCode: 'AM0005', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000048', prodCode: 'MD0001', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000048', prodCode: 'PC0003', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000048', prodCode: 'PF0006', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000048', prodCode: 'PR0003', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000049', prodCode: 'MP0001', quantity: 10, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000049', prodCode: 'MP0003', quantity: 10, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000050', prodCode: 'NT0005', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000051', prodCode: 'MP0001', quantity: 15, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000051', prodCode: 'MP0004', quantity: 15, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000051', prodCode: 'NT0001', quantity: 15, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000052', prodCode: 'MP0001', quantity: 10, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000052', prodCode: 'MP0003', quantity: 10, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000052', prodCode: 'NT0001', quantity: 10, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000053', prodCode: 'AK0002', quantity: 20, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000053', prodCode: 'AM0002', quantity: 20, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000053', prodCode: 'AP0002', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000053', prodCode: 'MD0001', quantity: 20, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000053', prodCode: 'PC0004', quantity: 20, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000054', prodCode: 'AP0001', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000054', prodCode: 'NB0001', quantity: 10, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000055', prodCode: 'AD0003', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000055', prodCode: 'NH0003', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000055', prodCode: 'PF0006', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000055', prodCode: 'PR0003', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000055', prodCode: 'PS0001', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000056', prodCode: 'NB0004', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000056', prodCode: 'PA0002', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000056', prodCode: 'PF0005', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000057', prodCode: 'AD0004', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000057', prodCode: 'NH0002', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000057', prodCode: 'PF0006', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000057', prodCode: 'PS0003', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000058', prodCode: 'MD0005', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000058', prodCode: 'PS0001', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000059', prodCode: 'MP0001', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000059', prodCode: 'NT0002', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000060', prodCode: 'AD0004', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000060', prodCode: 'MP0001', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000060', prodCode: 'PS0002', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000060', prodCode: 'PS0003', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000061', prodCode: 'MP0001', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000061', prodCode: 'MP0003', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000062', prodCode: 'AD0002', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000062', prodCode: 'NH0003', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000062', prodCode: 'NT0006', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000062', prodCode: 'PS0003', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000063', prodCode: 'PS0003', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000064', prodCode: 'MD0002', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000064', prodCode: 'PC0004', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000064', prodCode: 'PF0001', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000064', prodCode: 'PF0006', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000064', prodCode: 'PS0001', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000065', prodCode: 'NB0004', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000065', prodCode: 'PA0002', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000066', prodCode: 'AM0002', quantity: 15, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000066', prodCode: 'MP0003', quantity: 15, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000066', prodCode: 'NB0002', quantity: 15, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000067', prodCode: 'NH0002', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000067', prodCode: 'PS0003', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000068', prodCode: 'MP0001', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000069', prodCode: 'MP0003', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000070', prodCode: 'NT0001', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000071', prodCode: 'NT0003', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000072', prodCode: 'NT0005', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000073', prodCode: 'AP0002', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000073', prodCode: 'PC0004', quantity: 40, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000073', prodCode: 'PR0001', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000074', prodCode: 'AM0002', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000074', prodCode: 'PC0002', quantity: 20, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000074', prodCode: 'PF0001', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000075', prodCode: 'AM0001', quantity: 10, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000075', prodCode: 'AP0003', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000075', prodCode: 'NB0001', quantity: 10, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000075', prodCode: 'NB0005', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000076', prodCode: 'NB0005', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000077', prodCode: 'NB0005', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000078', prodCode: 'NB0005', quantity: 10, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000079', prodCode: 'AD0004', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000079', prodCode: 'PS0001', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000080', prodCode: 'NB0005', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000081', prodCode: 'NB0005', quantity: 4, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000081', prodCode: 'PA0002', quantity: 4, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000082', prodCode: 'PC0002', quantity: 20, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000082', prodCode: 'PF0005', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000083', prodCode: 'NB0005', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000083', prodCode: 'PA0002', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000084', prodCode: 'AM0001', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000084', prodCode: 'NB0005', quantity: 4, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000084', prodCode: 'NH0003', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000084', prodCode: 'PS0002', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000085', prodCode: 'AP0002', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000085', prodCode: 'PC0002', quantity: 10, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000085', prodCode: 'PF0006', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000086', prodCode: 'AD0003', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000086', prodCode: 'MD0004', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000086', prodCode: 'PC0003', quantity: 10, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000087', prodCode: 'AM0001', quantity: 10, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000087', prodCode: 'PC0001', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000087', prodCode: 'PC0004', quantity: 7, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000087', prodCode: 'PF0004', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000088', prodCode: 'NH0003', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000088', prodCode: 'PR0001', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000088', prodCode: 'PS0001', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000089', prodCode: 'NB0005', quantity: 10, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000090', prodCode: 'NB0005', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000090', prodCode: 'NH0001', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000090', prodCode: 'NH0003', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000090', prodCode: 'PS0003', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000091', prodCode: 'AD0003', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000091', prodCode: 'NT0001', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000091', prodCode: 'NT0005', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000091', prodCode: 'PS0002', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000092', prodCode: 'AD0003', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000092', prodCode: 'AM0001', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000092', prodCode: 'NB0004', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000092', prodCode: 'PC0001', quantity: 10, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000092', prodCode: 'PF0006', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000093', prodCode: 'MD0002', quantity: 10, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000093', prodCode: 'NH0003', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000093', prodCode: 'PC0002', quantity: 20, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000094', prodCode: 'PC0002', quantity: 9, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000094', prodCode: 'PF0006', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000095', prodCode: 'MD0003', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000095', prodCode: 'NB0003', quantity: 4, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000096', prodCode: 'AP0002', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000096', prodCode: 'PA0001', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000097', prodCode: 'NB0003', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000097', prodCode: 'PC0004', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000098', prodCode: 'NB0001', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000098', prodCode: 'NT0001', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000098', prodCode: 'PC0002', quantity: 10, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000098', prodCode: 'PF0004', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000099', prodCode: 'NB0005', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000099', prodCode: 'PS0002', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000099', prodCode: 'PS0003', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000100', prodCode: 'NB0005', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000100', prodCode: 'NT0002', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000100', prodCode: 'NT0004', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000100', prodCode: 'PA0002', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000100', prodCode: 'PC0002', quantity: 10, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000101', prodCode: 'AD0001', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000101', prodCode: 'NH0003', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000101', prodCode: 'PC0001', quantity: 10, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000101', prodCode: 'PF0006', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000102', prodCode: 'MD0001', quantity: 10, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000102', prodCode: 'NH0002', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000102', prodCode: 'PC0004', quantity: 10, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000102', prodCode: 'PS0003', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000103', prodCode: 'AK0001', quantity: 15, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000103', prodCode: 'AM0004', quantity: 15, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000103', prodCode: 'MD0006', quantity: 15, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000103', prodCode: 'PC0004', quantity: 15, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000104', prodCode: 'MP0002', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000104', prodCode: 'MP0003', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000104', prodCode: 'NB0005', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000105', prodCode: 'NB0005', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000106', prodCode: 'NB0005', quantity: 4, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000107', prodCode: 'NB0005', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000108', prodCode: 'MP0001', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000108', prodCode: 'NT0005', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000109', prodCode: 'NB0005', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000110', prodCode: 'MP0003', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000111', prodCode: 'NB0005', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000112', prodCode: 'NB0001', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000113', prodCode: 'NB0005', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000114', prodCode: 'AP0003', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000115', prodCode: 'NB0005', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000115', prodCode: 'NT0001', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000116', prodCode: 'MP0003', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000116', prodCode: 'NB0005', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000117', prodCode: 'NT0005', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000118', prodCode: 'NB0005', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000119', prodCode: 'NB0005', quantity: 20, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000119', prodCode: 'PC0004', quantity: 100, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000120', prodCode: 'AD0003', quantity: 10, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000120', prodCode: 'NH0003', quantity: 20, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000120', prodCode: 'PC0004', quantity: 150, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000120', prodCode: 'PR0003', quantity: 10, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000120', prodCode: 'PS0001', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000120', prodCode: 'PS0003', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000121', prodCode: 'NB0005', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000121', prodCode: 'NH0003', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000121', prodCode: 'NT0001', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000121', prodCode: 'PC0002', quantity: 20, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000122', prodCode: 'AP0002', quantity: 1, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000122', prodCode: 'NB0005', quantity: 10, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000122', prodCode: 'NH0003', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000122', prodCode: 'PC0003', quantity: 30, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000122', prodCode: 'PF0001', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000122', prodCode: 'PR0002', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000122', prodCode: 'PS0003', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000123', prodCode: 'AD0001', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000123', prodCode: 'NH0003', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000123', prodCode: 'NT0001', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000123', prodCode: 'PC0004', quantity: 60, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000123', prodCode: 'PF0005', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000123', prodCode: 'PF0006', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000123', prodCode: 'PR0003', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000123', prodCode: 'PS0001', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000124', prodCode: 'AM0002', quantity: 10, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000124', prodCode: 'MD0006', quantity: 5, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000124', prodCode: 'NB0005', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000124', prodCode: 'PC0002', quantity: 15, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000124', prodCode: 'PF0005', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000124', prodCode: 'PF0006', quantity: 2, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { transNo: 'TR000124', prodCode: 'PS0001', quantity: 3, isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' }
   ];
 
   let memorySales = null;
@@ -58,30 +452,82 @@
   let selectedTransNo = null;
   let salesDetailFilter = 'active';
 
-  function getSales() {
-    if (memorySales) return memorySales;
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored !== null) {
-        const sales = JSON.parse(stored);
-        if (!Array.isArray(sales)) throw new Error('Stored sales data must be an array.');
-        return sales;
-      }
+  function cloneRecords(records) {
+    return records.map(function (record) {
+      return Object.assign({}, record);
+    });
+  }
 
-      const sales = DEFAULT_SALES.map(function (sale) {
-        return Object.assign({}, sale);
-      });
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(sales));
-      return sales;
+  function mergeSeedRecords(records, seedRecords, getKey) {
+    const keys = new Set(records.map(getKey));
+    let changed = false;
+    seedRecords.forEach(function (record) {
+      const key = getKey(record);
+      if (keys.has(key)) return;
+      keys.add(key);
+      records.push(Object.assign({}, record));
+      changed = true;
+    });
+    return changed;
+  }
+
+  function readSeededRecords(storageKey, defaults, label, getKey, getMemory, setMemory) {
+    const memoryRecords = getMemory();
+    if (memoryRecords) return memoryRecords;
+
+    let stored;
+    try {
+      stored = localStorage.getItem(storageKey);
     } catch (error) {
-      console.error('[Sales storage read error]', error);
-      if (!memorySales) {
-        memorySales = DEFAULT_SALES.map(function (sale) {
-          return Object.assign({}, sale);
-        });
-      }
-      return memorySales;
+      console.error('[' + label + ' storage read error]', error);
+      const fallbackRecords = cloneRecords(defaults);
+      setMemory(fallbackRecords);
+      return fallbackRecords;
     }
+
+    let records;
+    let shouldPersist = stored === null;
+    if (stored === null) {
+      records = cloneRecords(defaults);
+    } else {
+      try {
+        records = JSON.parse(stored);
+        if (!Array.isArray(records)) throw new Error('Stored data must be an array.');
+      } catch (error) {
+        console.error('[' + label + ' storage parse error]', error);
+        records = cloneRecords(defaults);
+        setMemory(records);
+        return records;
+      }
+      shouldPersist = mergeSeedRecords(records, defaults, getKey);
+    }
+
+    if (shouldPersist) {
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(records));
+      } catch (error) {
+        console.error('[' + label + ' storage write error]', error);
+        setMemory(records);
+      }
+    }
+    return records;
+  }
+
+  function getSales() {
+    return readSeededRecords(
+      STORAGE_KEY,
+      DEFAULT_SALES,
+      'Sales',
+      function (sale) {
+        return String(sale.transNo || '').toLowerCase();
+      },
+      function () {
+        return memorySales;
+      },
+      function (sales) {
+        memorySales = sales;
+      }
+    );
   }
 
   function saveSales(sales) {
@@ -94,29 +540,21 @@
   }
 
   function getSalesDetails() {
-    if (memorySalesDetails) return memorySalesDetails;
-    try {
-      const stored = localStorage.getItem(DETAIL_STORAGE_KEY);
-      if (stored !== null) {
-        const details = JSON.parse(stored);
-        if (!Array.isArray(details)) throw new Error('Stored sales details must be an array.');
-        return details;
+    return readSeededRecords(
+      DETAIL_STORAGE_KEY,
+      DEFAULT_SALES_DETAILS,
+      'Sales detail',
+      function (detail) {
+        return String(detail.transNo || '').toLowerCase() + '|' +
+          String(detail.prodCode || '').toLowerCase();
+      },
+      function () {
+        return memorySalesDetails;
+      },
+      function (details) {
+        memorySalesDetails = details;
       }
-
-      const details = DEFAULT_SALES_DETAILS.map(function (detail) {
-        return Object.assign({}, detail);
-      });
-      localStorage.setItem(DETAIL_STORAGE_KEY, JSON.stringify(details));
-      return details;
-    } catch (error) {
-      console.error('[Sales detail storage read error]', error);
-      if (!memorySalesDetails) {
-        memorySalesDetails = DEFAULT_SALES_DETAILS.map(function (detail) {
-          return Object.assign({}, detail);
-        });
-      }
-      return memorySalesDetails;
-    }
+    );
   }
 
   function saveSalesDetails(details) {
