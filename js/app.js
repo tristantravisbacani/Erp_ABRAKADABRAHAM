@@ -10,21 +10,6 @@
   // Global App State
   window.currentUser = null;
 
-  // Connection status pill updater
-  window.addEventListener('dbReady', function (e) {
-    const statusPill = document.getElementById('dbStatusPill');
-    if (statusPill) {
-      if (e.detail.mode === 'cloud') {
-        statusPill.textContent = '● Supabase Cloud';
-        statusPill.className = 'status-pill status-cloud';
-      } else {
-        statusPill.textContent = '○ Local Storage (Offline Mode)';
-        statusPill.className = 'status-pill status-offline';
-      }
-    }
-    console.info(`[Hope ERP] Database layer ready in ${e.detail.mode.toUpperCase()} mode.`);
-  });
-
   // ========== Security & String Helpers ==========
   window.escapeHtml = function (value) {
     return String(value == null ? '' : value)

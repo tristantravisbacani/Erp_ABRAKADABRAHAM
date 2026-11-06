@@ -14,7 +14,7 @@ This document defines formal test specifications and verification logs for the c
 
 ### 1.1 Test Configuration
 - **Browser Platforms:** Google Chrome (v122+), Mozilla Firefox (v123+), Microsoft Edge (v122+)
-- **Storage Subsystems:** Local Storage (`hope_erp_users_v4`, `hope_erp_session_v4`, `hope_erp_reset_tokens`), Supabase PostgreSQL
+- **Storage Subsystem:** Local Storage (`hope_erp_users_v4`, `hope_erp_session_v4`, `hope_erp_reset_tokens`)
 - **Security Baseline:** OWASP ASVS v4.0.3 (Authentication & Session Management)
 
 ---

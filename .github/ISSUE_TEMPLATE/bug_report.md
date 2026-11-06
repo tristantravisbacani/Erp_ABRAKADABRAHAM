@@ -31,9 +31,9 @@ If applicable, add screenshots or console output to help explain the problem.
 - [ ] Human Resources
 - [ ] Sales Management
 - [ ] Reports Module
-- [ ] Database / Supabase Schema
+- [ ] Data / Persistence
 
 ### 📱 Environment
 - **Browser:** [e.g. Chrome, Edge, Firefox]
 - **OS:** Windows
-- **Database Mode:** [Supabase Cloud / Local Fallback]
+- **Data Storage:** [Browser Local Storage / Not Applicable]

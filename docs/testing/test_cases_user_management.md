@@ -14,7 +14,7 @@ This specification defines the test suite and validation logs for the **User Man
 
 ### 1.1 Test Configuration & Platforms
 - **Browsers Tested:** Google Chrome 122.0, Mozilla Firefox 123.0, Microsoft Edge 122.0
-- **Storage Subsystems:** Local Storage (`hope_erp_users_v4`, `hope_erp_session_v4`), Supabase Cloud PostgreSQL
+- **Storage Subsystem:** Local Storage (`hope_erp_users_v4`, `hope_erp_session_v4`)
 - **Security & Authorization Framework:** Role-Based Access Control (RBAC), Admin Isolation Boundaries, OWASP ASVS v4.0.3 (Access Control & Privilege Separation)
 
 ---

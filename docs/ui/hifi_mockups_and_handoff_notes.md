@@ -20,7 +20,7 @@ This specification delivers production-grade high-fidelity architectural wirefra
 
 ```
 +-----------------------------------------------------------------------------------------+
-|                                                          [ Status: ● Supabase Cloud ]   |
+|                                                          [ Status: Local Storage ]      |
 +--------------------------------------------+--------------------------------------------+
 | [Left Showcase Panel]                      | [Right Auth Card Panel]                    |
 |                                            |                                            |
