@@ -270,6 +270,41 @@
     </div>
   </div>
 
+  <!-- ==================== PRODUCT ADD/EDIT MODAL ==================== -->
+  <div class="modal-overlay" id="productModal">
+    <div class="modal modal-lg">
+      <div class="modal-header">
+        <div>
+          <h2 id="productModalTitle">Add Product</h2>
+          <p id="productModalSub">Enter new product details</p>
+        </div>
+        <button type="button" class="modal-close" onclick="window.closeProductModal()" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-error" id="productError" role="alert"></div>
+        <form id="productForm" onsubmit="window.saveProduct(event)">
+          <input type="hidden" id="prodEditCode" value="" />
+          <div class="form-group">
+            <label for="prodCode">Product Code</label>
+            <input type="text" id="prodCode" placeholder="e.g. AD0058" required pattern="[A-Za-z0-9._\-]+" title="Letters, numbers, dot, dash and underscore only" />
+          </div>
+          <div class="form-group">
+            <label for="prodDesc">Description</label>
+            <input type="text" id="prodDesc" placeholder="Product description" required />
+          </div>
+          <div class="form-group">
+            <label for="prodUnit">Unit</label>
+            <input type="text" id="prodUnit" placeholder="e.g. pcs, box, kg, liter" required />
+          </div>
+          <div class="product-form-actions">
+            <button type="submit" class="btn btn-primary btn-full" id="productSaveBtn">Save Product</button>
+            <button type="button" class="btn btn-secondary" onclick="window.closeProductModal()">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <!-- ==================== CUSTOMER ADD/EDIT MODAL ==================== -->
   <div class="modal-overlay" id="customerModal">
     <div class="modal modal-lg">
