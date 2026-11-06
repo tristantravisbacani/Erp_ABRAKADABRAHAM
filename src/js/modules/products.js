@@ -174,6 +174,19 @@
     }
   }
 
+  function savePrices(prices) {
+    memoryPrices = prices;
+    try {
+      localStorage.setItem(PRICE_STORAGE_KEY, JSON.stringify(prices));
+    } catch (error) {
+      console.error('[Price history storage write error]', error);
+    }
+  }
+
+  function priceKey(price) {
+    return price.prodCode + '|' + price.effDate;
+  }
+
   function latestPrice(productCode) {
     const today = window.todayStr();
     const price = getPrices()
@@ -339,6 +352,7 @@
   window.getProducts = getProducts;
   window.saveProducts = saveProducts;
   window.getPrices = getPrices;
+  window.savePrices = savePrices;
   window.renderProducts = renderProducts;
   window.openAddProduct = function () {
     if (!window.can('products.add')) {
@@ -570,6 +584,217 @@
     renderPriceHistory();
   };
 
+  window.openAddPrice = function (prodCode) {
+    if (!window.can('products.priceAdd')) {
+      window.alert('You do not have permission to add prices.');
+      return;
+    }
+    const product = getProducts().find(function (item) {
+      return item.prodCode === prodCode && !item.isDeleted;
+    });
+    if (!product) {
+      window.alert('Active product not found.');
+      return;
+    }
+
+    const form = document.getElementById('priceForm');
+    const editKey = document.getElementById('priceEditKey');
+    const productCode = document.getElementById('priceProdCode');
+    const effectiveDate = document.getElementById('priceEffDate');
+    const unitPrice = document.getElementById('priceUnitPrice');
+    const title = document.getElementById('priceModalTitle');
+    const subtitle = document.getElementById('priceModalSubtitle');
+    const saveButton = document.getElementById('priceSaveBtn');
+    const error = document.getElementById('priceError');
+    if (!form || !editKey || !productCode || !effectiveDate || !unitPrice || !title || !subtitle || !saveButton || !error) {
+      console.error('[Price form error] Required form elements are missing.');
+      return;
+    }
+
+    form.reset();
+    editKey.value = '';
+    productCode.value = prodCode;
+    effectiveDate.readOnly = false;
+    title.textContent = 'Add Price';
+    subtitle.textContent = 'Set a new effective unit price';
+    saveButton.textContent = 'Save Price';
+    error.textContent = '';
+    error.classList.remove('show');
+    window.openModal('price');
+  };
+
+  window.openEditPrice = function (prodCode, effDate) {
+    if (!window.can('products.priceEdit')) {
+      window.alert('You do not have permission to edit prices.');
+      return;
+    }
+    const price = getPrices().find(function (item) {
+      return item.prodCode === prodCode && item.effDate === effDate && !item.isDeleted;
+    });
+    if (!price) {
+      window.alert('Active price entry not found.');
+      return;
+    }
+
+    const editKey = document.getElementById('priceEditKey');
+    const productCode = document.getElementById('priceProdCode');
+    const effectiveDate = document.getElementById('priceEffDate');
+    const unitPrice = document.getElementById('priceUnitPrice');
+    const title = document.getElementById('priceModalTitle');
+    const subtitle = document.getElementById('priceModalSubtitle');
+    const saveButton = document.getElementById('priceSaveBtn');
+    const error = document.getElementById('priceError');
+    if (!editKey || !productCode || !effectiveDate || !unitPrice || !title || !subtitle || !saveButton || !error) {
+      console.error('[Price form error] Required form elements are missing.');
+      return;
+    }
+
+    editKey.value = priceKey(price);
+    productCode.value = price.prodCode;
+    effectiveDate.value = price.effDate;
+    effectiveDate.readOnly = true;
+    unitPrice.value = price.unitPrice;
+    title.textContent = 'Edit Price';
+    subtitle.textContent = 'Update unit price';
+    saveButton.textContent = 'Update Price';
+    error.textContent = '';
+    error.classList.remove('show');
+    window.openModal('price');
+  };
+
+  window.closePriceModal = function () {
+    window.closeModal('price');
+  };
+
+  window.savePrice = function (event) {
+    if (event) event.preventDefault();
+
+    const editKey = document.getElementById('priceEditKey');
+    const productCode = document.getElementById('priceProdCode');
+    const effectiveDate = document.getElementById('priceEffDate');
+    const unitPriceInput = document.getElementById('priceUnitPrice');
+    const error = document.getElementById('priceError');
+    if (!editKey || !productCode || !effectiveDate || !unitPriceInput || !error) {
+      console.error('[Price form error] Required form elements are missing.');
+      return;
+    }
+
+    const isEditing = !!editKey.value;
+    const permission = isEditing ? 'products.priceEdit' : 'products.priceAdd';
+    if (!window.can(permission)) {
+      error.textContent = 'You do not have permission to ' + (isEditing ? 'edit' : 'add') + ' prices.';
+      error.classList.add('show');
+      return;
+    }
+
+    error.textContent = '';
+    error.classList.remove('show');
+    const prodCode = productCode.value.trim();
+    const effDate = effectiveDate.value;
+    const unitPrice = Number(unitPriceInput.value);
+    const parsedDate = /^\d{4}-\d{2}-\d{2}$/.test(effDate)
+      ? new Date(effDate + 'T00:00:00.000Z')
+      : null;
+    const validDate = parsedDate !== null &&
+      !Number.isNaN(parsedDate.getTime()) &&
+      parsedDate.toISOString().slice(0, 10) === effDate;
+    const product = getProducts().find(function (item) {
+      return item.prodCode === prodCode && (isEditing || !item.isDeleted);
+    });
+    if (!product || !validDate || unitPriceInput.value === '' || !Number.isFinite(unitPrice) || unitPrice < 0) {
+      error.textContent = 'All fields are required. Price must be 0 or greater.';
+      error.classList.add('show');
+      return;
+    }
+
+    const prices = getPrices();
+    if (isEditing) {
+      const price = prices.find(function (item) {
+        return priceKey(item) === editKey.value && !item.isDeleted;
+      });
+      if (!price) {
+        error.textContent = 'Active price entry not found.';
+        error.classList.add('show');
+        return;
+      }
+      price.unitPrice = unitPrice;
+      price.stamp = makeStamp('EDITED');
+    } else {
+      const duplicate = prices.some(function (item) {
+        return item.prodCode === prodCode && item.effDate === effDate && !item.isDeleted;
+      });
+      if (duplicate) {
+        error.textContent = 'A price for this product and effective date already exists.';
+        error.classList.add('show');
+        return;
+      }
+      prices.push({
+        effDate: effDate,
+        prodCode: prodCode,
+        unitPrice: unitPrice,
+        isDeleted: false,
+        stamp: makeStamp('CREATED')
+      });
+    }
+
+    savePrices(prices);
+    window.closePriceModal();
+    selectedProductCode = prodCode;
+    renderPriceHistory();
+    renderProducts();
+  };
+
+  window.softDeletePrice = function (prodCode, effDate) {
+    if (!window.can('products.priceDelete')) {
+      window.alert('You do not have permission to delete prices.');
+      return;
+    }
+    if (!window.confirm('Mark this price entry as inactive?')) return;
+
+    const price = getPrices().find(function (item) {
+      return item.prodCode === prodCode && item.effDate === effDate && !item.isDeleted;
+    });
+    if (!price) {
+      window.alert('Active price entry not found.');
+      return;
+    }
+    price.isDeleted = true;
+    price.stamp = makeStamp('DELETED');
+    savePrices(getPrices());
+    renderPriceHistory();
+    renderProducts();
+  };
+
+  window.restorePrice = function (prodCode, effDate) {
+    const role = window.currentUser && window.currentUser.role;
+    if (role !== 'superadmin' && role !== 'admin') {
+      window.alert('Only Superadmin or Admin can restore prices.');
+      return;
+    }
+
+    const prices = getPrices();
+    const price = prices.find(function (item) {
+      return item.prodCode === prodCode && item.effDate === effDate && item.isDeleted;
+    });
+    if (!price) {
+      window.alert('Inactive price entry not found.');
+      return;
+    }
+    const duplicate = prices.some(function (item) {
+      return item.prodCode === prodCode && item.effDate === effDate && !item.isDeleted;
+    });
+    if (duplicate) {
+      window.alert('Cannot restore: an active price for this product and date already exists.');
+      return;
+    }
+
+    price.isDeleted = false;
+    price.stamp = makeStamp('RESTORED');
+    savePrices(prices);
+    renderPriceHistory();
+    renderProducts();
+  };
+
   function renderPriceHistory() {
     if (!selectedProductCode) return;
     const role = window.currentUser && window.currentUser.role;
@@ -602,9 +827,13 @@
       return;
     }
 
+    const canEdit = window.can('products.priceEdit');
+    const canDelete = window.can('products.priceDelete');
+    const canRestore = canSeeDeleted;
+    const columnCount = canSeeDeleted ? 5 : 3;
     tableHead.innerHTML = canSeeDeleted
-      ? '<th>Effective Date</th><th>Unit Price</th><th>Status</th><th>Stamp</th>'
-      : '<th>Effective Date</th><th>Unit Price</th>';
+      ? '<th>Effective Date</th><th>Unit Price</th><th>Status</th><th>Stamp</th><th>Actions</th>'
+      : '<th>Effective Date</th><th>Unit Price</th><th>Actions</th>';
     toolbar.innerHTML = canSeeDeleted
       ? '<div class="filter-tabs" role="group" aria-label="Filter price history">' +
         '<button type="button" class="filter-tab' +
@@ -617,8 +846,43 @@
         (priceFilter === 'all' ? ' active' : '') +
         '" onclick="window.setPriceFilter(&quot;all&quot;)">All</button></div>'
       : '';
+    const product = getProducts().find(function (item) {
+      return item.prodCode === selectedProductCode;
+    });
+    if (product && !product.isDeleted && window.can('products.priceAdd')) {
+      toolbar.innerHTML += '<button type="button" class="btn btn-primary btn-sm" onclick="window.openAddPrice(&#39;' +
+        window.jsArg(selectedProductCode) +
+        '&#39;)">+ Add Price</button>';
+    }
     tableBody.innerHTML = prices.length
       ? prices.map(function (price) {
+          let actions = '—';
+          if (price.isDeleted) {
+            if (canRestore) {
+              actions = '<button type="button" class="btn-restore" onclick="window.restorePrice(&#39;' +
+                window.jsArg(price.prodCode) +
+                '&#39;,&#39;' +
+                window.jsArg(price.effDate) +
+                '&#39;)">Restore</button>';
+            }
+          } else {
+            actions = '';
+            if (canEdit) {
+              actions += '<button type="button" class="btn-edit" onclick="window.openEditPrice(&#39;' +
+                window.jsArg(price.prodCode) +
+                '&#39;,&#39;' +
+                window.jsArg(price.effDate) +
+                '&#39;)">Edit</button>';
+            }
+            if (canDelete) {
+              actions += '<button type="button" class="btn-del" onclick="window.softDeletePrice(&#39;' +
+                window.jsArg(price.prodCode) +
+                '&#39;,&#39;' +
+                window.jsArg(price.effDate) +
+                '&#39;)">Delete</button>';
+            }
+            if (!actions) actions = '—';
+          }
           return '<tr' +
             (price.isDeleted ? ' class="deleted-row"' : '') +
             '><td>' +
@@ -633,10 +897,22 @@
                 window.escapeHtml(price.stamp || '—') +
                 '</div></td>'
               : '') +
+            '<td><div class="action-btns">' +
+            actions +
+            '</div></td>' +
             '</tr>';
         }).join('')
       : '<tr><td colspan="' +
-        (canSeeDeleted ? 4 : 2) +
+        columnCount +
         '"><div class="empty-state">No price history for this product.</div></td></tr>';
   }
+
+  document.addEventListener('keydown', function (event) {
+    if (event.key !== 'Escape') return;
+    if (document.getElementById('priceModal').classList.contains('active')) {
+      window.closePriceModal();
+    } else if (document.getElementById('priceHistoryModal').classList.contains('active')) {
+      window.closePriceHistory();
+    }
+  });
 })();
