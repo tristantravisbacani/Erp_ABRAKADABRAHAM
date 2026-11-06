@@ -1,6 +1,14 @@
 (function () {
   'use strict';
 
+  const DEMO_ACCOUNT_EMAILS = new Set([
+    'ceo@hope.com',
+    'superadmin@hope.com',
+    'admin@hope.com',
+    'manager@hope.com',
+    'user@hope.com'
+  ]);
+
   function showMessage(elementId, message) {
     const element = document.getElementById(elementId);
     if (!element) return;
@@ -56,6 +64,10 @@
     const email = emailInput ? emailInput.value.trim() : '';
     if (!email) {
       showMessage('resetError', 'Please enter your email address.');
+      return;
+    }
+    if (DEMO_ACCOUNT_EMAILS.has(email.toLowerCase())) {
+      showMessage('resetError', 'Password reset is disabled for demo accounts. Use the shared demo password shown on the login screen.');
       return;
     }
 
