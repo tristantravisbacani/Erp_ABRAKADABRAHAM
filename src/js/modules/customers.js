@@ -97,6 +97,8 @@
   }
 
   function getCustomers() {
+    if (memoryCustomers) return memoryCustomers;
+
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored !== null) {
@@ -192,9 +194,17 @@
           if (isDeleted && canRestore) {
             actions =
               `<button type="button" class="btn-restore" onclick="window.restoreCustomer('${window.jsArg(customer.custNo)}')">Restore</button>`;
-          } else if (!isDeleted && window.can('customers.delete')) {
-            actions =
-              `<button type="button" class="btn-del" onclick="window.softDeleteCustomer('${window.jsArg(customer.custNo)}')">Delete</button>`;
+          } else if (!isDeleted) {
+            actions = '';
+            if (window.can('customers.edit')) {
+              actions =
+                `<button type="button" class="btn-edit" onclick="window.openEditCustomer('${window.jsArg(customer.custNo)}')">Edit</button>`;
+            }
+            if (window.can('customers.delete')) {
+              actions +=
+                `<button type="button" class="btn-del" onclick="window.softDeleteCustomer('${window.jsArg(customer.custNo)}')">Delete</button>`;
+            }
+            if (!actions) actions = '—';
           }
 
           const adminColumns = canRestore
@@ -245,6 +255,9 @@
       '<input type="search" class="search-input" data-focus-key="customers" aria-label="Search customers" placeholder="Search customers..." value="' +
       window.escapeHtml(window.customerSearch) +
       '" oninput="window.customerSearch=this.value;window.rerenderKeepFocus(window.renderCustomers);" />' +
+      (window.can('customers.add')
+        ? '<button type="button" class="btn btn-primary btn-sm" onclick="window.openAddCustomer()">+ Add Customer</button>'
+        : '') +
       '</div></div><div class="data-table-wrap"><table class="data-table">' +
       '<thead><tr>' +
       headings +
@@ -257,6 +270,155 @@
   window.getCustomers = getCustomers;
   window.saveCustomers = saveCustomers;
   window.renderCustomers = renderCustomers;
+  window.openAddCustomer = function () {
+    if (!window.can('customers.add')) {
+      window.alert('You do not have permission to add customers.');
+      return;
+    }
+
+    const form = document.getElementById('customerForm');
+    if (form) form.reset();
+    const editNo = document.getElementById('custEditNo');
+    if (editNo) editNo.value = '';
+    const customerNo = document.getElementById('custNo');
+    if (customerNo) customerNo.readOnly = false;
+    const title = document.getElementById('customerModalTitle');
+    if (title) title.textContent = 'Add Customer';
+    const subtitle = document.getElementById('customerModalSub');
+    if (subtitle) subtitle.textContent = 'Enter new customer details';
+    const saveButton = document.getElementById('customerSaveBtn');
+    if (saveButton) saveButton.textContent = 'Save Customer';
+    const error = document.getElementById('customerError');
+    if (error) {
+      error.textContent = '';
+      error.classList.remove('show');
+    }
+    window.openModal('customer');
+  };
+  window.openEditCustomer = function (custNo) {
+    if (!window.can('customers.edit')) {
+      window.alert('You do not have permission to edit customers.');
+      return;
+    }
+
+    const customer = getCustomers().find(function (item) {
+      return item.custNo === custNo && !item.isDeleted;
+    });
+    if (!customer) {
+      window.alert('Active customer not found.');
+      return;
+    }
+
+    const editNo = document.getElementById('custEditNo');
+    if (editNo) editNo.value = customer.custNo;
+    const customerNo = document.getElementById('custNo');
+    if (customerNo) {
+      customerNo.value = customer.custNo;
+      customerNo.readOnly = true;
+    }
+    const customerName = document.getElementById('custName');
+    if (customerName) customerName.value = customer.custName;
+    const address = document.getElementById('custAddress');
+    if (address) address.value = customer.address;
+    const payterms = document.getElementById('custPayterms');
+    if (payterms) payterms.value = customer.payterms;
+    const title = document.getElementById('customerModalTitle');
+    if (title) title.textContent = 'Edit Customer';
+    const subtitle = document.getElementById('customerModalSub');
+    if (subtitle) subtitle.textContent = 'Update customer details';
+    const saveButton = document.getElementById('customerSaveBtn');
+    if (saveButton) saveButton.textContent = 'Update Customer';
+    const error = document.getElementById('customerError');
+    if (error) {
+      error.textContent = '';
+      error.classList.remove('show');
+    }
+    window.openModal('customer');
+  };
+  window.closeCustomerModal = function () {
+    window.closeModal('customer');
+    const customerNo = document.getElementById('custNo');
+    if (customerNo) customerNo.readOnly = false;
+  };
+  window.saveCustomer = function (event) {
+    if (event) event.preventDefault();
+
+    const editNo = document.getElementById('custEditNo');
+    const customerNo = document.getElementById('custNo');
+    const customerName = document.getElementById('custName');
+    const address = document.getElementById('custAddress');
+    const payterms = document.getElementById('custPayterms');
+    const error = document.getElementById('customerError');
+    if (!customerNo || !customerName || !address || !payterms || !error) {
+      console.error('[Customer form error] Required form elements are missing.');
+      return;
+    }
+
+    const isEditing = !!(editNo && editNo.value);
+    const permission = isEditing ? 'customers.edit' : 'customers.add';
+    if (!window.can(permission)) {
+      error.textContent = 'You do not have permission to ' + (isEditing ? 'edit' : 'add') + ' customers.';
+      error.classList.add('show');
+      return;
+    }
+
+    error.textContent = '';
+    error.classList.remove('show');
+    const custNo = customerNo.value.trim();
+    const custName = customerName.value.trim();
+    const customerAddress = address.value.trim();
+    const paymentTerms = payterms.value.trim();
+
+    if (!custNo || !custName || !customerAddress || !paymentTerms) {
+      error.textContent = 'All fields are required.';
+      error.classList.add('show');
+      return;
+    }
+    if (!/^[A-Za-z0-9._-]+$/.test(custNo)) {
+      error.textContent = 'Customer No. can contain only letters, numbers, dots, dashes, and underscores.';
+      error.classList.add('show');
+      return;
+    }
+
+    const customers = getCustomers();
+    if (isEditing) {
+      const customer = customers.find(function (item) {
+        return item.custNo === editNo.value && !item.isDeleted;
+      });
+      if (!customer) {
+        error.textContent = 'Active customer not found.';
+        error.classList.add('show');
+        return;
+      }
+
+      customer.custName = custName;
+      customer.address = customerAddress;
+      customer.payterms = paymentTerms;
+      customer.stamp = makeStamp('EDITED');
+    } else {
+      const duplicate = customers.some(function (item) {
+        return text(item.custNo).toLowerCase() === custNo.toLowerCase();
+      });
+      if (duplicate) {
+        error.textContent = 'Customer No. already exists.';
+        error.classList.add('show');
+        return;
+      }
+
+      customers.push({
+        custNo: custNo,
+        custName: custName,
+        address: customerAddress,
+        payterms: paymentTerms,
+        isDeleted: false,
+        stamp: makeStamp('CREATED')
+      });
+    }
+
+    saveCustomers(customers);
+    window.closeCustomerModal();
+    renderCustomers();
+  };
   window.setCustomerFilter = function (filter) {
     if (['active', 'deleted', 'all'].indexOf(filter) < 0) {
       console.warn('[Customer filter] Invalid filter:', filter);
