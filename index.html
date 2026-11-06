@@ -363,6 +363,37 @@
     </div>
   </div>
 
+  <!-- ==================== JOB ADD/EDIT MODAL ==================== -->
+  <div class="modal-overlay" id="jobModal">
+    <div class="modal modal-lg">
+      <div class="modal-header">
+        <div>
+          <h2 id="jobModalTitle">Add Job</h2>
+          <p>Enter job details</p>
+        </div>
+        <button type="button" class="modal-close" onclick="window.closeJobModal()" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-error" id="jobError" role="alert"></div>
+        <form id="jobForm" onsubmit="window.saveJob(event)">
+          <input type="hidden" id="jobEditCode" value="" />
+          <div class="form-group">
+            <label for="jobCode">Job Code</label>
+            <input type="text" id="jobCode" required pattern="[A-Za-z0-9._\-]+" title="Letters, numbers, dot, dash and underscore only" />
+          </div>
+          <div class="form-group">
+            <label for="jobDescription">Description</label>
+            <input type="text" id="jobDescription" required />
+          </div>
+          <div class="product-form-actions">
+            <button type="submit" class="btn btn-primary btn-full" id="jobSaveBtn">Save Job</button>
+            <button type="button" class="btn btn-secondary" onclick="window.closeJobModal()">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <!-- ==================== EMPLOYEE ADD/EDIT MODAL ==================== -->
   <div class="modal-overlay" id="employeeModal">
     <div class="modal modal-lg">

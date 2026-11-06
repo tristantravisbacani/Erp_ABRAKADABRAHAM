@@ -36,10 +36,31 @@
     { empNo: '00061', lastName: 'De Leon', firstName: 'Girlie', gender: 'F', birthDate: '1983-07-27', hireDate: '2011-01-05', sepDate: '', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
     { empNo: '00063', lastName: 'Grant', firstName: 'Albert', gender: 'M', birthDate: '1979-05-05', hireDate: '2011-01-05', sepDate: '', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' }
   ];
+  const JOB_STORAGE_KEY = 'hope_erp_jobs_v2';
+  const DEFAULT_JOBS = [
+    { jobCode: 'PRES', jobDesc: 'President', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { jobCode: 'VP', jobDesc: 'Vice president', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { jobCode: 'MGR', jobDesc: 'Manager', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { jobCode: 'SA1', jobDesc: 'Sales Agent 1', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { jobCode: 'SA2', jobDesc: 'Sales Agent 2', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { jobCode: 'SPVR', jobDesc: 'Supervisor', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { jobCode: 'CLK1', jobDesc: 'Clerk 1', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { jobCode: 'CLK2', jobDesc: 'Clerk 2', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { jobCode: 'PR1', jobDesc: 'Programmer 1', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { jobCode: 'PR2', jobDesc: 'Programmer 2', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { jobCode: 'ANYS', jobDesc: 'Analyst', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { jobCode: 'ACCT', jobDesc: 'Accountant', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { jobCode: 'WMAN', jobDesc: 'Warehouse man', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { jobCode: 'HRS', jobDesc: 'HR Specialist', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' }
+  ];
 
   let memoryEmployees = null;
+  let memoryJobs = null;
   let employeeFilter = 'active';
   let employeeSearch = '';
+  let hrTab = 'employees';
+  let jobFilter = 'active';
+  let jobSearch = '';
 
   function cloneEmployees() {
     return DEFAULT_EMPLOYEES.map(function (employee) {
@@ -79,6 +100,41 @@
     }
   }
 
+  function getJobs() {
+    if (memoryJobs) return memoryJobs;
+    try {
+      const stored = localStorage.getItem(JOB_STORAGE_KEY);
+      if (stored !== null) {
+        const jobs = JSON.parse(stored);
+        if (!Array.isArray(jobs)) throw new Error('Stored job data must be an array.');
+        return jobs;
+      }
+
+      const jobs = DEFAULT_JOBS.map(function (job) {
+        return Object.assign({}, job);
+      });
+      localStorage.setItem(JOB_STORAGE_KEY, JSON.stringify(jobs));
+      return jobs;
+    } catch (error) {
+      console.error('[Job storage read error]', error);
+      if (!memoryJobs) {
+        memoryJobs = DEFAULT_JOBS.map(function (job) {
+          return Object.assign({}, job);
+        });
+      }
+      return memoryJobs;
+    }
+  }
+
+  function saveJobs(jobs) {
+    memoryJobs = jobs;
+    try {
+      localStorage.setItem(JOB_STORAGE_KEY, JSON.stringify(jobs));
+    } catch (error) {
+      console.error('[Job storage write error]', error);
+    }
+  }
+
   function makeStamp(action) {
     const now = new Date();
     const date = window.localDateStr(now);
@@ -107,6 +163,22 @@
 
     const role = window.currentUser.role;
     const canSeeDeleted = role === 'superadmin' || role === 'admin';
+    const tabs = '<div class="filter-tabs hr-section-tabs" role="tablist" aria-label="Human Resources sections">' +
+      '<button type="button" class="filter-tab' +
+      (hrTab === 'employees' ? ' active' : '') +
+      '" role="tab" aria-selected="' +
+      (hrTab === 'employees') +
+      '" onclick="window.setHRTab(&quot;employees&quot;)">Employees</button>' +
+      '<button type="button" class="filter-tab' +
+      (hrTab === 'jobs' ? ' active' : '') +
+      '" role="tab" aria-selected="' +
+      (hrTab === 'jobs') +
+      '" onclick="window.setHRTab(&quot;jobs&quot;)">Jobs</button></div>';
+    if (hrTab === 'jobs') {
+      area.innerHTML = tabs + renderJobs(canSeeDeleted);
+      return;
+    }
+
     const allEmployees = getEmployees();
     let employees = allEmployees;
     if (!canSeeDeleted) {
@@ -213,7 +285,7 @@
         ')</button></div>'
       : '';
 
-    area.innerHTML =
+    area.innerHTML = tabs +
       '<div class="module-toolbar"><h3>Employees</h3>' +
       '<div class="toolbar-right">' +
       filterTabs +
@@ -231,9 +303,124 @@
       '</tbody></table></div>';
   }
 
+  function renderJobs(canSeeDeleted) {
+    const allJobs = getJobs();
+    let jobs = allJobs;
+    if (!canSeeDeleted) {
+      jobs = jobs.filter(function (job) {
+        return !job.isDeleted;
+      });
+    } else if (jobFilter === 'active') {
+      jobs = jobs.filter(function (job) {
+        return !job.isDeleted;
+      });
+    } else if (jobFilter === 'deleted') {
+      jobs = jobs.filter(function (job) {
+        return !!job.isDeleted;
+      });
+    }
+
+    const query = jobSearch.trim().toLowerCase();
+    if (query) {
+      jobs = jobs.filter(function (job) {
+        return [job.jobCode, job.jobDesc].some(function (value) {
+          return String(value == null ? '' : value).toLowerCase().includes(query);
+        });
+      });
+    }
+
+    const activeCount = allJobs.filter(function (job) {
+      return !job.isDeleted;
+    }).length;
+    const inactiveCount = allJobs.length - activeCount;
+    const columnCount = canSeeDeleted ? 5 : 3;
+    const headings = canSeeDeleted
+      ? '<th>Job Code</th><th>Description</th><th>Status</th><th>Stamp</th><th>Actions</th>'
+      : '<th>Job Code</th><th>Description</th><th>Actions</th>';
+    const rows = jobs.length
+      ? jobs.map(function (job) {
+          const isDeleted = !!job.isDeleted;
+          let actions = '—';
+          if (isDeleted && canSeeDeleted) {
+            actions = '<button type="button" class="btn-restore" onclick="window.restoreJob(&#39;' +
+              window.jsArg(job.jobCode) +
+              '&#39;)">Restore</button>';
+          } else if (!isDeleted) {
+            actions = '';
+            if (window.can('hr.jobEdit')) {
+              actions += '<button type="button" class="btn-edit" onclick="window.openEditJob(&#39;' +
+                window.jsArg(job.jobCode) +
+                '&#39;)">Edit</button>';
+            }
+            if (window.can('hr.jobDelete')) {
+              actions += '<button type="button" class="btn-del" onclick="window.softDeleteJob(&#39;' +
+                window.jsArg(job.jobCode) +
+                '&#39;)">Delete</button>';
+            }
+            if (!actions) actions = '—';
+          }
+          const adminColumns = canSeeDeleted
+            ? '<td><span class="badge ' +
+              (isDeleted ? 'badge-deleted">Inactive' : 'badge-active">Active') +
+              '</span></td><td><div class="employee-stamp">' +
+              window.escapeHtml(job.stamp || '—') +
+              '</div></td>'
+            : '';
+          return '<tr' +
+            (isDeleted ? ' class="deleted-row"' : '') +
+            '><td><strong>' +
+            window.escapeHtml(job.jobCode) +
+            '</strong></td><td>' +
+            window.escapeHtml(job.jobDesc) +
+            '</td>' +
+            adminColumns +
+            '<td><div class="action-btns">' +
+            actions +
+            '</div></td></tr>';
+        }).join('')
+      : '<tr><td colspan="' +
+        columnCount +
+        '"><div class="empty-state">No jobs found.</div></td></tr>';
+
+    const filterTabs = canSeeDeleted
+      ? '<div class="filter-tabs" role="group" aria-label="Filter jobs">' +
+        '<button type="button" class="filter-tab' +
+        (jobFilter === 'active' ? ' active' : '') +
+        '" onclick="window.setJobFilter(&quot;active&quot;)">Active (' +
+        activeCount +
+        ')</button><button type="button" class="filter-tab' +
+        (jobFilter === 'deleted' ? ' active' : '') +
+        '" onclick="window.setJobFilter(&quot;deleted&quot;)">Inactive (' +
+        inactiveCount +
+        ')</button><button type="button" class="filter-tab' +
+        (jobFilter === 'all' ? ' active' : '') +
+        '" onclick="window.setJobFilter(&quot;all&quot;)">All (' +
+        allJobs.length +
+        ')</button></div>'
+      : '';
+
+    return '<div class="module-toolbar"><h3>Jobs</h3>' +
+      '<div class="toolbar-right">' +
+      filterTabs +
+      '<input type="search" class="search-input" data-focus-key="jobs" aria-label="Search jobs" placeholder="Search jobs..." value="' +
+      window.escapeHtml(jobSearch) +
+      '" oninput="window.setJobSearch(this.value);window.rerenderKeepFocus(window.renderHR);" />' +
+      (window.can('hr.jobAdd')
+        ? '<button type="button" class="btn btn-primary btn-sm" onclick="window.openAddJob()">+ Add Job</button>'
+        : '') +
+      '</div></div><div class="data-table-wrap"><table class="data-table">' +
+      '<thead><tr>' +
+      headings +
+      '</tr></thead><tbody>' +
+      rows +
+      '</tbody></table></div>';
+  }
+
   window.employeeSearch = '';
   window.getEmployees = getEmployees;
   window.saveEmployees = saveEmployees;
+  window.getJobs = getJobs;
+  window.saveJobs = saveJobs;
   window.renderHR = renderHR;
   window.setEmployeeSearch = function (query) {
     employeeSearch = String(query == null ? '' : query);
@@ -246,6 +433,198 @@
     employeeFilter = filter;
     renderHR();
   };
+  window.setHRTab = function (tab) {
+    if (['employees', 'jobs'].indexOf(tab) < 0) {
+      console.warn('[HR tab] Invalid tab:', tab);
+      return;
+    }
+    hrTab = tab;
+    renderHR();
+  };
+  window.setJobFilter = function (filter) {
+    if (['active', 'deleted', 'all'].indexOf(filter) < 0) {
+      console.warn('[Job filter] Invalid filter:', filter);
+      return;
+    }
+    jobFilter = filter;
+    renderHR();
+  };
+  window.setJobSearch = function (query) {
+    jobSearch = String(query == null ? '' : query);
+  };
+  window.openAddJob = function () {
+    if (!window.can('hr.jobAdd')) {
+      window.alert('You do not have permission to add jobs.');
+      return;
+    }
+    const form = document.getElementById('jobForm');
+    const editCode = document.getElementById('jobEditCode');
+    const jobCode = document.getElementById('jobCode');
+    const title = document.getElementById('jobModalTitle');
+    const saveButton = document.getElementById('jobSaveBtn');
+    const error = document.getElementById('jobError');
+    if (!form || !editCode || !jobCode || !title || !saveButton || !error) {
+      console.error('[Job form error] Required form elements are missing.');
+      return;
+    }
+
+    form.reset();
+    editCode.value = '';
+    jobCode.readOnly = false;
+    title.textContent = 'Add Job';
+    saveButton.textContent = 'Save Job';
+    error.textContent = '';
+    error.classList.remove('show');
+    window.openModal('job');
+  };
+  window.openEditJob = function (jobCode) {
+    if (!window.can('hr.jobEdit')) {
+      window.alert('You do not have permission to edit jobs.');
+      return;
+    }
+    const jobs = getJobs();
+    const job = jobs.find(function (item) {
+      return item.jobCode === jobCode && !item.isDeleted;
+    });
+    if (!job) {
+      window.alert('Active job not found.');
+      return;
+    }
+
+    const editCode = document.getElementById('jobEditCode');
+    const jobCodeInput = document.getElementById('jobCode');
+    const description = document.getElementById('jobDescription');
+    const title = document.getElementById('jobModalTitle');
+    const saveButton = document.getElementById('jobSaveBtn');
+    const error = document.getElementById('jobError');
+    if (!editCode || !jobCodeInput || !description || !title || !saveButton || !error) {
+      console.error('[Job form error] Required form elements are missing.');
+      return;
+    }
+
+    editCode.value = job.jobCode;
+    jobCodeInput.value = job.jobCode;
+    jobCodeInput.readOnly = true;
+    description.value = job.jobDesc;
+    title.textContent = 'Edit Job';
+    saveButton.textContent = 'Update Job';
+    error.textContent = '';
+    error.classList.remove('show');
+    window.openModal('job');
+  };
+  window.closeJobModal = function () {
+    window.closeModal('job');
+    const jobCode = document.getElementById('jobCode');
+    if (jobCode) jobCode.readOnly = false;
+  };
+  window.saveJob = function (event) {
+    if (event) event.preventDefault();
+
+    const editCode = document.getElementById('jobEditCode');
+    const jobCodeInput = document.getElementById('jobCode');
+    const descriptionInput = document.getElementById('jobDescription');
+    const error = document.getElementById('jobError');
+    if (!editCode || !jobCodeInput || !descriptionInput || !error) {
+      console.error('[Job form error] Required form elements are missing.');
+      return;
+    }
+
+    const isEditing = !!editCode.value;
+    const permission = isEditing ? 'hr.jobEdit' : 'hr.jobAdd';
+    if (!window.can(permission)) {
+      error.textContent = 'You do not have permission to ' + (isEditing ? 'edit' : 'add') + ' jobs.';
+      error.classList.add('show');
+      return;
+    }
+    error.textContent = '';
+    error.classList.remove('show');
+
+    const code = jobCodeInput.value.trim();
+    const description = descriptionInput.value.trim();
+    if (!code || !description) {
+      error.textContent = 'All fields are required.';
+      error.classList.add('show');
+      return;
+    }
+    if (!/^[A-Za-z0-9._-]+$/.test(code)) {
+      error.textContent = 'Job Code can contain only letters, numbers, dots, dashes, and underscores.';
+      error.classList.add('show');
+      return;
+    }
+
+    const jobs = getJobs();
+    if (isEditing) {
+      const job = jobs.find(function (item) {
+        return item.jobCode === editCode.value && !item.isDeleted;
+      });
+      if (!job) {
+        error.textContent = 'Active job not found.';
+        error.classList.add('show');
+        return;
+      }
+      job.jobDesc = description;
+      job.stamp = makeStamp('EDITED');
+    } else {
+      const duplicate = jobs.some(function (item) {
+        return String(item.jobCode).toLowerCase() === code.toLowerCase();
+      });
+      if (duplicate) {
+        error.textContent = 'Job Code already exists.';
+        error.classList.add('show');
+        return;
+      }
+      jobs.push({
+        jobCode: code,
+        jobDesc: description,
+        isDeleted: false,
+        stamp: makeStamp('CREATED')
+      });
+    }
+
+    saveJobs(jobs);
+    window.closeJobModal();
+    renderHR();
+  };
+  window.softDeleteJob = function (jobCode) {
+    if (!window.can('hr.jobDelete')) {
+      window.alert('You do not have permission to delete jobs.');
+      return;
+    }
+    if (!window.confirm('Mark this job as inactive?')) return;
+
+    const job = getJobs().find(function (item) {
+      return item.jobCode === jobCode && !item.isDeleted;
+    });
+    if (!job) {
+      window.alert('Active job not found.');
+      return;
+    }
+    job.isDeleted = true;
+    job.stamp = makeStamp('DELETED');
+    saveJobs(jobs);
+    renderHR();
+  };
+  window.restoreJob = function (jobCode) {
+    const role = window.currentUser && window.currentUser.role;
+    if (role !== 'superadmin' && role !== 'admin') {
+      window.alert('Only Superadmin or Admin can restore jobs.');
+      return;
+    }
+
+    const jobs = getJobs();
+    const job = jobs.find(function (item) {
+      return item.jobCode === jobCode && item.isDeleted;
+    });
+    if (!job) {
+      window.alert('Inactive job not found.');
+      return;
+    }
+    job.isDeleted = false;
+    job.stamp = makeStamp('RESTORED');
+    saveJobs(jobs);
+    renderHR();
+  };
+
   window.openAddEmployee = function () {
     if (!window.can('hr.empAdd')) {
       window.alert('You do not have permission to add employees.');
@@ -472,6 +851,8 @@
   document.addEventListener('keydown', function (event) {
     if (event.key === 'Escape' && document.getElementById('employeeModal').classList.contains('active')) {
       window.closeEmployeeModal();
+    } else if (event.key === 'Escape' && document.getElementById('jobModal').classList.contains('active')) {
+      window.closeJobModal();
     }
   });
 })();
