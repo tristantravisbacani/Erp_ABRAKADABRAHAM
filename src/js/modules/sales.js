@@ -458,6 +458,10 @@
     });
   }
 
+  function isSupabaseDataActive() {
+    return !!(window.currentUser && window.currentUser.authProvider === 'supabase');
+  }
+
   function mergeSeedRecords(records, seedRecords, getKey) {
     const keys = new Set(records.map(getKey));
     let changed = false;
@@ -514,6 +518,7 @@
   }
 
   function getSales() {
+    if (isSupabaseDataActive()) return window.getSupabaseERPRecords('sales');
     return readSeededRecords(
       STORAGE_KEY,
       DEFAULT_SALES,
@@ -531,6 +536,7 @@
   }
 
   function saveSales(sales) {
+    if (isSupabaseDataActive()) return window.saveSupabaseERPRecords('sales', sales);
     memorySales = sales;
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(sales));
@@ -540,6 +546,7 @@
   }
 
   function getSalesDetails() {
+    if (isSupabaseDataActive()) return window.getSupabaseERPRecords('salesDetails');
     return readSeededRecords(
       DETAIL_STORAGE_KEY,
       DEFAULT_SALES_DETAILS,
@@ -558,12 +565,17 @@
   }
 
   function saveSalesDetails(details) {
+    if (isSupabaseDataActive()) return window.saveSupabaseERPRecords('salesDetails', details);
     memorySalesDetails = details;
     try {
       localStorage.setItem(DETAIL_STORAGE_KEY, JSON.stringify(details));
     } catch (error) {
       console.error('[Sales detail storage write error]', error);
     }
+  }
+
+  function salesDetailEditKey(detail) {
+    return detail.id || detail.transNo + '|' + detail.prodCode;
   }
 
   function makeStamp(action) {
@@ -807,10 +819,21 @@
     error.classList.add('show');
   }
 
+  function showSalesSaveError(label, error) {
+    console.error('[' + label + ' save error]', error);
+    window.alert('Could not save changes. ' + (error && error.message ? error.message : 'Please try again.'));
+  }
+
   window.getSales = getSales;
   window.saveSales = saveSales;
   window.getSalesDetails = getSalesDetails;
   window.saveSalesDetails = saveSalesDetails;
+  window.getDemoSalesFixtures = function () {
+    return cloneRecords(DEFAULT_SALES);
+  };
+  window.getDemoSalesDetailFixtures = function () {
+    return cloneRecords(DEFAULT_SALES_DETAILS);
+  };
   window.renderSales = renderSales;
   window.setSalesFilter = function (filter) {
     if (['active', 'deleted', 'all'].indexOf(filter) < 0) {
@@ -902,7 +925,7 @@
     const transNo = document.getElementById('salesTransNo');
     if (transNo) transNo.readOnly = false;
   };
-  window.saveSale = function (event) {
+  window.saveSale = async function (event) {
     if (event) event.preventDefault();
 
     const editNo = document.getElementById('salesEditNo');
@@ -989,7 +1012,13 @@
       });
     }
 
-    saveSales(sales);
+    try {
+      await saveSales(sales);
+    } catch (saveError) {
+      console.error('[Sales save error]', saveError);
+      showFormError('Could not save sale. ' + (saveError && saveError.message ? saveError.message : 'Please try again.'));
+      return;
+    }
     window.closeSalesModal();
     renderSales();
   };
@@ -1077,6 +1106,8 @@
               window.jsArg(detail.transNo) +
               '&#39;,&#39;' +
               window.jsArg(detail.prodCode) +
+              '&#39;,&#39;' +
+              window.jsArg(detail.id || '') +
               '&#39;)">Restore</button>';
           } else if (!detail.isDeleted && !sale.isDeleted) {
             actions = '';
@@ -1085,6 +1116,8 @@
                 window.jsArg(detail.transNo) +
                 '&#39;,&#39;' +
                 window.jsArg(detail.prodCode) +
+                '&#39;,&#39;' +
+                window.jsArg(detail.id || '') +
                 '&#39;)">Edit</button>';
             }
             if (window.can('sales.detailDelete')) {
@@ -1092,6 +1125,8 @@
                 window.jsArg(detail.transNo) +
                 '&#39;,&#39;' +
                 window.jsArg(detail.prodCode) +
+                '&#39;,&#39;' +
+                window.jsArg(detail.id || '') +
                 '&#39;)">Delete</button>';
             }
             if (!actions) actions = '—';
@@ -1276,7 +1311,7 @@
     updateSalesDetailPriceHint();
     window.openModal('salesDetailForm');
   };
-  window.openEditSalesDetail = function (transNo, productCode) {
+  window.openEditSalesDetail = function (transNo, productCode, detailId) {
     if (!window.can('sales.detailEdit')) {
       window.alert('You do not have permission to edit sale line items.');
       return;
@@ -1285,7 +1320,8 @@
       return item.transNo === transNo && !item.isDeleted;
     });
     const detail = getSalesDetails().find(function (item) {
-      return item.transNo === transNo && item.prodCode === productCode && !item.isDeleted;
+      return item.transNo === transNo && item.prodCode === productCode &&
+        (!detailId || item.id === detailId) && !item.isDeleted;
     });
     if (!sale || !detail) {
       window.alert('Active sale line item not found.');
@@ -1307,7 +1343,7 @@
       window.alert('The product for this line item is unavailable.');
       return;
     }
-    editKey.value = transNo + '|' + productCode;
+    editKey.value = salesDetailEditKey(detail);
     transaction.value = transNo;
     productSelect.value = detail.prodCode;
     productSelect.disabled = true;
@@ -1324,7 +1360,7 @@
     const productSelect = document.getElementById('salesDetailProduct');
     if (productSelect) productSelect.disabled = false;
   };
-  window.saveSalesDetail = function (event) {
+  window.saveSalesDetail = async function (event) {
     if (event) event.preventDefault();
     const editKey = document.getElementById('salesDetailEditKey');
     const productSelect = document.getElementById('salesDetailProduct');
@@ -1360,7 +1396,12 @@
     const product = products.find(function (item) {
       return item.prodCode === productSelect.value;
     });
-    const currentProductCode = isEditing ? editKey.value.slice(editKey.value.indexOf('|') + 1) : '';
+    const currentDetail = isEditing
+      ? getSalesDetails().find(function (item) {
+          return salesDetailEditKey(item) === editKey.value && !item.isDeleted;
+        })
+      : null;
+    const currentProductCode = currentDetail ? currentDetail.prodCode : '';
     if (!product || (product.isDeleted && product.prodCode !== currentProductCode)) {
       showSalesDetailError('Select an active product.');
       return;
@@ -1369,7 +1410,7 @@
     const details = getSalesDetails();
     if (isEditing) {
       const detail = details.find(function (item) {
-        return item.transNo + '|' + item.prodCode === editKey.value && !item.isDeleted;
+        return salesDetailEditKey(item) === editKey.value && !item.isDeleted;
       });
       if (!detail) {
         showSalesDetailError('Active sale line item not found.');
@@ -1396,12 +1437,18 @@
       });
     }
 
-    saveSalesDetails(details);
+    try {
+      await saveSalesDetails(details);
+    } catch (saveError) {
+      console.error('[Sales detail save error]', saveError);
+      showSalesDetailError('Could not save line item. ' + (saveError && saveError.message ? saveError.message : 'Please try again.'));
+      return;
+    }
     window.closeSalesDetailForm();
     renderSalesDetailList();
     renderSales();
   };
-  window.softDeleteSalesDetail = function (transNo, productCode) {
+  window.softDeleteSalesDetail = async function (transNo, productCode, detailId) {
     if (!window.can('sales.detailDelete')) {
       window.alert('You do not have permission to delete sale line items.');
       return;
@@ -1416,7 +1463,8 @@
     if (!window.confirm('Mark this line item as inactive?')) return;
     const details = getSalesDetails();
     const detail = details.find(function (item) {
-      return item.transNo === transNo && item.prodCode === productCode && !item.isDeleted;
+      return item.transNo === transNo && item.prodCode === productCode &&
+        (!detailId || item.id === detailId) && !item.isDeleted;
     });
     if (!detail) {
       window.alert('Active sale line item not found.');
@@ -1424,11 +1472,16 @@
     }
     detail.isDeleted = true;
     detail.stamp = makeStamp('DELETED');
-    saveSalesDetails(details);
+    try {
+      await saveSalesDetails(details);
+    } catch (saveError) {
+      showSalesSaveError('Sales detail', saveError);
+      return;
+    }
     renderSalesDetailList();
     renderSales();
   };
-  window.restoreSalesDetail = function (transNo, productCode) {
+  window.restoreSalesDetail = async function (transNo, productCode, detailId) {
     const role = window.currentUser && window.currentUser.role;
     if (role !== 'superadmin' && role !== 'admin') {
       window.alert('Only Superadmin or Admin can restore sale line items.');
@@ -1436,7 +1489,8 @@
     }
     const details = getSalesDetails();
     const detail = details.find(function (item) {
-      return item.transNo === transNo && item.prodCode === productCode && item.isDeleted;
+      return item.transNo === transNo && item.prodCode === productCode &&
+        (!detailId || item.id === detailId) && item.isDeleted;
     });
     if (!detail) {
       window.alert('Inactive sale line item not found.');
@@ -1451,12 +1505,17 @@
     }
     detail.isDeleted = false;
     detail.stamp = makeStamp('RESTORED');
-    saveSalesDetails(details);
+    try {
+      await saveSalesDetails(details);
+    } catch (saveError) {
+      showSalesSaveError('Sales detail', saveError);
+      return;
+    }
     renderSalesDetailList();
     renderSales();
   };
 
-  window.softDeleteSale = function (transNo) {
+  window.softDeleteSale = async function (transNo) {
     if (!window.can('sales.delete')) {
       window.alert('You do not have permission to delete sales.');
       return;
@@ -1473,10 +1532,15 @@
     }
     sale.isDeleted = true;
     sale.stamp = makeStamp('DELETED');
-    saveSales(sales);
+    try {
+      await saveSales(sales);
+    } catch (saveError) {
+      showSalesSaveError('Sales', saveError);
+      return;
+    }
     renderSales();
   };
-  window.restoreSale = function (transNo) {
+  window.restoreSale = async function (transNo) {
     const role = window.currentUser && window.currentUser.role;
     if (role !== 'superadmin' && role !== 'admin') {
       window.alert('Only Superadmin or Admin can restore sales.');
@@ -1493,7 +1557,12 @@
     }
     sale.isDeleted = false;
     sale.stamp = makeStamp('RESTORED');
-    saveSales(sales);
+    try {
+      await saveSales(sales);
+    } catch (saveError) {
+      showSalesSaveError('Sales', saveError);
+      return;
+    }
     renderSales();
   };
 
