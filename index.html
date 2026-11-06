@@ -637,6 +637,62 @@
     </div>
   </div>
 
+  <!-- ==================== SALES LINE ITEM LIST MODAL ==================== -->
+  <div class="modal-overlay sales-detail-list-modal" id="salesDetailListModal">
+    <div class="modal modal-xl">
+      <div class="modal-header">
+        <div>
+          <h2 id="salesDetailListTitle">Sale Details</h2>
+          <p id="salesDetailListSub"></p>
+        </div>
+        <button type="button" class="modal-close" onclick="window.closeModal('salesDetailList')" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="sales-detail-toolbar" id="salesDetailListToolbar"></div>
+        <div class="data-table-wrap">
+          <table class="data-table">
+            <thead><tr id="salesDetailListHead"></tr></thead>
+            <tbody id="salesDetailListBody"></tbody>
+          </table>
+        </div>
+        <div class="sales-detail-total" id="salesDetailListTotal"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SALES LINE ITEM ADD/EDIT MODAL ==================== -->
+  <div class="modal-overlay sales-detail-form-modal" id="salesDetailFormModal">
+    <div class="modal modal-lg">
+      <div class="modal-header">
+        <div>
+          <h2 id="salesDetailFormTitle">Add Line Item</h2>
+          <p>Choose a product and quantity</p>
+        </div>
+        <button type="button" class="modal-close" onclick="window.closeSalesDetailForm()" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-error" id="salesDetailError" role="alert"></div>
+        <form id="salesDetailForm" onsubmit="window.saveSalesDetail(event)">
+          <input type="hidden" id="salesDetailEditKey" value="" />
+          <input type="hidden" id="salesDetailTransNo" value="" />
+          <div class="form-group">
+            <label for="salesDetailProduct">Product</label>
+            <select id="salesDetailProduct" required onchange="window.updateSalesDetailPriceHint()"></select>
+          </div>
+          <p class="sales-detail-price-hint" id="salesDetailPriceHint" aria-live="polite"></p>
+          <div class="form-group">
+            <label for="salesDetailQuantity">Quantity</label>
+            <input type="number" id="salesDetailQuantity" min="1" step="1" required />
+          </div>
+          <div class="sales-form-actions">
+            <button type="submit" class="btn btn-primary btn-full" id="salesDetailSaveBtn">Save Line</button>
+            <button type="button" class="btn btn-secondary" onclick="window.closeSalesDetailForm()">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <!-- ==================== USER MGMT: ADD/EDIT USER MODAL ==================== -->
   <div class="modal-overlay" id="umUserModal">
     <div class="modal modal-lg">

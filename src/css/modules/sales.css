@@ -14,6 +14,69 @@
   min-width: 100px;
 }
 
+.sales-detail-list-modal {
+  z-index: 250;
+}
+
+.sales-detail-form-modal {
+  z-index: 300;
+}
+
+.sales-detail-list-modal .modal,
+.sales-detail-form-modal .modal {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 40px);
+}
+
+.sales-detail-list-modal .modal-body,
+.sales-detail-form-modal .modal-body {
+  overflow-y: auto;
+}
+
+.sales-detail-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.sales-detail-toolbar .filter-tabs {
+  margin-bottom: 0;
+}
+
+.sales-detail-total {
+  margin-top: 16px;
+  text-align: right;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.sales-detail-price-hint,
+.sales-no-price {
+  color: var(--text-muted);
+  font-size: 13px;
+  margin: -8px 0 16px;
+}
+
+.sales-no-price {
+  color: var(--warning);
+  margin: 0;
+}
+
+#salesDetailProduct {
+  width: 100%;
+  padding: 5px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font: inherit;
+  line-height: 20px;
+  color: var(--text);
+  background: var(--surface);
+}
+
 #salesModal .modal {
   display: flex;
   flex-direction: column;
@@ -41,5 +104,13 @@
     flex-direction: column;
     grid-template-columns: 1fr;
     gap: 0;
+  }
+
+  .sales-detail-toolbar {
+    align-items: stretch;
+  }
+
+  .sales-detail-toolbar .filter-tabs {
+    overflow-x: auto;
   }
 }
