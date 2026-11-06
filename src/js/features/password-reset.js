@@ -1,248 +1,166 @@
 (function () {
   'use strict';
 
-  // Helper to generate a 64-character simulated secure token
-  function generateResetToken() {
-    const chars = '0123456789abcdef';
-    let token = '';
-    for (let i = 0; i < 64; i++) {
-      token += chars[Math.floor(Math.random() * chars.length)];
-    }
-    return token;
+  function showMessage(elementId, message) {
+    const element = document.getElementById(elementId);
+    if (!element) return;
+    element.textContent = message;
+    element.classList.add('show');
   }
 
-  // ========== Password Reset Step 1: Request Token ==========
-  window.handleReset = function (e) {
+  function clearMessage(elementId) {
+    const element = document.getElementById(elementId);
+    if (!element) return;
+    element.textContent = '';
+    element.classList.remove('show');
+  }
+
+  function getSupabaseClient() {
+    if (!window.supabaseClient) {
+      throw new Error('Supabase is unavailable. Check your connection and reload the page.');
+    }
+    return window.supabaseClient;
+  }
+
+  window.showPasswordRecoveryForm = function () {
+    const requestForm = document.getElementById('resetForm');
+    const passwordSection = document.getElementById('resetTokenSection');
+    const subtitle = document.getElementById('resetModalSubtitle');
+    if (requestForm) requestForm.style.display = 'none';
+    if (passwordSection) passwordSection.style.display = 'block';
+    if (subtitle) subtitle.textContent = 'Choose a new password for your account';
+    window.openModal('reset');
+  };
+
+  window.openPasswordResetRequest = function () {
+    const requestForm = document.getElementById('resetForm');
+    const passwordSection = document.getElementById('resetTokenSection');
+    const subtitle = document.getElementById('resetModalSubtitle');
+    if (requestForm) {
+      requestForm.style.display = '';
+      requestForm.reset();
+    }
+    if (passwordSection) passwordSection.style.display = 'none';
+    if (subtitle) subtitle.textContent = "We'll send you a secure link to reset it";
+    clearMessage('resetError');
+    clearMessage('resetSuccess');
+    window.openModal('reset');
+  };
+
+  window.handleReset = async function (e) {
     if (e) e.preventDefault();
+    clearMessage('resetError');
+    clearMessage('resetSuccess');
+
+    const emailInput = document.getElementById('resetEmail');
+    const email = emailInput ? emailInput.value.trim() : '';
+    if (!email) {
+      showMessage('resetError', 'Please enter your email address.');
+      return;
+    }
+
     try {
-      const emailInput = document.getElementById('resetEmail');
-      const errorEl = document.getElementById('resetError');
-      const successEl = document.getElementById('resetSuccess');
-      const tokenSection = document.getElementById('resetTokenSection');
-      const tokenInput = document.getElementById('resetToken');
+      const client = getSupabaseClient();
+      const { error } = await client.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin + window.location.pathname
+      });
+      if (error) throw error;
 
-      if (errorEl) {
-        errorEl.classList.remove('show');
-        errorEl.textContent = '';
-      }
-      if (successEl) {
-        successEl.classList.remove('show');
-        successEl.textContent = '';
-      }
-
-      const email = emailInput ? emailInput.value.trim() : '';
-      if (!email) {
-        if (errorEl) {
-          errorEl.textContent = 'Please enter your email address.';
-          errorEl.classList.add('show');
-        }
-        return;
-      }
-
-      // Generate the simulated demo reset token.
-      const token = generateResetToken();
-      const expiresAt = Date.now() + 2 * 3600 * 1000; // 2 hour validity window
-
-      try {
-        const storedTokens = JSON.parse(localStorage.getItem('hope_erp_reset_tokens') || '[]');
-        storedTokens.push({
-          token: token,
-          email: email.toLowerCase(),
-          expiresAt: expiresAt,
-          isUsed: false,
-          createdAt: new Date().toISOString()
-        });
-        localStorage.setItem('hope_erp_reset_tokens', JSON.stringify(storedTokens));
-      } catch (err) {}
-
-      if (successEl) {
-        successEl.innerHTML =
-          'If an account exists for <strong>' +
-          window.escapeHtml(email) +
-          '</strong>, a secure reset link has been dispatched.<br>' +
-          '<small style="display:block;margin-top:6px;color:var(--text-muted);">' +
-          'Demo Mode: Token generated below for testing.</small>';
-        successEl.classList.add('show');
-      }
-
-      if (tokenSection) {
-        tokenSection.style.display = 'block';
-        if (tokenInput) tokenInput.value = token;
-      }
+      showMessage(
+        'resetSuccess',
+        'If an account exists for this email, a password reset link has been sent.'
+      );
     } catch (err) {
-      console.error('[Reset Error]', err);
+      console.error('[Supabase Password Reset Error]', err);
+      showMessage('resetError', err.message || 'Could not send a password reset link. Please try again.');
     }
   };
 
-  // ========== Password Reset Step 2: Validate Token & Set Password ==========
-  window.handleSetNewPassword = function (e) {
+  window.handleSetNewPassword = async function (e) {
     if (e) e.preventDefault();
+    clearMessage('resetError');
+    clearMessage('resetSuccess');
+
+    const newPasswordInput = document.getElementById('newPassword');
+    const confirmPasswordInput = document.getElementById('confirmNewPassword');
+    const password = newPasswordInput ? newPasswordInput.value : '';
+    const confirmation = confirmPasswordInput ? confirmPasswordInput.value : '';
+
+    if (!password || !confirmation) {
+      showMessage('resetError', 'Please fill in both password fields.');
+      return;
+    }
+    if (password.length < 8) {
+      showMessage('resetError', 'Password must be at least 8 characters long.');
+      return;
+    }
+    if (password !== confirmation) {
+      showMessage('resetError', 'Passwords do not match.');
+      return;
+    }
+
+    let passwordUpdated = false;
     try {
-      const tokenInput = document.getElementById('resetToken');
-      const newPasswordInput = document.getElementById('newPassword');
-      const confirmPasswordInput = document.getElementById('confirmNewPassword');
-      const errorEl = document.getElementById('resetError');
-      const successEl = document.getElementById('resetSuccess');
+      const client = getSupabaseClient();
+      const { error } = await client.auth.updateUser({ password: password });
+      if (error) throw error;
+      passwordUpdated = true;
 
-      if (errorEl) {
-        errorEl.classList.remove('show');
-        errorEl.textContent = '';
-      }
-      if (successEl) {
-        successEl.classList.remove('show');
-        successEl.textContent = '';
-      }
+      const loginEmail = document.getElementById('loginEmail');
+      if (loginEmail && window.currentUser) loginEmail.value = window.currentUser.email;
 
-      const rawToken = tokenInput ? tokenInput.value : '';
-      const token = rawToken.trim();
-      const newPass = newPasswordInput ? newPasswordInput.value : '';
-      const confirmPass = confirmPasswordInput ? confirmPasswordInput.value : '';
+      const { error: signOutError } = await client.auth.signOut({ scope: 'local' });
+      if (signOutError) throw signOutError;
+      window.currentUser = null;
+      window.clearSession();
 
-      if (!token || !newPass || !confirmPass) {
-        if (errorEl) {
-          errorEl.textContent = 'Please fill in all password fields.';
-          errorEl.classList.add('show');
-        }
-        return;
-      }
-
-      if (newPass !== confirmPass) {
-        if (errorEl) {
-          errorEl.textContent = 'Passwords do not match.';
-          errorEl.classList.add('show');
-        }
-        return;
-      }
-
-      if (newPass.length < 6) {
-        if (errorEl) {
-          errorEl.textContent = 'Password must be at least 6 characters long.';
-          errorEl.classList.add('show');
-        }
-        return;
-      }
-
-      // Verify token in local token registry
-      const storedTokens = JSON.parse(localStorage.getItem('hope_erp_reset_tokens') || '[]');
-      const tokenRecord = storedTokens.find(function (t) {
-        return t.token === token;
-      });
-
-      if (!tokenRecord) {
-        if (errorEl) {
-          errorEl.textContent = 'Invalid reset token. Please request a new link.';
-          errorEl.classList.add('show');
-        }
-        return;
-      }
-
-      if (tokenRecord.isUsed) {
-        if (errorEl) {
-          errorEl.textContent = 'This reset token has already been used.';
-          errorEl.classList.add('show');
-        }
-        return;
-      }
-
-      if (tokenRecord.expiresAt < Date.now()) {
-        if (errorEl) {
-          errorEl.textContent = 'This reset token has expired. Request a new link.';
-          errorEl.classList.add('show');
-        }
-        return;
-      }
-
-      // Find user and update password
-      const user = window.findUser(tokenRecord.email);
-      if (!user) {
-        if (errorEl) {
-          errorEl.textContent = 'Associated user account no longer exists.';
-          errorEl.classList.add('show');
-        }
-        return;
-      }
-
-      user.password = newPass;
-      user.passwordUpdatedAt = new Date().toISOString();
-      window.upsertUser(user);
-
-      // Mark token as used
-      tokenRecord.isUsed = true;
-      tokenRecord.usedAt = new Date().toISOString();
-      localStorage.setItem('hope_erp_reset_tokens', JSON.stringify(storedTokens));
-
-      if (successEl) {
-        successEl.textContent = 'Password successfully updated! Redirecting to sign in...';
-        successEl.classList.add('show');
-      }
-
+      showMessage('resetSuccess', 'Password updated. You can now sign in with your new password.');
       setTimeout(function () {
         window.closeModal('reset');
-        const loginEmail = document.getElementById('loginEmail');
-        if (loginEmail) loginEmail.value = user.email;
-        const loginPassword = document.getElementById('loginPassword');
-        if (loginPassword) loginPassword.value = '';
+        const requestForm = document.getElementById('resetForm');
+        const passwordSection = document.getElementById('resetTokenSection');
+        const subtitle = document.getElementById('resetModalSubtitle');
+        if (requestForm) {
+          requestForm.style.display = '';
+          requestForm.reset();
+        }
+        if (passwordSection) passwordSection.style.display = 'none';
+        if (subtitle) subtitle.textContent = "We'll send you a secure link to reset it";
+        const form = document.getElementById('setNewPasswordForm');
+        if (form) form.reset();
+        if (typeof window.finishLogout === 'function') window.finishLogout();
         window.openModal('login');
       }, 1200);
     } catch (err) {
-      console.error('[Set New Password Error]', err);
+      console.error('[Supabase Set New Password Error]', err);
+      showMessage(
+        'resetError',
+        passwordUpdated
+          ? 'Your password was updated, but sign-out failed. Please sign out before leaving this device.'
+          : err.message || 'Could not update your password. Request a new reset link.'
+      );
     }
   };
 
-  // Demo Google sign-in: signs in as sample Google account
-  window.handleGoogleSignIn = function () {
+  window.handleGoogleSignIn = async function () {
+    clearMessage('loginError');
+    clearMessage('registerError');
     try {
-      const email = 'google.user@gmail.com';
-      const errorEl = document.getElementById('loginError');
-      if (errorEl) errorEl.classList.remove('show');
-
-      let user = window.findUser(email);
-      if (!user) {
-        user = {
-          email: email,
-          firstName: 'Google',
-          lastName: 'User',
-          role: 'user',
-          status: 'pending',
-          perms: window.emptyPermissions()
-        };
-        window.upsertUser(user);
-      }
-
-      if (!user.status) user.status = 'active';
-      if (!user.perms) {
-        user.perms =
-          user.role === 'superadmin' || user.role === 'admin'
-            ? window.fullPermissions()
-            : window.sampleUserPermissions();
-        window.upsertUser(user);
-      }
-
-      const statusProblem = window.accountStatusError(user);
-      if (statusProblem) {
-        if (errorEl) {
-          errorEl.textContent = statusProblem;
-          errorEl.classList.add('show');
+      const client = getSupabaseClient();
+      const { error } = await client.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin + window.location.pathname
         }
-        return;
-      }
-
-      window.currentUser = {
-        email: user.email,
-        name: (user.firstName + ' ' + (user.lastName || '')).trim(),
-        role: user.role,
-        firstName: user.firstName || 'Google'
-      };
-
-      ['login', 'register', 'reset'].forEach(function (n) {
-        const m = document.getElementById(n + 'Modal');
-        if (m) m.classList.remove('active');
       });
-      window.syncBodyScroll();
-      window.saveSession(window.currentUser);
-      window.showDashboard();
+      if (error) throw error;
     } catch (err) {
-      console.error('[Google sign-in error]', err);
+      console.error('[Supabase Google Sign-in Error]', err);
+      const registerModal = document.getElementById('registerModal');
+      const errorElement = registerModal && registerModal.classList.contains('active')
+        ? 'registerError'
+        : 'loginError';
+      showMessage(errorElement, err.message || 'Google sign-in is unavailable. Please try email and password.');
     }
   };
 })();

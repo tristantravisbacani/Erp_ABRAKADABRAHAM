@@ -22,7 +22,7 @@
     window.updateUserInfo();
   };
 
-  window.handleLogout = function () {
+  window.finishLogout = function () {
     window.clearSession();
     window.currentUser = null;
 
@@ -47,6 +47,24 @@
     const dashboard = document.getElementById('dashboard');
     if (dashboard) dashboard.style.display = 'none';
     if (landing) landing.style.display = 'block';
+  };
+
+  window.handleLogout = async function () {
+    if (window.currentUser && window.currentUser.authProvider === 'supabase') {
+      try {
+        const { error } = await window.supabaseClient.auth.signOut({ scope: 'local' });
+        if (error) throw error;
+      } catch (err) {
+        console.error('[Supabase Logout Error]', err);
+        const errorEl = document.getElementById('loginError');
+        if (errorEl) {
+          errorEl.textContent = 'Could not sign out. Please check your connection and try again.';
+          errorEl.classList.add('show');
+        }
+        return;
+      }
+    }
+    window.finishLogout();
   };
 
   window.logout = window.handleLogout;
@@ -186,11 +204,20 @@
       quickButtons = '<p class="empty-quick-actions">No quick actions available. Contact an administrator.</p>';
     }
 
-    const roleMessages = {
-      superadmin: 'You have full system access. You can manage all modules, approve users, and assign rights.',
-      admin: 'You can manage core modules and standard user rights (except Superadmin accounts).',
-      user: 'You have operational access to modules assigned to your profile by an administrator.'
-    };
+    const roleMessages = window.currentUser.authProvider === 'supabase'
+      ? {
+          superadmin:
+            'You are signed in to Supabase as Superadmin. ERP records and user administration are still local demo data.',
+          admin:
+            'You are signed in to Supabase as Admin. ERP records and user administration are still local demo data.',
+          user:
+            'You are signed in to Supabase. ERP records are still local demo data; access follows your assigned profile permissions.'
+        }
+      : {
+          superadmin: 'You have full system access. You can manage all modules, approve users, and assign rights.',
+          admin: 'You can manage core modules and standard user rights (except Superadmin accounts).',
+          user: 'You have operational access to modules assigned to your profile by an administrator.'
+        };
 
     area.innerHTML =
       '<div class="dash-grid">' +
@@ -238,13 +265,54 @@
       '</div>';
   };
 
-  // Restore session or remembered email on startup
-  document.addEventListener('DOMContentLoaded', function () {
+  // Restore the Supabase session; the previous local demo session is not an authentication source.
+  document.addEventListener('DOMContentLoaded', async function () {
     window.restoreRememberedEmail();
-    const session = window.getSession();
-    if (session && session.email) {
-      window.currentUser = session;
+    window.clearSession();
+
+    const client = window.supabaseClient;
+    if (!client) {
+      const errorEl = document.getElementById('loginError');
+      if (errorEl) {
+        errorEl.textContent = 'Supabase is unavailable. Check your connection and reload the page.';
+        errorEl.classList.add('show');
+      }
+      return;
+    }
+
+    client.auth.onAuthStateChange(function (event) {
+      if (event === 'PASSWORD_RECOVERY') {
+        setTimeout(function () {
+          window.showPasswordRecoveryForm();
+        }, 0);
+      } else if (event === 'SIGNED_OUT' && window.currentUser) {
+        setTimeout(function () {
+          if (window.currentUser && window.currentUser.authProvider === 'supabase') {
+            window.finishLogout();
+          }
+        }, 0);
+      }
+    });
+
+    try {
+      const { data, error } = await client.auth.getSession();
+      if (error) throw error;
+      if (!data.session) return;
+
+      await window.loadSupabaseUser(data.session.user);
       window.showDashboard();
+      const callbackParams = new URLSearchParams(window.location.hash.slice(1));
+      if (callbackParams.get('type') === 'recovery') {
+        window.showPasswordRecoveryForm();
+      }
+    } catch (err) {
+      console.error('[Supabase Session Restore Error]', err);
+      window.currentUser = null;
+      const errorEl = document.getElementById('loginError');
+      if (errorEl) {
+        errorEl.textContent = err.message || 'Could not restore your sign-in. Please log in again.';
+        errorEl.classList.add('show');
+      }
     }
   });
 

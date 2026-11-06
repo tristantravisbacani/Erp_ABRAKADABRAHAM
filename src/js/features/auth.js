@@ -1,114 +1,149 @@
 (function () {
   'use strict';
 
-  // ========== Form Handlers ==========
-  window.handleRegister = function (e) {
+  function showMessage(elementId, message) {
+    const element = document.getElementById(elementId);
+    if (!element) return;
+    element.textContent = message;
+    element.classList.add('show');
+  }
+
+  function clearMessage(elementId) {
+    const element = document.getElementById(elementId);
+    if (!element) return;
+    element.textContent = '';
+    element.classList.remove('show');
+  }
+
+  function getSupabaseClient() {
+    if (!window.supabaseClient) {
+      throw new Error('Supabase is unavailable. Check your connection and reload the page.');
+    }
+    return window.supabaseClient;
+  }
+
+  window.loadSupabaseUser = async function (authUser) {
+    const client = getSupabaseClient();
+    const profileResult = await client
+      .from('profiles')
+      .select('id, email, first_name, last_name, role, account_status, access_scope')
+      .eq('id', authUser.id)
+      .maybeSingle();
+
+    if (profileResult.error) throw profileResult.error;
+    if (!profileResult.data) throw new Error('Your account profile was not found. Contact an administrator.');
+
+    const profile = profileResult.data;
+    const statusProblem = window.accountStatusError({ status: profile.account_status });
+    if (statusProblem) {
+      const { error } = await client.auth.signOut({ scope: 'local' });
+      if (error) console.error('[Supabase sign-out Error]', error);
+      throw new Error(statusProblem);
+    }
+
+    const permissionResult = await client
+      .from('user_permissions')
+      .select('permission, enabled')
+      .eq('user_id', authUser.id);
+
+    if (permissionResult.error) throw permissionResult.error;
+
+    const permissions = window.emptyPermissions();
+    permissionResult.data.forEach(function (item) {
+      if (Object.prototype.hasOwnProperty.call(permissions, item.permission)) {
+        permissions[item.permission] = item.enabled;
+      }
+    });
+
+    window.currentUser = {
+      id: authUser.id,
+      email: profile.email,
+      name: (profile.first_name + ' ' + profile.last_name).trim() || 'User',
+      firstName: profile.first_name || 'User',
+      role: profile.role,
+      perms: permissions,
+      accessScope: profile.access_scope,
+      authProvider: 'supabase'
+    };
+
+    return window.currentUser;
+  };
+
+  window.handleRegister = async function (e) {
     if (e) e.preventDefault();
+    clearMessage('registerError');
+    clearMessage('registerSuccess');
+
+    const firstName = document.getElementById('regFirstName').value.trim();
+    const lastName = document.getElementById('regLastName').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const password = document.getElementById('regPassword').value;
+    const confirmPassword = document.getElementById('confirmRegPassword').value;
+
+    if (!firstName || !lastName || !email || !password || !confirmPassword) {
+      showMessage('registerError', 'Please fill in all fields.');
+      return;
+    }
+    if (password.length < 8) {
+      showMessage('registerError', 'Password must be at least 8 characters long.');
+      return;
+    }
+    if (password !== confirmPassword) {
+      showMessage('registerError', 'Passwords do not match.');
+      return;
+    }
+
     try {
-      const firstName = document.getElementById('regFirstName').value.trim();
-      const lastName = document.getElementById('regLastName').value.trim();
-      const email = document.getElementById('regEmail').value.trim();
-      const errorEl = document.getElementById('registerError');
-      const successEl = document.getElementById('registerSuccess');
-
-      if (errorEl) errorEl.classList.remove('show');
-      if (successEl) successEl.classList.remove('show');
-
-      if (!firstName || !lastName || !email) {
-        if (errorEl) {
-          errorEl.textContent = 'Please fill in all fields.';
-          errorEl.classList.add('show');
-        }
-        return;
-      }
-
-      if (window.findUser(email)) {
-        if (errorEl) {
-          errorEl.textContent = 'An account with this email already exists. Please sign in.';
-          errorEl.classList.add('show');
-        }
-        return;
-      }
-
-      const newUser = {
+      const client = getSupabaseClient();
+      const { data, error } = await client.auth.signUp({
         email: email,
-        firstName: firstName,
-        lastName: lastName,
-        role: 'user',
-        status: 'pending',
-        perms: window.emptyPermissions()
-      };
-      window.upsertUser(newUser);
+        password: password,
+        options: {
+          data: { first_name: firstName, last_name: lastName },
+          emailRedirectTo: window.location.origin + window.location.pathname
+        }
+      });
 
-      if (successEl) {
-        successEl.textContent =
-          'Registration submitted. An admin must approve your account before you can sign in.';
-        successEl.classList.add('show');
+      if (error) throw error;
+      if (data.session) {
+        const { error: signOutError } = await client.auth.signOut({ scope: 'local' });
+        if (signOutError) throw signOutError;
       }
+
+      showMessage(
+        'registerSuccess',
+        'Registration submitted. Confirm your email if requested; an administrator must approve your account before you can sign in.'
+      );
       const form = document.getElementById('registerForm');
       if (form) form.reset();
     } catch (err) {
-      console.error('[Register Error]', err);
+      console.error('[Supabase Registration Error]', err);
+      showMessage('registerError', err.message || 'Registration failed. Please try again.');
     }
   };
 
-  window.handleLogin = function (e) {
+  window.handleLogin = async function (e) {
     if (e) e.preventDefault();
+    clearMessage('loginError');
+
+    const emailInput = document.getElementById('loginEmail');
+    const passwordInput = document.getElementById('loginPassword');
+    const email = emailInput ? emailInput.value.trim() : '';
+    const password = passwordInput ? passwordInput.value : '';
+    if (!email || !password) {
+      showMessage('loginError', 'Please fill in all fields.');
+      return;
+    }
+
     try {
-      const emailInput = document.getElementById('loginEmail');
-      const passwordInput = document.getElementById('loginPassword');
-      const errorEl = document.getElementById('loginError');
+      const client = getSupabaseClient();
+      const { data, error } = await client.auth.signInWithPassword({
+        email: email,
+        password: password
+      });
+      if (error) throw error;
 
-      if (errorEl) {
-        errorEl.classList.remove('show');
-        errorEl.textContent = '';
-      }
-
-      const email = emailInput ? emailInput.value.trim() : '';
-      const password = passwordInput ? passwordInput.value : '';
-
-      if (!email || !password) {
-        if (errorEl) {
-          errorEl.textContent = 'Please fill in all fields.';
-          errorEl.classList.add('show');
-        }
-        return;
-      }
-
-      let user = window.findUser(email);
-      if (!user) {
-        if (errorEl) {
-          errorEl.textContent = 'No account found for this email. Please create a new account first.';
-          errorEl.classList.add('show');
-        }
-        return;
-      }
-
-      // Normalize status and permissions for seed/legacy users
-      if (!user.status) user.status = 'active';
-      if (!user.perms) {
-        user.perms =
-          user.role === 'superadmin' || user.role === 'admin'
-            ? window.fullPermissions()
-            : window.sampleUserPermissions();
-        window.upsertUser(user);
-      }
-
-      const statusProblem = window.accountStatusError(user);
-      if (statusProblem) {
-        if (errorEl) {
-          errorEl.textContent = statusProblem;
-          errorEl.classList.add('show');
-        }
-        return;
-      }
-
-      window.currentUser = {
-        email: user.email,
-        name: (user.firstName + ' ' + (user.lastName || '')).trim(),
-        role: user.role,
-        firstName: user.firstName || 'User'
-      };
+      await window.loadSupabaseUser(data.user);
 
       try {
         const rememberMe = document.getElementById('rememberMe');
@@ -117,21 +152,14 @@
         } else {
           localStorage.removeItem('hope_erp_remember_email');
         }
-      } catch (err) {}
-
-      if (typeof window.saveSession === 'function') {
-        window.saveSession(window.currentUser);
+      } catch (storageError) {
+        console.error('[Remembered Email Error]', storageError);
       }
-      if (typeof window.showDashboard === 'function') {
-        window.showDashboard();
-      }
+      if (typeof window.showDashboard === 'function') window.showDashboard();
     } catch (err) {
-      console.error('[Login error]', err);
-      const errorEl = document.getElementById('loginError');
-      if (errorEl) {
-        errorEl.textContent = 'Login failed: ' + err.message;
-        errorEl.classList.add('show');
-      }
+      console.error('[Supabase Login Error]', err);
+      window.currentUser = null;
+      showMessage('loginError', err.message || 'Sign in failed. Check your email and password.');
     }
   };
 
@@ -143,31 +171,35 @@
     return '';
   };
 
-  // ========== Permissions Checking ==========
   window.can = function (perm) {
     if (!window.currentUser) return false;
     if (window.currentUser.role === 'superadmin' || window.currentUser.role === 'admin') return true;
-    const u = window.findUser(window.currentUser.email);
-    if (!u || !u.perms) return false;
-    return !!u.perms[perm];
+    if (window.currentUser.authProvider === 'supabase') {
+      return !!(window.currentUser.perms && window.currentUser.perms[perm]);
+    }
+    const user = window.findUser(window.currentUser.email);
+    return !!(user && user.perms && user.perms[perm]);
   };
 
   window.canModule = function (mod) {
     return window.can(mod + '.view');
   };
 
-  // ========== Session Persistence Helpers ==========
   window.saveSession = function (user) {
+    if (user && user.authProvider === 'supabase') return;
     try {
       localStorage.setItem('hope_erp_session_v4', JSON.stringify(user));
-    } catch (e) {}
+    } catch (err) {
+      console.error('[Local Demo Session Error]', err);
+    }
   };
 
   window.getSession = function () {
     try {
-      const s = localStorage.getItem('hope_erp_session_v4');
-      return s ? JSON.parse(s) : null;
-    } catch (e) {
+      const session = localStorage.getItem('hope_erp_session_v4');
+      return session ? JSON.parse(session) : null;
+    } catch (err) {
+      console.error('[Local Demo Session Error]', err);
       return null;
     }
   };
@@ -175,7 +207,9 @@
   window.clearSession = function () {
     try {
       localStorage.removeItem('hope_erp_session_v4');
-    } catch (e) {}
+    } catch (err) {
+      console.error('[Local Demo Session Error]', err);
+    }
   };
 
   window.restoreRememberedEmail = function () {
@@ -187,7 +221,8 @@
         emailInput.value = saved;
         if (rememberCheckbox) rememberCheckbox.checked = true;
       }
-    } catch (e) {}
+    } catch (err) {
+      console.error('[Remembered Email Error]', err);
+    }
   };
-
 })();
