@@ -1,0 +1,45 @@
+.sales-stamp {
+  color: var(--text-muted);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.sales-form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.sales-form-actions .btn-secondary {
+  min-width: 100px;
+}
+
+#salesModal .modal {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 40px);
+}
+
+#salesModal .modal-body {
+  overflow-y: auto;
+}
+
+#salesModal .form-group select {
+  width: 100%;
+  padding: 5px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font: inherit;
+  line-height: 20px;
+  color: var(--text);
+  background: var(--surface);
+}
+
+@media (max-width: 760px) {
+  #salesModal .form-row,
+  .sales-form-actions {
+    flex-direction: column;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
