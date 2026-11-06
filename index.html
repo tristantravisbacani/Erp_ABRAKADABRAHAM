@@ -425,6 +425,74 @@
     </div>
   </div>
 
+  <!-- ==================== EMPLOYEE JOB HISTORY MODALS ==================== -->
+  <div class="modal-overlay" id="jobHistoryListModal">
+    <div class="modal modal-xl">
+      <div class="modal-header">
+        <div>
+          <h2 id="jobHistoryListTitle">Job History</h2>
+          <p id="jobHistoryListSubtitle">Employment assignments</p>
+        </div>
+        <button type="button" class="modal-close" onclick="window.closeJobHistoryList()" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="job-history-toolbar" id="jobHistoryListToolbar"></div>
+        <div class="data-table-wrap modal-body-scroll">
+          <table class="data-table">
+            <thead><tr id="jobHistoryListHead"></tr></thead>
+            <tbody id="jobHistoryListBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="jobHistoryFormModal">
+    <div class="modal modal-lg">
+      <div class="modal-header">
+        <div>
+          <h2 id="jobHistoryFormTitle">Add Job History</h2>
+          <p>Assignment details</p>
+        </div>
+        <button type="button" class="modal-close" onclick="window.closeJobHistoryForm()" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-error" id="jobHistoryError" role="alert"></div>
+        <form id="jobHistoryForm" onsubmit="window.saveJobHistory(event)">
+          <input type="hidden" id="jobHistoryEditKey" value="" />
+          <div class="form-group">
+            <label for="jobHistoryEmployeeNo">Employee No.</label>
+            <input type="text" id="jobHistoryEmployeeNo" readonly />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="jobHistoryEffectiveDate">Effective Date</label>
+              <input type="date" id="jobHistoryEffectiveDate" required />
+            </div>
+            <div class="form-group">
+              <label for="jobHistorySalary">Salary</label>
+              <input type="number" id="jobHistorySalary" min="0" step="0.01" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="jobHistoryJobCode">Job</label>
+              <select id="jobHistoryJobCode" required></select>
+            </div>
+            <div class="form-group">
+              <label for="jobHistoryDepartmentCode">Department</label>
+              <select id="jobHistoryDepartmentCode" required></select>
+            </div>
+          </div>
+          <div class="product-form-actions">
+            <button type="submit" class="btn btn-primary btn-full" id="jobHistorySaveBtn">Save History</button>
+            <button type="button" class="btn btn-secondary" onclick="window.closeJobHistoryForm()">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <!-- ==================== EMPLOYEE ADD/EDIT MODAL ==================== -->
   <div class="modal-overlay" id="employeeModal">
     <div class="modal modal-lg">

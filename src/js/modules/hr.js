@@ -64,10 +64,68 @@
     { deptCode: 'PAY', deptName: 'Payroll', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
     { deptCode: 'WHS', deptName: 'Warehouse', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' }
   ];
+  const JOB_HISTORY_STORAGE_KEY = 'hope_erp_jh_v2';
+  const DEFAULT_JOB_HISTORIES = [
+    { empNo: '00001', jobCode: 'PR1', effDate: '2010-05-11', salary: 48000, deptCode: 'IT', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00001', jobCode: 'PR2', effDate: '2010-12-01', salary: 50000, deptCode: 'IT', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00003', jobCode: 'PR2', effDate: '2010-05-11', salary: 50000, deptCode: 'IT', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00003', jobCode: 'ANYS', effDate: '2010-12-01', salary: 55000, deptCode: 'IT', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00005', jobCode: 'SA1', effDate: '2010-06-23', salary: 36000, deptCode: 'BR1', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00005', jobCode: 'SA2', effDate: '2011-01-02', salary: 38000, deptCode: 'BR1', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00007', jobCode: 'ANYS', effDate: '2010-05-30', salary: 55000, deptCode: 'IT', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00007', jobCode: 'MGR', effDate: '2011-01-02', salary: 60000, deptCode: 'IT', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00007', jobCode: 'VP', effDate: '2011-03-31', salary: 80000, deptCode: 'IT', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00009', jobCode: 'ACCT', effDate: '2010-05-30', salary: 50000, deptCode: 'ACT', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00009', jobCode: 'MGR', effDate: '2010-12-01', salary: 60000, deptCode: 'ACT', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00011', jobCode: 'PRES', effDate: '2010-06-30', salary: 100000, deptCode: 'EXC', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00013', jobCode: 'MGR', effDate: '2010-06-30', salary: 60000, deptCode: 'BR1', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00013', jobCode: 'VP', effDate: '2011-01-02', salary: 80000, deptCode: 'BR2', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00013', jobCode: 'VP', effDate: '2011-03-01', salary: 80000, deptCode: 'BR1', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00015', jobCode: 'SA1', effDate: '2010-07-05', salary: 36000, deptCode: 'BR1', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00017', jobCode: 'SA1', effDate: '2010-07-05', salary: 36000, deptCode: 'BR1', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00017', jobCode: 'SPVR', effDate: '2011-01-12', salary: 40000, deptCode: 'BR1', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00019', jobCode: 'SA1', effDate: '2010-07-05', salary: 36000, deptCode: 'BR1', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00019', jobCode: 'SA2', effDate: '2011-01-12', salary: 38000, deptCode: 'BR1', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00021', jobCode: 'SA1', effDate: '2010-07-05', salary: 36000, deptCode: 'BR1', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00021', jobCode: 'SA2', effDate: '2011-01-12', salary: 38000, deptCode: 'BR1', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00023', jobCode: 'MGR', effDate: '2010-07-05', salary: 60000, deptCode: 'HRD', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00025', jobCode: 'SA1', effDate: '2010-07-05', salary: 36000, deptCode: 'BR1', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00027', jobCode: 'SA1', effDate: '2010-07-05', salary: 36000, deptCode: 'BR1', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00027', jobCode: 'SA2', effDate: '2011-01-12', salary: 38000, deptCode: 'BR1', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00029', jobCode: 'SPVR', effDate: '2010-07-05', salary: 40000, deptCode: 'BR1', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00029', jobCode: 'MGR', effDate: '2011-01-02', salary: 60000, deptCode: 'BR1', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00031', jobCode: 'WMAN', effDate: '2010-07-05', salary: 35000, deptCode: 'WHS', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00031', jobCode: 'WMAN', effDate: '2011-12-01', salary: 40000, deptCode: 'WHS', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00033', jobCode: 'WMAN', effDate: '2010-07-05', salary: 35000, deptCode: 'WHS', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00035', jobCode: 'ACCT', effDate: '2010-07-21', salary: 50000, deptCode: 'PAY', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00037', jobCode: 'CLK1', effDate: '2010-07-21', salary: 34000, deptCode: 'PAY', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00039', jobCode: 'CLK1', effDate: '2010-07-21', salary: 34000, deptCode: 'PAY', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00039', jobCode: 'CLK2', effDate: '2012-06-30', salary: 35000, deptCode: 'EXC', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00041', jobCode: 'SPVR', effDate: '2010-09-01', salary: 40000, deptCode: 'WHS', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00041', jobCode: 'MGR', effDate: '2011-06-01', salary: 60000, deptCode: 'WHS', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00043', jobCode: 'CLK2', effDate: '2010-09-01', salary: 35000, deptCode: 'EXC', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00043', jobCode: 'SPVR', effDate: '2011-06-01', salary: 35000, deptCode: 'EXC', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00043', jobCode: 'SPVR', effDate: '2011-01-12', salary: 35000, deptCode: 'HRD', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00045', jobCode: 'SPVR', effDate: '2010-12-03', salary: 40000, deptCode: 'ACT', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00047', jobCode: 'CLK1', effDate: '2010-12-03', salary: 34000, deptCode: 'EXC', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00047', jobCode: 'CLK2', effDate: '2011-01-12', salary: 35000, deptCode: 'HRD', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00049', jobCode: 'MGR', effDate: '2010-12-03', salary: 60000, deptCode: 'BR2', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00051', jobCode: 'SA1', effDate: '2011-01-05', salary: 36000, deptCode: 'BR2', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00053', jobCode: 'SA1', effDate: '2011-01-05', salary: 36000, deptCode: 'BR2', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00055', jobCode: 'SA1', effDate: '2011-01-05', salary: 36000, deptCode: 'BR2', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00055', jobCode: 'SA2', effDate: '2011-03-01', salary: 38000, deptCode: 'BR2', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00057', jobCode: 'SA1', effDate: '2011-01-05', salary: 36000, deptCode: 'BR2', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00057', jobCode: 'PR1', effDate: '2011-06-01', salary: 48000, deptCode: 'BR2', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00059', jobCode: 'SA1', effDate: '2011-01-05', salary: 36000, deptCode: 'BR2', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00061', jobCode: 'SA1', effDate: '2011-01-05', salary: 36000, deptCode: 'BR2', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00063', jobCode: 'SA2', effDate: '2011-01-05', salary: 38000, deptCode: 'BR2', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' },
+    { empNo: '00063', jobCode: 'SPVR', effDate: '2011-06-01', salary: 40000, deptCode: 'BR2', isDeleted: false, stamp: 'CREATED system 2026-11-01 9:00 AM' }
+  ];
 
   let memoryEmployees = null;
   let memoryJobs = null;
   let memoryDepartments = null;
+  let memoryJobHistories = null;
   let employeeFilter = 'active';
   let employeeSearch = '';
   let hrTab = 'employees';
@@ -75,6 +133,8 @@
   let jobSearch = '';
   let departmentFilter = 'active';
   let departmentSearch = '';
+  let selectedEmployeeNo = null;
+  let jobHistoryFilter = 'active';
 
   function cloneEmployees() {
     return DEFAULT_EMPLOYEES.map(function (employee) {
@@ -184,6 +244,45 @@
     }
   }
 
+  function getJobHistories() {
+    if (memoryJobHistories) return memoryJobHistories;
+    try {
+      const stored = localStorage.getItem(JOB_HISTORY_STORAGE_KEY);
+      if (stored !== null) {
+        const histories = JSON.parse(stored);
+        if (!Array.isArray(histories)) throw new Error('Stored job history data must be an array.');
+        return histories;
+      }
+
+      const histories = DEFAULT_JOB_HISTORIES.map(function (history) {
+        return Object.assign({}, history);
+      });
+      localStorage.setItem(JOB_HISTORY_STORAGE_KEY, JSON.stringify(histories));
+      return histories;
+    } catch (error) {
+      console.error('[Job history storage read error]', error);
+      if (!memoryJobHistories) {
+        memoryJobHistories = DEFAULT_JOB_HISTORIES.map(function (history) {
+          return Object.assign({}, history);
+        });
+      }
+      return memoryJobHistories;
+    }
+  }
+
+  function saveJobHistories(histories) {
+    memoryJobHistories = histories;
+    try {
+      localStorage.setItem(JOB_HISTORY_STORAGE_KEY, JSON.stringify(histories));
+    } catch (error) {
+      console.error('[Job history storage write error]', error);
+    }
+  }
+
+  function jobHistoryKey(history) {
+    return history.empNo + '|' + history.jobCode + '|' + history.effDate;
+  }
+
   function makeStamp(action) {
     const now = new Date();
     const date = window.localDateStr(now);
@@ -280,6 +379,11 @@
               '&#39;)">Restore</button>';
           } else if (!isDeleted) {
             actions = '';
+            if (window.can('hr.jhView')) {
+              actions += '<button type="button" class="btn-edit" onclick="window.openJobHistory(&#39;' +
+                window.jsArg(employee.empNo) +
+                '&#39;)">History</button>';
+            }
             if (window.can('hr.empEdit')) {
               actions += '<button type="button" class="btn-edit" onclick="window.openEditEmployee(&#39;' +
                 window.jsArg(employee.empNo) +
@@ -587,6 +691,130 @@
       '</tbody></table></div>';
   }
 
+  function renderJobHistoryList() {
+    const employee = getEmployees().find(function (item) {
+      return item.empNo === selectedEmployeeNo;
+    });
+    const isAdmin = window.currentUser.role === 'superadmin' || window.currentUser.role === 'admin';
+    const histories = getJobHistories()
+      .filter(function (history) {
+        return history.empNo === selectedEmployeeNo &&
+          (isAdmin
+            ? jobHistoryFilter === 'all' ||
+              (jobHistoryFilter === 'deleted' ? !!history.isDeleted : !history.isDeleted)
+            : !history.isDeleted);
+      })
+      .sort(function (left, right) {
+        return right.effDate.localeCompare(left.effDate);
+      });
+    const jobs = getJobs();
+    const departments = getDepartments();
+    const jobName = function (code) {
+      const job = jobs.find(function (item) {
+        return item.jobCode === code;
+      });
+      return job ? job.jobDesc : code;
+    };
+    const departmentName = function (code) {
+      const department = departments.find(function (item) {
+        return item.deptCode === code;
+      });
+      return department ? department.deptName : code;
+    };
+    const headings = isAdmin
+      ? '<th>Effective Date</th><th>Job</th><th>Department</th><th>Salary</th><th>Status</th><th>Stamp</th><th>Actions</th>'
+      : '<th>Effective Date</th><th>Job</th><th>Department</th><th>Salary</th><th>Actions</th>';
+    const columnCount = isAdmin ? 7 : 5;
+    const rows = histories.length
+      ? histories.map(function (history) {
+          const isDeleted = !!history.isDeleted;
+          let actions = '—';
+          if (isDeleted && isAdmin) {
+            actions = '<button type="button" class="btn-restore" onclick="window.restoreJobHistory(&#39;' +
+              window.jsArg(history.empNo) +
+              '&#39;,&#39;' +
+              window.jsArg(history.jobCode) +
+              '&#39;,&#39;' +
+              window.jsArg(history.effDate) +
+              '&#39;)">Restore</button>';
+          } else if (!isDeleted) {
+            actions = '';
+            if (window.can('hr.jhEdit')) {
+              actions += '<button type="button" class="btn-edit" onclick="window.openEditJobHistory(&#39;' +
+                window.jsArg(history.empNo) +
+                '&#39;,&#39;' +
+                window.jsArg(history.jobCode) +
+                '&#39;,&#39;' +
+                window.jsArg(history.effDate) +
+                '&#39;)">Edit</button>';
+            }
+            if (window.can('hr.jhDelete')) {
+              actions += '<button type="button" class="btn-del" onclick="window.softDeleteJobHistory(&#39;' +
+                window.jsArg(history.empNo) +
+                '&#39;,&#39;' +
+                window.jsArg(history.jobCode) +
+                '&#39;,&#39;' +
+                window.jsArg(history.effDate) +
+                '&#39;)">Delete</button>';
+            }
+            if (!actions) actions = '—';
+          }
+          const statusCells = isAdmin
+            ? '<td><span class="badge ' +
+              (isDeleted ? 'badge-deleted">Inactive' : 'badge-active">Active') +
+              '</span></td><td><div class="employee-stamp">' +
+              window.escapeHtml(history.stamp || '—') +
+              '</div></td>'
+            : '';
+          return '<tr' +
+            (isDeleted ? ' class="deleted-row"' : '') +
+            '><td>' +
+            window.escapeHtml(history.effDate) +
+            '</td><td>' +
+            window.escapeHtml(history.jobCode) +
+            ' — ' +
+            window.escapeHtml(jobName(history.jobCode)) +
+            '</td><td>' +
+            window.escapeHtml(history.deptCode) +
+            ' — ' +
+            window.escapeHtml(departmentName(history.deptCode)) +
+            '</td><td><strong>$' +
+            Number(history.salary).toLocaleString() +
+            '</strong></td>' +
+            statusCells +
+            '<td><div class="action-btns">' +
+            actions +
+            '</div></td></tr>';
+        }).join('')
+      : '<tr><td colspan="' +
+        columnCount +
+        '"><div class="empty-state">No job history.</div></td></tr>';
+
+    const filterTabs = isAdmin
+      ? '<div class="filter-tabs" role="group" aria-label="Filter job history">' +
+        '<button type="button" class="filter-tab' +
+        (jobHistoryFilter === 'active' ? ' active' : '') +
+        '" onclick="window.setJobHistoryFilter(&quot;active&quot;)">Active</button>' +
+        '<button type="button" class="filter-tab' +
+        (jobHistoryFilter === 'deleted' ? ' active' : '') +
+        '" onclick="window.setJobHistoryFilter(&quot;deleted&quot;)">Inactive</button>' +
+        '<button type="button" class="filter-tab' +
+        (jobHistoryFilter === 'all' ? ' active' : '') +
+        '" onclick="window.setJobHistoryFilter(&quot;all&quot;)">All</button></div>'
+      : '';
+    const addButton = employee && !employee.isDeleted && window.can('hr.jhAdd')
+      ? '<button type="button" class="btn btn-primary btn-sm" onclick="window.openAddJobHistory()">+ Add History</button>'
+      : '';
+
+    document.getElementById('jobHistoryListTitle').textContent = 'Job History — ' + selectedEmployeeNo;
+    document.getElementById('jobHistoryListSubtitle').textContent = employee
+      ? employee.firstName + ' ' + employee.lastName
+      : '';
+    document.getElementById('jobHistoryListToolbar').innerHTML = filterTabs + addButton;
+    document.getElementById('jobHistoryListHead').innerHTML = headings;
+    document.getElementById('jobHistoryListBody').innerHTML = rows;
+  }
+
   window.employeeSearch = '';
   window.getEmployees = getEmployees;
   window.saveEmployees = saveEmployees;
@@ -594,6 +822,8 @@
   window.saveJobs = saveJobs;
   window.getDepartments = getDepartments;
   window.saveDepartments = saveDepartments;
+  window.getJobHistories = getJobHistories;
+  window.saveJobHistories = saveJobHistories;
   window.renderHR = renderHR;
   window.setEmployeeSearch = function (query) {
     employeeSearch = String(query == null ? '' : query);
@@ -635,6 +865,312 @@
   };
   window.setDepartmentSearch = function (query) {
     departmentSearch = String(query == null ? '' : query);
+  };
+  window.setJobHistoryFilter = function (filter) {
+    if (['active', 'deleted', 'all'].indexOf(filter) < 0) {
+      console.warn('[Job history filter] Invalid filter:', filter);
+      return;
+    }
+    jobHistoryFilter = filter;
+    renderJobHistoryList();
+  };
+  window.openJobHistory = function (empNo) {
+    if (!window.can('hr.jhView')) {
+      window.alert('You do not have permission to view job history.');
+      return;
+    }
+    const employee = getEmployees().find(function (item) {
+      return item.empNo === empNo && !item.isDeleted;
+    });
+    if (!employee) {
+      window.alert('Active employee not found.');
+      return;
+    }
+
+    selectedEmployeeNo = empNo;
+    jobHistoryFilter = 'active';
+    renderJobHistoryList();
+    window.openModal('jobHistoryList');
+  };
+  window.closeJobHistoryList = function () {
+    window.closeModal('jobHistoryList');
+    selectedEmployeeNo = null;
+  };
+  function fillJobHistorySelects(currentJobCode, currentDepartmentCode) {
+    const jobSelect = document.getElementById('jobHistoryJobCode');
+    const departmentSelect = document.getElementById('jobHistoryDepartmentCode');
+    if (!jobSelect || !departmentSelect) {
+      console.error('[Job history form error] Job or department selectors are missing.');
+      return false;
+    }
+
+    const jobs = getJobs().filter(function (job) {
+      return !job.isDeleted || job.jobCode === currentJobCode;
+    });
+    const departments = getDepartments().filter(function (department) {
+      return !department.isDeleted || department.deptCode === currentDepartmentCode;
+    });
+    jobSelect.innerHTML = jobs.map(function (job) {
+      return '<option value="' +
+        window.escapeHtml(job.jobCode) +
+        '">' +
+        window.escapeHtml(job.jobCode) +
+        ' — ' +
+        window.escapeHtml(job.jobDesc) +
+        (job.isDeleted ? ' [inactive]' : '') +
+        '</option>';
+    }).join('');
+    departmentSelect.innerHTML = departments.map(function (department) {
+      return '<option value="' +
+        window.escapeHtml(department.deptCode) +
+        '">' +
+        window.escapeHtml(department.deptCode) +
+        ' — ' +
+        window.escapeHtml(department.deptName) +
+        (department.isDeleted ? ' [inactive]' : '') +
+        '</option>';
+    }).join('');
+    return jobs.length > 0 && departments.length > 0;
+  }
+  window.openAddJobHistory = function () {
+    if (!window.can('hr.jhAdd')) {
+      window.alert('You do not have permission to add job history.');
+      return;
+    }
+    const employee = getEmployees().find(function (item) {
+      return item.empNo === selectedEmployeeNo && !item.isDeleted;
+    });
+    const form = document.getElementById('jobHistoryForm');
+    const editKey = document.getElementById('jobHistoryEditKey');
+    const empNo = document.getElementById('jobHistoryEmployeeNo');
+    const effectiveDate = document.getElementById('jobHistoryEffectiveDate');
+    const salary = document.getElementById('jobHistorySalary');
+    const title = document.getElementById('jobHistoryFormTitle');
+    const saveButton = document.getElementById('jobHistorySaveBtn');
+    const error = document.getElementById('jobHistoryError');
+    if (!employee || !form || !editKey || !empNo || !effectiveDate || !salary || !title || !saveButton || !error) {
+      console.error('[Job history form error] Employee or required form elements are missing.');
+      return;
+    }
+    if (!fillJobHistorySelects()) {
+      error.textContent = 'Add an active job and department before creating job history.';
+      error.classList.add('show');
+      window.openModal('jobHistoryForm');
+      return;
+    }
+
+    form.reset();
+    editKey.value = '';
+    empNo.value = employee.empNo;
+    effectiveDate.readOnly = false;
+    title.textContent = 'Add Job History';
+    saveButton.textContent = 'Save History';
+    error.textContent = '';
+    error.classList.remove('show');
+    window.openModal('jobHistoryForm');
+  };
+  window.openEditJobHistory = function (empNo, jobCode, effectiveDate) {
+    if (!window.can('hr.jhEdit')) {
+      window.alert('You do not have permission to edit job history.');
+      return;
+    }
+    const history = getJobHistories().find(function (item) {
+      return item.empNo === empNo &&
+        item.jobCode === jobCode &&
+        item.effDate === effectiveDate &&
+        !item.isDeleted;
+    });
+    if (!history) {
+      window.alert('Active job history entry not found.');
+      return;
+    }
+    if (!fillJobHistorySelects(history.jobCode, history.deptCode)) {
+      window.alert('The current job or department is unavailable.');
+      return;
+    }
+
+    const editKey = document.getElementById('jobHistoryEditKey');
+    const empNoInput = document.getElementById('jobHistoryEmployeeNo');
+    const dateInput = document.getElementById('jobHistoryEffectiveDate');
+    const salaryInput = document.getElementById('jobHistorySalary');
+    const jobSelect = document.getElementById('jobHistoryJobCode');
+    const departmentSelect = document.getElementById('jobHistoryDepartmentCode');
+    const title = document.getElementById('jobHistoryFormTitle');
+    const saveButton = document.getElementById('jobHistorySaveBtn');
+    const error = document.getElementById('jobHistoryError');
+    if (!editKey || !empNoInput || !dateInput || !salaryInput || !jobSelect || !departmentSelect || !title || !saveButton || !error) {
+      console.error('[Job history form error] Required form elements are missing.');
+      return;
+    }
+
+    editKey.value = jobHistoryKey(history);
+    empNoInput.value = history.empNo;
+    dateInput.value = history.effDate;
+    dateInput.readOnly = true;
+    salaryInput.value = history.salary;
+    jobSelect.value = history.jobCode;
+    departmentSelect.value = history.deptCode;
+    title.textContent = 'Edit Job History';
+    saveButton.textContent = 'Update History';
+    error.textContent = '';
+    error.classList.remove('show');
+    window.openModal('jobHistoryForm');
+  };
+  window.closeJobHistoryForm = function () {
+    window.closeModal('jobHistoryForm');
+    const effectiveDate = document.getElementById('jobHistoryEffectiveDate');
+    if (effectiveDate) effectiveDate.readOnly = false;
+  };
+  window.saveJobHistory = function (event) {
+    if (event) event.preventDefault();
+
+    const editKeyInput = document.getElementById('jobHistoryEditKey');
+    const empNoInput = document.getElementById('jobHistoryEmployeeNo');
+    const effectiveDateInput = document.getElementById('jobHistoryEffectiveDate');
+    const salaryInput = document.getElementById('jobHistorySalary');
+    const jobSelect = document.getElementById('jobHistoryJobCode');
+    const departmentSelect = document.getElementById('jobHistoryDepartmentCode');
+    const error = document.getElementById('jobHistoryError');
+    if (!editKeyInput || !empNoInput || !effectiveDateInput || !salaryInput || !jobSelect || !departmentSelect || !error) {
+      console.error('[Job history form error] Required form elements are missing.');
+      return;
+    }
+
+    const isEditing = !!editKeyInput.value;
+    const permission = isEditing ? 'hr.jhEdit' : 'hr.jhAdd';
+    if (!window.can(permission)) {
+      error.textContent = 'You do not have permission to ' + (isEditing ? 'edit' : 'add') + ' job history.';
+      error.classList.add('show');
+      return;
+    }
+
+    const employee = getEmployees().find(function (item) {
+      return item.empNo === empNoInput.value && !item.isDeleted;
+    });
+    const effectiveDate = effectiveDateInput.value;
+    const salary = Number(salaryInput.value);
+    const jobCode = jobSelect.value;
+    const departmentCode = departmentSelect.value;
+    if (!employee || !isValidDate(effectiveDate) || !salaryInput.value.trim() ||
+      !Number.isFinite(salary) || salary < 0 || !jobCode || !departmentCode) {
+      error.textContent = 'Enter a valid employee, effective date, salary, job, and department.';
+      error.classList.add('show');
+      return;
+    }
+
+    const currentHistory = isEditing
+      ? getJobHistories().find(function (item) {
+          return jobHistoryKey(item) === editKeyInput.value && !item.isDeleted;
+        })
+      : null;
+    const job = getJobs().find(function (item) {
+      return item.jobCode === jobCode && (!item.isDeleted || (currentHistory && item.jobCode === currentHistory.jobCode));
+    });
+    const department = getDepartments().find(function (item) {
+      return item.deptCode === departmentCode &&
+        (!item.isDeleted || (currentHistory && item.deptCode === currentHistory.deptCode));
+    });
+    if (!job || !department) {
+      error.textContent = 'Select an active job and department.';
+      error.classList.add('show');
+      return;
+    }
+
+    const histories = getJobHistories();
+    const conflict = histories.some(function (item) {
+      return !item.isDeleted &&
+        item.empNo === employee.empNo &&
+        item.jobCode === jobCode &&
+        item.effDate === effectiveDate &&
+        (!currentHistory || jobHistoryKey(item) !== jobHistoryKey(currentHistory));
+    });
+    if (conflict) {
+      error.textContent = 'This job history entry already exists.';
+      error.classList.add('show');
+      return;
+    }
+
+    if (isEditing) {
+      if (!currentHistory) {
+        error.textContent = 'Active job history entry not found.';
+        error.classList.add('show');
+        return;
+      }
+      currentHistory.jobCode = jobCode;
+      currentHistory.deptCode = departmentCode;
+      currentHistory.salary = salary;
+      currentHistory.stamp = makeStamp('EDITED');
+    } else {
+      histories.push({
+        empNo: employee.empNo,
+        jobCode: jobCode,
+        effDate: effectiveDate,
+        salary: salary,
+        deptCode: departmentCode,
+        isDeleted: false,
+        stamp: makeStamp('CREATED')
+      });
+    }
+
+    saveJobHistories(histories);
+    window.closeJobHistoryForm();
+    renderJobHistoryList();
+  };
+  window.softDeleteJobHistory = function (empNo, jobCode, effectiveDate) {
+    if (!window.can('hr.jhDelete')) {
+      window.alert('You do not have permission to delete job history.');
+      return;
+    }
+    if (!window.confirm('Mark this job history as inactive?')) return;
+
+    const histories = getJobHistories();
+    const history = histories.find(function (item) {
+      return item.empNo === empNo &&
+        item.jobCode === jobCode &&
+        item.effDate === effectiveDate &&
+        !item.isDeleted;
+    });
+    if (!history) {
+      window.alert('Active job history entry not found.');
+      return;
+    }
+    history.isDeleted = true;
+    history.stamp = makeStamp('DELETED');
+    saveJobHistories(histories);
+    renderJobHistoryList();
+  };
+  window.restoreJobHistory = function (empNo, jobCode, effectiveDate) {
+    const role = window.currentUser && window.currentUser.role;
+    if (role !== 'superadmin' && role !== 'admin') {
+      window.alert('Only Superadmin or Admin can restore job history.');
+      return;
+    }
+
+    const histories = getJobHistories();
+    const history = histories.find(function (item) {
+      return item.empNo === empNo &&
+        item.jobCode === jobCode &&
+        item.effDate === effectiveDate &&
+        item.isDeleted;
+    });
+    if (!history) {
+      window.alert('Inactive job history entry not found.');
+      return;
+    }
+    const duplicate = histories.some(function (item) {
+      return !item.isDeleted &&
+        item.empNo === empNo &&
+        item.jobCode === jobCode &&
+        item.effDate === effectiveDate;
+    });
+    if (duplicate) {
+      window.alert('Cannot restore: this job history entry already exists as an active row.');
+      return;
+    }
+    history.isDeleted = false;
+    history.stamp = makeStamp('RESTORED');
+    saveJobHistories(histories);
+    renderJobHistoryList();
   };
   window.openAddJob = function () {
     if (!window.can('hr.jobAdd')) {
@@ -1212,6 +1748,10 @@
       window.closeJobModal();
     } else if (event.key === 'Escape' && document.getElementById('departmentModal').classList.contains('active')) {
       window.closeDepartmentModal();
+    } else if (event.key === 'Escape' && document.getElementById('jobHistoryFormModal').classList.contains('active')) {
+      window.closeJobHistoryForm();
+    } else if (event.key === 'Escape' && document.getElementById('jobHistoryListModal').classList.contains('active')) {
+      window.closeJobHistoryList();
     }
   });
 })();
