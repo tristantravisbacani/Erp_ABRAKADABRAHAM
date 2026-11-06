@@ -13,7 +13,7 @@ The Hope, Inc. ERP application uses a repository-inspired header and navigation 
 
 ```
 +-----------------------------------------------------------------------------------------+
-| [Logo] Hope, Inc. ERP                      [dbStatusPill]     [User Avatar | Kurt v]    | <- .gh-top
+| [Logo] Hope, Inc. ERP                      [Local Storage]    [User Avatar | Kurt v]    | <- .gh-top
 +-----------------------------------------------------------------------------------------+
 |  Dashboard   Customers   Products   HR   Sales   Reports   [Admin Menu v]              | <- .sidebar-nav
 +-----------------------------------------------------------------------------------------+

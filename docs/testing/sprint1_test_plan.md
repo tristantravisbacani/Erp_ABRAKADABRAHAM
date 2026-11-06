@@ -12,7 +12,7 @@
 This Master Test Plan defines the verification strategy, test case specifications, and acceptance criteria for all deliverables in Sprint 1.
 
 ### 1.1 In-Scope Modules & Capabilities
-1. **System Infrastructure & Environment:** Hybrid database connectivity (Supabase Cloud live instance vs LocalStorage offline fallback).
+1. **System Infrastructure & Environment:** Browser-based application using LocalStorage for demo data.
 2. **User Authentication & Session Management:**
    - Account registration and pending state validation.
    - User sign-in, session persistence, and logout flow.
@@ -47,7 +47,6 @@ This Master Test Plan defines the verification strategy, test case specification
 | **TC-UM-03** | User Mgmt | Last Superadmin protection guard | Exactly 1 Superadmin in system | Block/delete/demote button disabled/rejected | Prevents organizational lockout |
 | **TC-PERM-01** | RBAC | 36-Action Rights assignment | Logged in as Superadmin | Checking/unchecking rights persists to user store | User's UI and actions reflect assigned rights |
 | **TC-PERM-02** | RBAC | All / None module group toggles | Rights modal open | Toggling group checkbox toggles all child rights | Batch permission updates function correctly |
-| **TC-DB-01** | Database | Base tables integrity & constraints | PostgreSQL schema | Tables `customer`, `product`, `employee`, `job`, `dept` exist | FK relationships and active flags operational |
 | **TC-UI-01** | Design System | Button hierarchy and hover scaling | Dark theme active | Hover transitions smooth at 1.08 scale | Zero toolbar jitter or element displacement |
 
 
@@ -55,9 +54,9 @@ This Master Test Plan defines the verification strategy, test case specification
 
 ## 3. Environment Testing Procedures & Defect Verification Log
 
-### 3.1 Dual-Mode Environment Setup
-- **Supabase Cloud Mode:** Verify that `SUPABASE_CONFIG` connects to the live project and database requests succeed with valid response payloads.
-- **Offline / Local Mode:** Simulate network disconnect or empty credentials. The topbar badge must display `○ Local Storage (Offline Mode)` and pre-seeded mock records must load without unhandled exceptions.
+### 3.1 Local Storage Environment Setup
+- Open the application in a supported browser.
+- Verify that the topbar badge displays `Local Storage` and pre-seeded mock records load without unhandled exceptions.
 
 ### 3.2 Pre-Release Defect Verification (Sprint 1 Week 1)
 
@@ -74,4 +73,3 @@ This Master Test Plan defines the verification strategy, test case specification
 To achieve Quality Sign-Off for Sprint 1:
 - [ ] 100% of P1 test cases (Authentication & Access Control) must pass.
 - [ ] Zero blocking or high-severity visual defects in core screens.
-- [ ] All database migrations must execute without syntax errors or constraint violations in the Supabase SQL editor.

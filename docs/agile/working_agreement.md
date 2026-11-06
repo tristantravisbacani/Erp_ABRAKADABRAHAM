@@ -29,11 +29,11 @@ A task / PR is considered **Done** only when all of the following conditions are
 1. **Acceptance Criteria Verified:** Every acceptance criterion defined in the corresponding user story has been built and manually verified.
 2. **Code & Architecture Hygiene:**
    - Code is clean, well-commented, and preserves existing comments/contracts.
-   - Decoupled into appropriate files (`css/`, `js/`, `supabase/`).
+   - Decoupled into appropriate files (`css/`, `js/`).
    - Browser console shows zero unhandled errors or warnings.
-3. **Dual-Mode Data Layer:**
-   - Features work smoothly against Supabase Cloud when connected.
-   - Falls back gracefully to localStorage when offline or if Supabase pauses.
+3. **Data Layer:**
+   - Demo data currently uses browser localStorage.
+   - Backend integrations are rebuilt as a separate task when needed.
 4. **Peer Review & Approval:**
    - At least one teammate has performed a code review, verified criteria, and submitted an approved review.
 5. **No Regressions:**
@@ -46,7 +46,7 @@ A task / PR is considered **Done** only when all of the following conditions are
 | Role | Assignee | Core Responsibilities | Target PRs (Midterm / Final) |
 |---|---|---|:---:|
 | **Developer** | Kurt Abraham | Application architecture, JavaScript modules (`auth.js`, `customers.js`, `products.js`, `hr.js`, `sales.js`, `reports.js`, `userManagement.js`), client-side RBAC enforcement, session management. | 8 / 24 (32 total) |
-| **DB Admin** | Sir Mischa Solis | Supabase PostgreSQL schema, migrations (`01_base_tables.sql`, etc.), indexing, audit log triggers, seed data scripts, restore documentation. | 6 / 18 (24 total) |
+| **DB Admin** | Sir Mischa Solis | Database schema, migrations, indexing, audit logging, seed data, and restore documentation. | 6 / 18 (24 total) |
 | **Tester** | Simon Mangubat | Sprint test plans, test matrices, manual acceptance verification, automated smoke tests, bug reporting, and final test sign-off reports. | 6 / 18 (24 total) |
 | **UI/UX Designer** | Clark Deocampo | Design system (`base.css`, `landing.css`, `modules.css`), GitHub Primer dark theme alignment, wireframes, component mockups, usability audits. | 5 / 15 (20 total) |
 | **Scrum Master** | Tristan Bacani | Agile boards, user stories, Definition of Done, impediment tracking, velocity monitoring, sprint reviews, and retrospectives. | 5 / 15 (20 total) |
