@@ -531,6 +531,26 @@ footer {
   font-size: 13px;
 }
 
+.auth-card .demo-password {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  margin: 10px 0;
+  padding: 10px 12px;
+  border: 1px solid rgba(227, 179, 65, 0.6);
+  border-radius: var(--radius);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.auth-card .demo-password code {
+  color: #fff2c2;
+  font-size: 15px;
+  font-weight: 700;
+  user-select: all;
+}
+
 .auth-footer {
   text-align: center;
   margin-top: 24px;
