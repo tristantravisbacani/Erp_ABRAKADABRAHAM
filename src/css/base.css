@@ -398,3 +398,26 @@ body {
   display: block;
   margin-bottom: 4px;
 }
+
+.demo-password {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 8px 0;
+  padding: 8px 10px;
+  border-left: 3px solid var(--warning);
+  border-radius: 4px;
+  background: rgba(1, 4, 9, 0.35);
+}
+
+.demo-password strong {
+  margin: 0;
+}
+
+.demo-password code {
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 700;
+  user-select: all;
+}
