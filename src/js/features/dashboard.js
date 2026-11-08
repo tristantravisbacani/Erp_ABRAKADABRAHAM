@@ -321,6 +321,17 @@
       }
     });
 
+    const callbackParams = new URLSearchParams(window.location.hash.slice(1));
+    const queryParams = new URLSearchParams(window.location.search);
+    if (
+      callbackParams.get('type') === 'recovery' ||
+      queryParams.get('type') === 'recovery' ||
+      queryParams.get('passwordRecovery') === '1'
+    ) {
+      window.showPasswordRecoveryForm();
+      return;
+    }
+
     try {
       const { data, error } = await client.auth.getSession();
       if (error) throw error;
@@ -329,10 +340,6 @@
       await window.loadSupabaseUser(data.session.user);
       await window.initializeSupabaseERPData();
       window.showDashboard();
-      const callbackParams = new URLSearchParams(window.location.hash.slice(1));
-      if (callbackParams.get('type') === 'recovery') {
-        window.showPasswordRecoveryForm();
-      }
     } catch (err) {
       console.error('[Supabase Session Restore Error]', err);
       window.clearSupabaseERPData();
