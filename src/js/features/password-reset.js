@@ -30,6 +30,15 @@
     return window.supabaseClient;
   }
 
+  function clearRecoveryCallbackUrl() {
+    const url = new URL(window.location.href);
+    url.searchParams.delete('passwordRecovery');
+    url.searchParams.delete('type');
+    url.searchParams.delete('code');
+    url.hash = '';
+    window.history.replaceState(null, '', url.pathname + url.search);
+  }
+
   window.showPasswordRecoveryForm = function () {
     const requestForm = document.getElementById('resetForm');
     const passwordSection = document.getElementById('resetTokenSection');
@@ -73,8 +82,11 @@
 
     try {
       const client = getSupabaseClient();
+      const redirectUrl = new URL(window.location.href);
+      redirectUrl.hash = '';
+      redirectUrl.searchParams.set('passwordRecovery', '1');
       const { error } = await client.auth.resetPasswordForEmail(email, {
-        redirectTo: window.location.origin + window.location.pathname
+        redirectTo: redirectUrl.toString()
       });
       if (error) throw error;
 
@@ -125,6 +137,7 @@
       if (signOutError) throw signOutError;
       window.currentUser = null;
       window.clearSession();
+      clearRecoveryCallbackUrl();
 
       showMessage('resetSuccess', 'Password updated. You can now sign in with your new password.');
       setTimeout(function () {
