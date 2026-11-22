@@ -247,6 +247,33 @@
         if (record.id) row.id = record.id;
         return row;
       }
+    },
+    payments: {
+      table: 'erp_payments',
+      select: 'access_scope, or_no, pay_date, amount, trans_no, is_deleted, stamp, updated_at',
+      key: [{ column: 'or_no', field: 'orNo' }],
+      fromDatabase: function (row) {
+        return {
+          orNo: row.or_no,
+          payDate: row.pay_date,
+          amount: Number(row.amount),
+          transNo: row.trans_no,
+          isDeleted: row.is_deleted,
+          stamp: row.stamp,
+          updatedAt: row.updated_at
+        };
+      },
+      toDatabase: function (record, scope) {
+        return {
+          access_scope: scope,
+          or_no: record.orNo,
+          pay_date: record.payDate,
+          amount: Number(record.amount),
+          trans_no: record.transNo,
+          is_deleted: !!record.isDeleted,
+          stamp: record.stamp || ''
+        };
+      }
     }
   };
 
@@ -321,6 +348,9 @@
       salesDetails: function () {
         return ['sales.view', 'sales.detailView'].some(window.can) ||
           reportAccess(['reports.topCustomers', 'reports.topProducts', 'reports.topSales']);
+      },
+      payments: function () {
+        return window.can('sales.view');
       }
     };
     return !!(permissions[name] && permissions[name]());

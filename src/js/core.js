@@ -101,7 +101,7 @@
     'hr.jhAdd': 'Add Job History',
     'hr.jhEdit': 'Edit Job History',
     'hr.jhDelete': 'Delete Job History',
-    'sales.view': 'View Sales',
+    'sales.view': 'View Sales & Payments',
     'sales.add': 'Add Sale',
     'sales.edit': 'Edit Sale',
     'sales.delete': 'Delete Sale',

@@ -449,6 +449,9 @@
   let memorySalesDetails = null;
   let salesSearch = '';
   let salesFilter = 'active';
+  let salesView = 'sales';
+  let paymentsSearch = '';
+  let paymentsFilter = 'active';
   let selectedTransNo = null;
   let salesDetailFilter = 'active';
 
@@ -622,11 +625,151 @@
     }, 0);
   }
 
+  function renderSalesViewTabs() {
+    return '<div class="sales-view-tabs" role="tablist" aria-label="Sales sections">' +
+      '<button type="button" role="tab" aria-selected="' + (salesView === 'sales') +
+      '" class="' + (salesView === 'sales' ? 'active' : '') +
+      '" onclick="window.setSalesView(&quot;sales&quot;)">Sales</button>' +
+      (window.can('sales.view')
+        ? '<button type="button" role="tab" aria-selected="' + (salesView === 'payments') +
+          '" class="' + (salesView === 'payments' ? 'active' : '') +
+          '" onclick="window.setSalesView(&quot;payments&quot;)">Payments</button>'
+        : '') +
+      '</div>';
+  }
+
+  function renderPayments() {
+    const area = document.getElementById('contentArea');
+    if (!area) return;
+    if (!window.can('sales.view')) {
+      area.innerHTML = '<div class="empty-state">You need View Sales permission to view payments.</div>';
+      return;
+    }
+
+    if (!isSupabaseDataActive()) {
+      area.innerHTML = renderSalesViewTabs() +
+        '<div class="empty-state">Payments are available for Supabase accounts only.</div>';
+      return;
+    }
+
+    const allPayments = window.getSupabaseERPRecords('payments');
+    const sales = getSales();
+    const customers = window.getCustomers();
+    const canSeeDeleted = window.currentUser.role === 'superadmin' || window.currentUser.role === 'admin';
+    const activeCount = allPayments.filter(function (payment) {
+      return !payment.isDeleted;
+    }).length;
+    const inactiveCount = allPayments.length - activeCount;
+    let payments = allPayments;
+    if (!canSeeDeleted) {
+      payments = payments.filter(function (payment) {
+        return !payment.isDeleted;
+      });
+    } else if (paymentsFilter === 'active') {
+      payments = payments.filter(function (payment) {
+        return !payment.isDeleted;
+      });
+    } else if (paymentsFilter === 'deleted') {
+      payments = payments.filter(function (payment) {
+        return !!payment.isDeleted;
+      });
+    }
+
+    const query = paymentsSearch.trim().toLowerCase();
+    if (query) {
+      payments = payments.filter(function (payment) {
+        const sale = sales.find(function (item) {
+          return item.transNo === payment.transNo;
+        });
+        const customer = sale && customers.find(function (item) {
+          return item.custNo === sale.custNo;
+        });
+        return [
+          payment.orNo,
+          payment.payDate,
+          payment.transNo,
+          payment.amount,
+          sale && sale.custNo,
+          customer && customer.custName
+        ].some(function (value) {
+          return String(value == null ? '' : value).toLowerCase().includes(query);
+        });
+      });
+    }
+
+    payments.sort(function (left, right) {
+      return right.payDate.localeCompare(left.payDate) || right.orNo.localeCompare(left.orNo);
+    });
+
+    const rows = payments.length
+      ? payments.map(function (payment) {
+          const sale = sales.find(function (item) {
+            return item.transNo === payment.transNo;
+          });
+          const customer = sale && customers.find(function (item) {
+            return item.custNo === sale.custNo;
+          });
+          const actions = sale && !sale.isDeleted && window.can('sales.detailView')
+            ? '<button type="button" class="btn-edit" onclick="window.openSalesDetails(&#39;' +
+              window.jsArg(payment.transNo) + '&#39;)">Sale details</button>'
+            : '—';
+          const status = canSeeDeleted
+            ? '<td><span class="badge ' +
+              (payment.isDeleted ? 'badge-deleted">Inactive' : 'badge-active">Active') +
+              '</span></td><td><div class="sales-stamp">' +
+              window.escapeHtml(payment.stamp || '—') + '</div></td>'
+            : '';
+          return '<tr' + (payment.isDeleted ? ' class="deleted-row"' : '') +
+            '><td><strong>' + window.escapeHtml(payment.orNo) +
+            '</strong></td><td>' + window.escapeHtml(payment.payDate) +
+            '</td><td><strong>' + window.escapeHtml(payment.transNo) +
+            '</strong></td><td>' +
+            (sale ? window.escapeHtml(sale.custNo) + ' — ' +
+              window.escapeHtml(customer ? customer.custName : sale.custNo) : '—') +
+            '</td><td><strong>' + formatMoney(Number(payment.amount) || 0) +
+            '</strong></td>' + status +
+            '<td><div class="action-btns">' + actions + '</div></td></tr>';
+        }).join('')
+      : '<tr><td colspan="' + (canSeeDeleted ? 8 : 6) +
+        '"><div class="empty-state">No payments found.</div></td></tr>';
+    const filterTabs = canSeeDeleted
+      ? '<div class="filter-tabs" role="group" aria-label="Filter payments">' +
+        '<button type="button" class="filter-tab' +
+        (paymentsFilter === 'active' ? ' active' : '') +
+        '" onclick="window.setPaymentsFilter(&quot;active&quot;)">Active (' +
+        activeCount + ')</button><button type="button" class="filter-tab' +
+        (paymentsFilter === 'deleted' ? ' active' : '') +
+        '" onclick="window.setPaymentsFilter(&quot;deleted&quot;)">Inactive (' +
+        inactiveCount + ')</button><button type="button" class="filter-tab' +
+        (paymentsFilter === 'all' ? ' active' : '') +
+        '" onclick="window.setPaymentsFilter(&quot;all&quot;)">All (' +
+        allPayments.length + ')</button></div>'
+      : '';
+    const scopeLabel = window.currentUser.accessScope === 'production' ? 'Production scope' : 'Sandbox scope';
+
+    area.innerHTML =
+      renderSalesViewTabs() +
+      '<div class="module-toolbar"><h3>Payments <span class="sales-scope-label">' +
+      window.escapeHtml(scopeLabel) + '</span></h3><div class="toolbar-right">' +
+      filterTabs +
+      '<input type="search" class="search-input" data-focus-key="payments" aria-label="Search payments" placeholder="Search payments..." value="' +
+      window.escapeHtml(paymentsSearch) +
+      '" oninput="window.setPaymentsSearch(this.value);window.rerenderKeepFocus(window.renderSales);" />' +
+      '</div></div><div class="data-table-wrap"><table class="data-table">' +
+      '<thead><tr><th>OR No.</th><th>Payment Date</th><th>Transaction No.</th><th>Customer</th><th>Amount</th>' +
+      (canSeeDeleted ? '<th>Status</th><th>Stamp</th>' : '') +
+      '<th>Actions</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+  }
+
   function renderSales() {
     const area = document.getElementById('contentArea');
     if (!area) return;
     if (!window.currentUser || !window.canModule('sales')) {
       area.innerHTML = '<div class="empty-state">Access denied.</div>';
+      return;
+    }
+    if (salesView === 'payments') {
+      renderPayments();
       return;
     }
 
@@ -756,6 +899,7 @@
       : '';
 
     area.innerHTML =
+      renderSalesViewTabs() +
       '<div class="module-toolbar"><h3>Sales Management</h3>' +
       '<div class="toolbar-right">' +
       filterTabs +
@@ -835,6 +979,29 @@
     return cloneRecords(DEFAULT_SALES_DETAILS);
   };
   window.renderSales = renderSales;
+  window.setSalesView = function (view) {
+    if (view !== 'sales' && view !== 'payments') {
+      console.warn('[Sales view] Invalid view:', view);
+      return;
+    }
+    if (view === 'payments' && !window.can('sales.view')) {
+      window.alert('You do not have permission to view payments.');
+      return;
+    }
+    salesView = view;
+    renderSales();
+  };
+  window.setPaymentsFilter = function (filter) {
+    if (['active', 'deleted', 'all'].indexOf(filter) < 0) {
+      console.warn('[Payments filter] Invalid filter:', filter);
+      return;
+    }
+    paymentsFilter = filter;
+    renderSales();
+  };
+  window.setPaymentsSearch = function (query) {
+    paymentsSearch = String(query == null ? '' : query);
+  };
   window.setSalesFilter = function (filter) {
     if (['active', 'deleted', 'all'].indexOf(filter) < 0) {
       console.warn('[Sales filter] Invalid filter:', filter);
