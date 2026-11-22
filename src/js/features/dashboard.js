@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  let logoutInProgress = false;
+
   // ========== View Transitions & Dashboard Rendering ==========
   window.showDashboard = function () {
     ['login', 'register', 'reset'].forEach(function (name) {
@@ -27,6 +29,12 @@
     window.clearSupabaseERPData();
     window.currentUser = null;
 
+    const logoutError = document.getElementById('logoutError');
+    if (logoutError) {
+      logoutError.classList.remove('show');
+      logoutError.textContent = '';
+    }
+
     document.querySelectorAll('.modal-overlay.active').forEach(function (m) {
       m.classList.remove('active');
     });
@@ -51,21 +59,47 @@
   };
 
   window.handleLogout = async function () {
-    if (window.currentUser && window.currentUser.authProvider === 'supabase') {
-      try {
-        const { error } = await window.supabaseClient.auth.signOut({ scope: 'local' });
-        if (error) throw error;
-      } catch (err) {
-        console.error('[Supabase Logout Error]', err);
-        const errorEl = document.getElementById('loginError');
-        if (errorEl) {
-          errorEl.textContent = 'Could not sign out. Please check your connection and try again.';
-          errorEl.classList.add('show');
+    if (logoutInProgress) return;
+    logoutInProgress = true;
+    const client = window.supabaseClient;
+
+    try {
+      if (window.currentUser && window.currentUser.authProvider === 'supabase') {
+        if (!client) {
+          throw new Error('Supabase is unavailable. Check your connection and try again.');
         }
-        return;
+        const { error } = await client.auth.signOut({ scope: 'local' });
+        if (error) throw error;
       }
+      window.finishLogout();
+    } catch (err) {
+      console.error('[Supabase Logout Error]', err);
+      if (client && window.currentUser && window.currentUser.authProvider === 'supabase') {
+        try {
+          const { data, error } = await client.auth.getSession();
+          if (error) throw error;
+          if (!data.session) {
+            window.finishLogout();
+            const loginError = document.getElementById('loginError');
+            if (loginError) {
+              loginError.textContent = 'Your local session was cleared, but Supabase could not confirm sign-out. Please sign in again.';
+              loginError.classList.add('show');
+            }
+            return;
+          }
+        } catch (sessionError) {
+          console.error('[Supabase Logout Session Check Error]', sessionError);
+        }
+      }
+
+      const errorEl = document.getElementById('logoutError');
+      if (errorEl) {
+        errorEl.textContent = 'Could not sign out. Please check your connection and try again.';
+        errorEl.classList.add('show');
+      }
+    } finally {
+      logoutInProgress = false;
     }
-    window.finishLogout();
   };
 
   window.logout = window.handleLogout;
@@ -312,12 +346,13 @@
         setTimeout(function () {
           window.showPasswordRecoveryForm();
         }, 0);
-      } else if (event === 'SIGNED_OUT' && window.currentUser) {
-        setTimeout(function () {
-          if (window.currentUser && window.currentUser.authProvider === 'supabase') {
-            window.finishLogout();
-          }
-        }, 0);
+      } else if (
+        event === 'SIGNED_OUT' &&
+        !logoutInProgress &&
+        window.currentUser &&
+        window.currentUser.authProvider === 'supabase'
+      ) {
+        window.finishLogout();
       }
     });
 

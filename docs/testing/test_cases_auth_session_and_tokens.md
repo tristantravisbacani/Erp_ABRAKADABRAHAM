@@ -89,15 +89,29 @@ This document defines formal test specifications and verification logs for the c
 - **Status:** **PASS**
 
 ### TC-AUTH-04: Session Recovery & Logout State Teardown
-- **Description:** Verify persistent session survives page refresh, and logout clears state.
+- **Description:** Verify persistent Supabase session survives page refresh, and logout clears local state only after Supabase confirms sign-out.
 - **Execution Steps:**
   1. Sign in as `admin@hope.com`.
   2. Reload browser tab $\rightarrow$ Verify dashboard immediately restored.
   3. Open user dropdown $\rightarrow$ Click "Logout".
 - **Expected Result:**
-  - `localStorage` session key `hope_erp_session_v4` removed.
-  - User returned to clean landing view with empty password field.
+  - Supabase `getSession()` returns no session.
+  - Refreshing with the ended session's refresh token is rejected by Supabase.
+  - The app returns to the landing view with the password field empty.
+  - The `SIGNED_OUT` event does not run cleanup a second time during an explicit logout.
 - **Status:** **PASS**
+
+### TC-AUTH-05: Logout Network Failure
+- **Description:** Verify an unsuccessful Supabase logout keeps the UI consistent with whether the local session remains available.
+- **Execution Steps:**
+  1. Sign in as an active Supabase user.
+  2. Block or fail the Supabase `/auth/v1/logout` request.
+  3. Open the user dropdown and click "Logout".
+- **Expected Result:**
+  - If the local session remains, the dashboard stays active and an accessible logout error is visible.
+  - If Supabase cleared the local session despite a failed server request, the app returns to the landing view and asks the user to sign in again.
+  - The app never shows an authenticated dashboard after `getSession()` reports no session.
+- **Status:** **PASS** (verified in the Live Server browser)
 
 
 ---
